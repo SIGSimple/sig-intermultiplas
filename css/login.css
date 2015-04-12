@@ -1,0 +1,39 @@
+.campo_alerta {
+	font-family: Tahoma, Verdana, Arial;
+	font-size: 11px;
+	border: 1px solid black;
+	background-color: #ffff99;
+}
+
+.texto_pagina {
+	font-family: Tahoma, Verdana, Arial;
+	font-size: 11px;
+	color: dimgray;
+}
+
+.tabela_formulario {
+	width: 200;
+	background-color: white;
+}
+
+.titulo_campos {
+	font-family: Tahoma, Verdana, Arial;
+	font-size: 11px;
+	color: dimgray;
+	background-color: whitesmoke;
+}
+
+.campos_formulario {
+	font-family: Tahoma, Verdana, Arial;
+	font-size: 11px;
+	color: dimgray;
+	background-color: gainsboro;
+	border: 1px inset;
+}
+
+.botao_enviar {
+	font-family: Tahoma, Verdana, Arial;
+	font-size: 11px;
+	color: white;
+	background-color: gray;
+}

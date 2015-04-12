@@ -1,0 +1,124 @@
+body { padding-top: 70px !important; }
+body.login { padding-top: 50px !important; }
+body#body { width: 100%; height: 100%; }
+.container-box { max-width: 768px; }
+.page-title { font-size: 20px; }
+.page-title small { font-size: 90%; font-weight: bold !important; color: #00B2EC; }
+.img-topo { height: 100px; }
+.jumbotron { background-color: #fff; margin-bottom: 0 !important; }
+.navbar-default .navbar-brand:hover, .navbar-default .navbar-brand:focus,
+.navbar-default .navbar-nav>li>a:hover, .navbar-default .navbar-nav>li>a:focus { color: #00B2EC; }
+.navbar-default .navbar-nav>li>a.sign-out:hover, .navbar-default .navbar-nav>li>a.sign-out:focus { color: #e74c3c; }
+.form-group { margin-bottom: 5px; }
+.table>thead>tr>th.text-top { vertical-align: top !important; }
+.table tbody>tr>td.text-top { vertical-align: top !important; }
+.table>thead>tr>th.text-middle { vertical-align: middle !important; }
+.table tbody>tr>td.text-middle { vertical-align: middle !important; }
+.panel.panel-table-data { width: 4000px; }
+img.logo-intermultiplas { max-height: 300px; }
+img.logo-intermultiplas.report { max-height: 100px; }
+.form-wrap img.logo-intermultiplas { max-height: 150px; }
+.text-bold { font-weight: bold; }
+.text-title { font-size: 120%; }
+img.img-governo { max-width: 150px; padding-top: 10px; }
+img.img-daee { max-height: 50px; }
+div.row-header { margin-bottom: 10px; }
+tr.primary td { background-color: #2c3e50 !important; color: #fff !important; }
+.progress { margin-bottom: 0; }
+.table-boxed { border: 1px solid #2c3e50; }
+.text-90 { font-size: 90%; }
+.cursor { cursor: pointer; }
+@media print {
+  body {
+    -webkit-print-color-adjust: exact;
+    font-size: 90%;
+    padding-top: 0;
+    margin-top: 0;
+  }
+  .images-header { page-break-before: always; }
+  .progress{
+    background-color: #F5F5F5 !important;
+    -ms-filter: "progid:DXImageTransform.Microsoft.gradient(GradientType=0,startColorstr='#F5F5F5', endColorstr='#F5F5F5')" !important;
+  }
+  .progress-bar-info{
+    display: block !important;
+    background-color: #5BC0DE !important;
+    -ms-filter: "progid:DXImageTransform.Microsoft.gradient(GradientType=0,startColorstr='#5BC0DE', endColorstr='#5BC0DE')" !important;
+  }
+  .progress-bar-danger{
+    display: block !important;
+    background-color: #e74c3c !important;
+    -ms-filter: "progid:DXImageTransform.Microsoft.gradient(GradientType=0,startColorstr='#e74c3c', endColorstr='#e74c3c')" !important;
+  }
+  .progress-bar-warning{
+    display: block !important;
+    background-color: #f39c12 !important;
+    -ms-filter: "progid:DXImageTransform.Microsoft.gradient(GradientType=0,startColorstr='#f39c12', endColorstr='#f39c12')" !important;
+  }
+  .progress-bar-success{
+    display: block !important;
+    background-color: #18bc9c !important;
+    -ms-filter: "progid:DXImageTransform.Microsoft.gradient(GradientType=0,startColorstr='#18bc9c', endColorstr='#18bc9c')" !important;
+  }
+
+  .progress, .progress > .progress-bar {
+    display: block !important;
+    -webkit-print-color-adjust: exact !important;
+
+    box-shadow: inset 0 0 !important;
+    -webkit-box-shadow: inset 0 0 !important;
+  }   
+}
+
+/* --------------------------------------------------
+   :: Login Section
+   -------------------------------------------------- */
+.container-login { margin-top: 80px; width: 900px; }
+.container-login.development { margin-top: 50px; width: 500px; }
+#login .form-wrap { width: 70%; margin: 0 auto; }
+#login h1 { color: #2c3e50; font-size: 18px; text-align: center; font-weight: bold; }
+#login .form-group { margin-bottom: 15px; }
+#login .checkbox { margin-bottom: 20px; position: relative; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; -o-user-select: none; user-select: none; }
+#login .checkbox.show:before { content: '\e013'; color: #2c3e50; font-size: 17px; margin: 1px 0 0 3px; position: absolute; pointer-events: none; font-family: 'Glyphicons Halflings'; }
+#login .checkbox .character-checkbox { width: 25px; height: 25px; cursor: pointer; border-radius: 3px; border: 1px solid #ccc; vertical-align: middle; display: inline-block; }
+#login .checkbox .label { color: #6d6d6d; font-size: 13px; font-weight: normal; }
+#login .btn.btn-custom { font-size: 14px; margin-bottom: 20px; }
+#login .forget { font-size: 13px; text-align: center; display: block; }
+
+/* --------------------------------------------------
+   :: Inputs & Buttons
+   -------------------------------------------------- */
+.form-control { color: #212121; }
+.btn-custom { color: #fff; background-color: #2c3e50; }
+.btn-custom:hover,
+.btn-custom:focus { color: #fff; }
+
+/* --------------------------------------------------
+   :: Footer
+   -------------------------------------------------- */
+#footer { color: #6d6d6d; font-size: 12px; text-align: center; margin-top: 40px; }
+#footer p { margin-bottom: 0; }
+#footer a { color: inherit; }
+
+.specialImage{
+	max-height: 50px;
+	position:fixed;
+	bottom:0;
+	right:0;
+	margin-right: 10px;
+	margin-bottom: 10px;
+	z-index:100; /* or higher/lower depending on other elements */
+}
+
+/* --------------------------------------------------
+   :: Gallery
+   -------------------------------------------------- */
+.thumbnail {
+    position: relative;
+    padding: 0px;
+    margin-bottom: 20px;
+}
+
+.thumbnail img {
+    width: 100%;
+}

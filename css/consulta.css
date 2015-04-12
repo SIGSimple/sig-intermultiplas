@@ -1,0 +1,44 @@
+.texto_pagina {
+	font-family: Tahoma, Verdana, Arial;
+	font-size: 11px;
+	color: dimgray;
+}
+
+.tabela_registros {
+	width: 100%;
+	background-color: white;
+}
+
+.titulos_registros {
+	font-family: Tahoma, Verdana, Arial;
+	font-size: 11px;
+	color: white;
+	background-color: gray;
+}
+
+.exibe_registros {
+	font-family: Tahoma, Verdana, Arial;
+	font-size: 11px;
+	width: 100%;
+	color: dimgray;
+	background-color: whitesmoke;
+}
+
+.tabela_paginacao {
+	font-family: Tahoma, Verdana, Arial;
+	font-size: 11px;
+	width: 100%;
+	color: gray;
+	border-top: 1px solid gainsboro;
+	background-color: gainsboro;
+}
+
+.links_paginacao {
+	color: dimgray;
+	text-decoration: none;
+}
+
+.links_paginacao:hover {
+	color: gray;
+	text-decoration: underline;
+}

@@ -1,0 +1,643 @@
+[base_dados]
+tipo=1
+nome=Microsoft Access
+caminho=C:\Documents and Settings\Admin\Desktop\bd.mdb
+login=
+senha=
+tabela=tb_predio
+[campos]
+total=12
+[var_campo]
+0=4
+1=9
+2=2
+3=3
+4=0
+5=5
+6=6
+7=7
+8=8
+9=1
+10=10
+11=11
+12=12
+[var_tipocampo]
+0=0
+1=0
+2=0
+3=0
+4=0
+5=0
+6=4
+7=0
+8=4
+9=0
+10=0
+11=0
+12=0
+[var_tamanhotexto]
+0=350
+1=350
+2=350
+3=350
+4=350
+5=350
+6=350
+7=350
+8=350
+9=350
+10=350
+11=350
+12=350
+[var_caractertexto]
+0=255
+1=255
+2=255
+3=255
+4=255
+5=255
+6=255
+7=255
+8=255
+9=255
+10=255
+11=255
+12=255
+[var_validartexto]
+0=0
+1=0
+2=0
+3=0
+4=0
+5=0
+6=0
+7=0
+8=0
+9=0
+10=0
+11=0
+12=0
+[var_linhascaixa]
+0=50
+1=50
+2=50
+3=50
+4=50
+5=50
+6=50
+7=50
+8=50
+9=50
+10=50
+11=50
+12=50
+[var_colunascaixa]
+0=350
+1=350
+2=350
+3=350
+4=350
+5=350
+6=350
+7=350
+8=350
+9=350
+10=350
+11=350
+12=350
+[var_tabelaindexmenulista]
+0=-1
+1=-1
+2=-1
+3=-1
+4=-1
+5=-1
+6=2
+7=-1
+8=3
+9=-1
+10=-1
+11=-1
+12=-1
+[var_campoindexmenulista]
+0=-1
+1=-1
+2=-1
+3=-1
+4=-1
+5=-1
+6=0
+7=-1
+8=1
+9=-1
+10=-1
+11=-1
+12=-1
+[var_selectedopcoes]
+0=-1
+1=-1
+2=-1
+3=-1
+4=-1
+5=-1
+6=-1
+7=-1
+8=-1
+9=-1
+10=-1
+11=-1
+12=-1
+[var_selectedcampomenulista]
+0=-1
+1=-1
+2=-1
+3=-1
+4=-1
+5=-1
+6=-1
+7=-1
+8=-1
+9=-1
+10=-1
+11=-1
+12=-1
+[var_tipomenulista]
+0=0
+1=0
+2=0
+3=0
+4=0
+5=0
+6=1
+7=0
+8=1
+9=0
+10=0
+11=0
+12=0
+[var_tipoimagem]
+0=0
+1=0
+2=0
+3=0
+4=0
+5=0
+6=0
+7=0
+8=0
+9=0
+10=0
+11=0
+12=0
+[var_tamanhomenu]
+0=350
+1=350
+2=350
+3=350
+4=350
+5=350
+6=350
+7=350
+8=350
+9=350
+10=350
+11=350
+12=350
+[var_tamanhoimagem]
+0=350
+1=350
+2=350
+3=350
+4=350
+5=350
+6=350
+7=350
+8=350
+9=350
+10=350
+11=350
+12=350
+[var_nomecampo]
+0=Área Construída
+1=Área Ocupada
+2=Área Total
+3=CEP
+4=cod_predio
+5=Complemento
+6=Diretoria de Ensino
+7=Endereço
+8=Município
+9=Nome_Unidade
+10=Número de Pavimentos
+11=Número de Salas
+12=Observação sobre o Prédio
+[var_titulotexto]
+0=Área Construída
+1=Área Ocupada
+2=Área Total
+3=CEP
+4=cod_predio
+5=Complemento
+6=Diretoria de Ensino
+7=Endereço
+8=Município
+9=Nome_Unidade
+10=Número de Pavimentos
+11=Número de Salas
+12=Observação sobre o Prédio
+[var_campotexto]
+0=
+1=
+2=
+3=
+4=
+5=
+6=
+7=
+8=
+9=
+10=
+11=
+12=
+[var_titulocaixa]
+0=Área Construída
+1=Área Ocupada
+2=Área Total
+3=CEP
+4=cod_predio
+5=Complemento
+6=Diretoria de Ensino
+7=Endereço
+8=Município
+9=Nome_Unidade
+10=Número de Pavimentos
+11=Número de Salas
+12=Observação sobre o Prédio
+[var_campocaixa]
+0=
+1=
+2=
+3=
+4=
+5=
+6=
+7=
+8=
+9=
+10=
+11=
+12=
+[var_valorsimmarcador]
+0=
+1=
+2=
+3=
+4=
+5=
+6=
+7=
+8=
+9=
+10=
+11=
+12=
+[var_valornaomarcador]
+0=
+1=
+2=
+3=
+4=
+5=
+6=
+7=
+8=
+9=
+10=
+11=
+12=
+[var_titulomarcador]
+0=Área Construída
+1=Área Ocupada
+2=Área Total
+3=CEP
+4=cod_predio
+5=Complemento
+6=Diretoria de Ensino
+7=Endereço
+8=Município
+9=Nome_Unidade
+10=Número de Pavimentos
+11=Número de Salas
+12=Observação sobre o Prédio
+[var_coluna1opcoes]
+0=
+1=
+2=
+3=
+4=
+5=
+6=
+7=
+8=
+9=
+10=
+11=
+12=
+[var_coluna2opcoes]
+0=
+1=
+2=
+3=
+4=
+5=
+6=
+7=
+8=
+9=
+10=
+11=
+12=
+[var_titulomenulista]
+0=Área Construída
+1=Área Ocupada
+2=Área Total
+3=CEP
+4=cod_predio
+5=Complemento
+6=Diretoria de Ensino
+7=Endereço
+8=Município
+9=Nome_Unidade
+10=Número de Pavimentos
+11=Número de Salas
+12=Observação sobre o Prédio
+[var_tituloopcoes]
+0=Área Construída
+1=Área Ocupada
+2=Área Total
+3=CEP
+4=cod_predio
+5=Complemento
+6=Diretoria de Ensino
+7=Endereço
+8=Município
+9=Nome_Unidade
+10=Número de Pavimentos
+11=Número de Salas
+12=Observação sobre o Prédio
+[var_valoresopcoes]
+0=
+1=
+2=
+3=
+4=
+5=
+6=
+7=
+8=
+9=
+10=
+11=
+12=
+[var_campomenulista]
+0=
+1=
+2=
+3=
+4=
+5=
+6=desc_diretoria
+7=
+8=Municipios
+9=
+10=
+11=
+12=
+[var_textomenulista]
+0=
+1=
+2=
+3=
+4=
+5=
+6=
+7=
+8=
+9=
+10=
+11=
+12=
+[var_tabelamenulista]
+0=
+1=
+2=
+3=
+4=
+5=
+6=tb_diretoria
+7=
+8=tb_Municipios
+9=
+10=
+11=
+12=
+[var_titulo1imagem]
+0=Área Construída (URL)
+1=Área Ocupada (URL)
+2=Área Total (URL)
+3=CEP (URL)
+4=cod_predio (URL)
+5=Complemento (URL)
+6=Diretoria de Ensino (URL)
+7=Endereço (URL)
+8=Município (URL)
+9=Nome_Unidade (URL)
+10=Número de Pavimentos (URL)
+11=Número de Salas (URL)
+12=Observação sobre o Prédio (URL)
+[var_campo1imagem]
+0=http://
+1=http://
+2=http://
+3=http://
+4=http://
+5=http://
+6=http://
+7=http://
+8=http://
+9=http://
+10=http://
+11=http://
+12=http://
+[var_pastaimagem]
+0=imagens_Área Construída
+1=imagens_Área Ocupada
+2=imagens_Área Total
+3=imagens_CEP
+4=imagens_cod_predio
+5=imagens_Complemento
+6=imagens_Diretoria de Ensino
+7=imagens_Endereço
+8=imagens_Município
+9=imagens_Nome_Unidade
+10=imagens_Número de Pavimentos
+11=imagens_Número de Salas
+12=imagens_Observação sobre o Prédio
+[var_permitirtexto]
+0=1
+1=1
+2=1
+3=1
+4=1
+5=1
+6=1
+7=1
+8=1
+9=1
+10=1
+11=1
+12=1
+[var_senhatexto]
+0=0
+1=0
+2=0
+3=0
+4=0
+5=0
+6=0
+7=0
+8=0
+9=0
+10=0
+11=0
+12=0
+[var_permitircaixa]
+0=0
+1=0
+2=0
+3=0
+4=0
+5=0
+6=0
+7=0
+8=0
+9=0
+10=0
+11=0
+12=0
+[var_permitiropcoes]
+0=0
+1=0
+2=0
+3=0
+4=0
+5=0
+6=0
+7=0
+8=0
+9=0
+10=0
+11=0
+12=0
+[var_permitirmenu]
+0=0
+1=0
+2=0
+3=0
+4=0
+5=0
+6=0
+7=0
+8=0
+9=0
+10=0
+11=0
+12=0
+[var_campomarcador]
+0=0
+1=0
+2=0
+3=0
+4=0
+5=0
+6=0
+7=0
+8=0
+9=0
+10=0
+11=0
+12=0
+[var_nao_permitir_duplicidade]
+0=0
+1=0
+2=0
+3=0
+4=0
+5=0
+6=0
+7=0
+8=0
+9=0
+10=0
+11=0
+12=0
+[campo_selected]
+0=1
+1=1
+2=1
+3=1
+4=1
+5=1
+6=1
+7=1
+8=1
+9=1
+10=1
+11=1
+12=1
+[titulo_inclusao]
+text=Incluir Registro
+[cabecalho_inclusao]
+text=<B>Incluir um novo registro</B><BR>Preencha corretamente [#13][#10]os dados abaixo:<BR>[#13][#10]
+[msg_apos_inclusao]
+text=<BR><B>Registro salvo</B><BR>O registro foi cadastrado [#13][#10]com sucesso.<BR><BR>[#13][#10]
+[titulo_consulta]
+text=Consultar Registros
+[cabecalho_consulta]
+text=<B>Consultar Registros</B><BR>Visualize os registros da [#13][#10]tabela abaixo:<BR>[#13][#10]
+[msg_erro_consulta]
+text=<BR><B>Nenhum registro foi encontrado</B><BR><BR>[#13][#10]
+[RegPorPag_consulta]
+value=15
+[titulo_alteracao]
+text=Alterar Registro
+[cabecalho_alteracao]
+text=<B>Alterar dados do Registro</B><BR>Altere os dados [#13][#10]necessários abaixo:<BR>[#13][#10]
+[msg_apos_alteracao]
+text=<BR><B>Registro alterado</B><BR>O registro foi alterado [#13][#10]com sucesso.<BR><BR>[#13][#10]
+[RadioButton1]
+Value=0
+[RadioButton2]
+Value=1
+[login1]
+text=
+[senha1]
+text=
+[login2]
+text=nome
+[senha2]
+text=senha
+[login_tabela]
+text=login
+[CheckBox_inclusao]
+Value=1
+[CheckBox_consulta]
+Value=0
+[CheckBox_alteracao]
+Value=1
+[CheckBox_exclusao]
+Value=1
+[Edit_local]
+Value=C:\temp
+[StringGrid_nomes]
+Value=df_consulta.asp[#13][#10]df_inclusao.asp[#13][#10]df_alteracao.asp[#13][#10]df_login.asp[#13][#10]
