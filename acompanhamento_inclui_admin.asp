@@ -53,7 +53,7 @@ If (CStr(Request("MM_insert")) = "form1") Then
   MM_fieldsStr = "PI|value|Data_do_Registro|value|Registro|value|Responsvel|value"
   
   If Session("MM_UserAuthorization") = 1 or Session("MM_UserAuthorization") = 4 or Session("MM_UserAuthorization") = 5 Then
-    MM_fieldsStr = MM_fieldsStr & "|cod_situacao_sso|value|cod_situacao_clima_manha|value|cod_situacao_clima_tarde|value|cod_situacao_clima_noite|value|cod_situacao_limpeza_obra|value|cod_situacao_organizacao_obra|value|flg_dia_perdido|value|flg_dia_trabalhado|value|dsc_nota_clima_manha|value|dsc_nota_clima_tarde|value|dsc_nota_clima_noite|value|dsc_nota_limpeza_obra|value|dsc_nota_organizacao_obra|value|dsc_nota_dia_perdido|value|dsc_nota_dia_trabalhado|value"
+    MM_fieldsStr = MM_fieldsStr & "|cod_situacao_sso|value|dsc_nota_sso|value|cod_situacao_clima_manha|value|cod_situacao_clima_tarde|value|cod_situacao_clima_noite|value|cod_situacao_limpeza_obra|value|cod_situacao_organizacao_obra|value|dsc_nota_clima_manha|value|dsc_nota_clima_tarde|value|dsc_nota_clima_noite|value|dsc_nota_limpeza_obra|value|dsc_nota_organizacao_obra|value|dsc_nota_dia_perdido|value|dsc_nota_dia_trabalhado|value"
   End If
 
   If Session("MM_UserAuthorization") <> 6 Then
@@ -68,8 +68,8 @@ If (CStr(Request("MM_insert")) = "form1") Then
 
   MM_columnsStr = "PI|',none,''|[Data do Registro]|',none,NULL|Registro|',none,''|cod_fiscal|none,none,NULL"
 
-  If Session("MM_UserAuthorization") = 1 or Session("MM_UserAuthorization") = 4 or Session("MM_UserAuthorization") = 5 Then
-    MM_columnsStr = MM_columnsStr & "|cod_situacao_sso|none,none,NULL|cod_situacao_clima_manha|none,none,NULL|cod_situacao_clima_tarde|none,none,NULL|cod_situacao_clima_noite|none,none,NULL|cod_situacao_limpeza_obra|none,none,NULL|cod_situacao_organizacao_obra|none,none,NULL|flg_dia_perdido|none,1,0|flg_dia_trabalhado|none,1,0|dsc_nota_clima_manha|',none,''|dsc_nota_clima_tarde|',none,''|dsc_nota_clima_noite|',none,''|dsc_nota_limpeza_obra|',none,''|dsc_nota_organizacao_obra|',none,''|dsc_nota_dia_perdido|',none,''|dsc_nota_dia_trabalhado|',none,''"
+  If Session("MM_UserAuthorization") = 1 or Session("MM_UserAuthorization") = 5 Then
+    MM_columnsStr = MM_columnsStr & "|cod_situacao_sso|none,none,NULL|dsc_nota_sso|',none,''|cod_situacao_clima_manha|none,none,NULL|cod_situacao_clima_tarde|none,none,NULL|cod_situacao_clima_noite|none,none,NULL|cod_situacao_limpeza_obra|none,none,NULL|cod_situacao_organizacao_obra|none,none,NULL|dsc_nota_clima_manha|',none,''|dsc_nota_clima_tarde|',none,''|dsc_nota_clima_noite|',none,''|dsc_nota_limpeza_obra|',none,''|dsc_nota_organizacao_obra|',none,''|dsc_nota_dia_perdido|',none,''|dsc_nota_dia_trabalhado|',none,''"
   End If
 
   If Session("MM_UserAuthorization") <> 6 Then
@@ -337,11 +337,11 @@ End Select
 
 sql = "SELECT *  FROM c_lista_acompanhamento WHERE PI = '" + Replace(rs_lista_acomp__MMColParam, "'", "''") + "' "
 
-If cod_tipo_registro <> "" Then
-  sql = sql & " AND cod_tipo_registro="& cod_tipo_registro
-End If
+'If cod_tipo_registro <> "" Then
+''  sql = sql & " AND cod_tipo_registro="& cod_tipo_registro
+'End If
 
-sql = sql & " ORDER BY cod_acompanhamento DESC"
+sql = sql & " ORDER BY [Data do Registro] DESC"
 
 Set rs_lista_acomp = Server.CreateObject("ADODB.Recordset")
 rs_lista_acomp.ActiveConnection = MM_cpf_STRING
@@ -715,6 +715,7 @@ rs_situacao_numRows = 0
             <input name="Data_do_Registro" type="text" class="datepicker" onblur="verifica_data(this)" onkeypress="desabilita_cor(this)" onkeyup="this.value=mascara_data(this.value)" value="<% =Date %>" size="15" />
           </td>
         </tr>
+        
         <tr valign="baseline">
           <td align="right" nowrap bordercolor="#CCCCCC" bgcolor="#CCCCCC">
             <strong class="style5">Responsável:</strong>
@@ -738,17 +739,18 @@ rs_situacao_numRows = 0
             </select>
           </td>
         </tr>
+        
         <tr valign="middle">
           <td align="right" nowrap bordercolor="#CCCCCC" bgcolor="#CCCCCC">
             <strong class="style5">Registro:</strong>
           </td>
           <td bordercolor="#CCCCCC" bgcolor="#CCCCCC">
-            <textarea name="Registro" cols="32" maxlength="255"></textarea>
+            <textarea name="Registro" cols="32"></textarea>
           </td>
         </tr>
 
         <%
-          If Session("MM_UserAuthorization") = 1 or Session("MM_UserAuthorization") = 4 or Session("MM_UserAuthorization") = 5 Then
+          If Session("MM_UserAuthorization") = 1 or Session("MM_UserAuthorization") = 5 Then
         %>
 
         <tr valign="middle">
@@ -773,6 +775,9 @@ rs_situacao_numRows = 0
                   End If
               %>
             </select>
+            <br/>
+            Nota/Observações: <br/>
+            <textarea name="dsc_nota_sso" cols="32"></textarea>
           </td>
         </tr>
 
@@ -912,28 +917,6 @@ rs_situacao_numRows = 0
                   <input type="text" name="dsc_nota_organizacao_obra" placeholder="Notas">
                 </td>
               </tr>
-              <tr>
-                <td>
-                  Dia perdido?
-                </td>
-                <td>
-                  <input name="flg_dia_perdido" type="checkbox" value="1" />
-                </td>
-                <td>
-                  <input type="text" name="dsc_nota_dia_perdido" placeholder="Notas">
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  Dia trabalhado?
-                </td>
-                <td>
-                  <input name="flg_dia_trabalhado" type="checkbox" value="1" />
-                </td>
-                <td>
-                  <input type="text" name="dsc_nota_dia_trabalhado" placeholder="Notas">
-                </td>
-              </tr>
             </table>
           </td>
         </tr>
@@ -1035,7 +1018,7 @@ rs_situacao_numRows = 0
     <table border="0" class="lista-acompanhamento">
       <tr bgcolor="#999999" class="title">
         <%
-          If Session("MM_UserAuthorization") = 1 Then
+          If Session("MM_UserAuthorization") = 1 Or Session("MM_UserAuthorization") = 4 Or Session("MM_UserAuthorization") = 5 Then
         %>
         <td>&nbsp;</td>
         <td>&nbsp;</td>
@@ -1048,7 +1031,8 @@ rs_situacao_numRows = 0
         <%
           If Session("MM_UserAuthorization") = 1 or Session("MM_UserAuthorization") = 4 or Session("MM_UserAuthorization") = 5 Then
         %>
-        <td style="min-width: 200px;">Tipo Situação MSST</td>
+        <td style="min-width: 200px;">Situação MSST</td>
+        <td style="min-width: 200px;">Notas/Observações MSST</td>
         <td style="min-width: 100px;">Clima Manhã</td>
         <td style="min-width: 300px;">Nota Clima Manhã</td>
         <td style="min-width: 100px;">Clima Tarde</td>
@@ -1059,10 +1043,6 @@ rs_situacao_numRows = 0
         <td style="min-width: 300px;">Nota Limpeza da Obra</td>
         <td style="min-width: 100px;">Organização da Obra</td>
         <td style="min-width: 300px;">Nota Organização da Obra</td>
-        <td style="min-width: 80px;">Dia Perdido?</td>
-        <td style="min-width: 300px;">Nota Dia Perdido</td>
-        <td style="min-width: 80px;">Dia Trabalhado?</td>
-        <td style="min-width: 300px;">Nota Dia Trabalhado</td>
         <%
           End If
 
@@ -1093,7 +1073,7 @@ rs_situacao_numRows = 0
       %>
       <tr bgcolor="#CCCCCC">
         <%
-          If Session("MM_UserAuthorization") = 1 Then
+          If Session("MM_UserAuthorization") = 1 Or Session("MM_UserAuthorization") = 4 Or Session("MM_UserAuthorization") = 5 Then
         %>
         <td>
           <a href="altera_acomp.asp?cod_acompanhamento=<%=(rs_lista_acomp.Fields.Item("cod_acompanhamento").Value)%>">
@@ -1110,11 +1090,18 @@ rs_situacao_numRows = 0
         %>
         <td class="text-center"><%=(rs_lista_acomp.Fields.Item("Data do Registro").Value)%></td>
         <td class="text-center"><%=(rs_lista_acomp.Fields.Item("nme_interessado").Value)%></td>
-        <td><%=(rs_lista_acomp.Fields.Item("Registro").Value)%></td>
+        <td>
+          <%
+            If Not rs_lista_acomp.Fields.Item("Registro").Value = "" Then
+              Response.Write Replace( rs_lista_acomp.Fields.Item("Registro").Value, VbCrLf, "<br>")
+            End If
+          %>
+        </td>
         <%
           If Session("MM_UserAuthorization") = 1 or Session("MM_UserAuthorization") = 4 or Session("MM_UserAuthorization") = 5 Then
         %>
         <td><%=(rs_lista_acomp.Fields.Item("dsc_situacao_sso").Value)%></td>
+        <td><%=(rs_lista_acomp.Fields.Item("dsc_nota_sso").Value)%></td>
         <td class="text-center"><%=(rs_lista_acomp.Fields.Item("clima_manha").Value)%></td>
         <td><%=(rs_lista_acomp.Fields.Item("dsc_nota_clima_manha").Value)%></td>
         <td class="text-center"><%=(rs_lista_acomp.Fields.Item("clima_tarde").Value)%></td>
@@ -1125,10 +1112,6 @@ rs_situacao_numRows = 0
         <td><%=(rs_lista_acomp.Fields.Item("dsc_nota_limpeza_obra").Value)%></td>
         <td class="text-center"><%=(rs_lista_acomp.Fields.Item("organizacao_obra").Value)%></td>
         <td><%=(rs_lista_acomp.Fields.Item("dsc_nota_organizacao_obra").Value)%></td>
-        <td class="text-center"><%=(rs_lista_acomp.Fields.Item("flg_dia_perdido").Value)%></td>
-        <td><%=(rs_lista_acomp.Fields.Item("dsc_nota_dia_perdido").Value)%></td>
-        <td class="text-center"><%=(rs_lista_acomp.Fields.Item("flg_dia_trabalhado").Value)%></td>
-        <td><%=(rs_lista_acomp.Fields.Item("dsc_nota_dia_trabalhado").Value)%></td>
         <%
           End If
 
@@ -1157,7 +1140,7 @@ rs_situacao_numRows = 0
           End If
         %>
         <td>
-            <form id="form-upload" method="post" enctype="multipart/form-data"
+            <form id="form-upload" method="post" enctype="multipart/form-data" accept-charset="ISO-8859-1"
               action="novo_upload.asp?id=<%=(rs_lista_acomp.Fields.Item("cod_acompanhamento").Value)%>&folder=ACOMPANHAMENTO&retUrl=<%=(Request.ServerVariables("URL"))%>?<%=(Request.QueryString)%>">
               <input type="file" name="blob">
               <br/>
@@ -1178,10 +1161,15 @@ rs_situacao_numRows = 0
 
               If Not rs_files.EOF Then
                 While Not rs_files.EOF
+                  If rs_files.Fields.Item("flg_pmweb_file").Value Then
+                    filename = rs_files.Fields.Item("nme_arquivo").Value
+                  Else
+                    filename = rs_lista_acomp.Fields.Item("cod_acompanhamento").Value &"_"& rs_files.Fields.Item("nme_arquivo").Value
+                  End If
             %>
               <ul>
                 <li>
-                  <a href="download.asp?path=<%=(rs_files.Fields.Item("pth_arquivo").Value)%>&filename=<%=(rs_lista_acomp.Fields.Item("cod_acompanhamento").Value)%>_<%=(rs_files.Fields.Item("nme_arquivo").Value)%>">
+                  <a href="download.asp?path=/ARQUIVOS/ACOMPANHAMENTO&filename=<%=(filename)%>">
                     <%=(rs_files.Fields.Item("nme_arquivo").Value)%>
                   </a>
                 </li>

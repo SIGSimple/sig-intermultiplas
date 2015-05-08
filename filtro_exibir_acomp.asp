@@ -1,6 +1,8 @@
 <%@LANGUAGE="VBSCRIPT" CODEPAGE="1252"%>
 <!--#include file="Connections/cpf.asp" -->
+<!--#include file="functions.asp" -->
 <%
+
 Dim rs_filtro_combo__MMColParam
 rs_filtro_combo__MMColParam = "1"
 If (Request.Form("cod_predio") <> "") Then 
@@ -9,16 +11,27 @@ End If
 %>
 <%
 Dim rs_filtro_combo
-Dim rs_filtro_combo_cmd
+'Dim rs_filtro_combo_cmd
 Dim rs_filtro_combo_numRows
 
-Set rs_filtro_combo_cmd = Server.CreateObject ("ADODB.Command")
-rs_filtro_combo_cmd.ActiveConnection = MM_cpf_STRING
-rs_filtro_combo_cmd.CommandText = "SELECT tb_pi.*, tb_situacao_pi.desc_situacao AS situacao_interna, tb_situacao_pi_1.desc_situacao AS situacao_externa, tb_predio.Município FROM ((tb_situacao_pi RIGHT JOIN tb_pi ON tb_situacao_pi.cod_situacao = tb_pi.cod_situacao) LEFT JOIN tb_situacao_pi AS tb_situacao_pi_1 ON tb_pi.cod_situacao_externa = tb_situacao_pi_1.cod_situacao) INNER JOIN tb_predio ON (tb_predio.cod_predio = tb_pi.cod_predio) AND (tb_pi.id_predio = tb_predio.id_predio) WHERE tb_pi.cod_predio = ?" 
-rs_filtro_combo_cmd.Prepared = true
-rs_filtro_combo_cmd.Parameters.Append rs_filtro_combo_cmd.CreateParameter("param1", 200, 1, 255, rs_filtro_combo__MMColParam) ' adVarChar
+'Set rs_filtro_combo_cmd = Server.CreateObject ("ADODB.Command")
+'rs_filtro_combo_cmd.ActiveConnection = MM_cpf_STRING
+'rs_filtro_combo_cmd.CommandText = "SELECT tb_pi.*, tb_situacao_pi.desc_situacao AS situacao_interna, tb_situacao_pi_1.desc_situacao AS situacao_externa, tb_predio.Município FROM ((tb_situacao_pi RIGHT JOIN tb_pi ON tb_situacao_pi.cod_situacao = tb_pi.cod_situacao) LEFT JOIN tb_situacao_pi AS tb_situacao_pi_1 ON tb_pi.cod_situacao_externa = tb_situacao_pi_1.cod_situacao) INNER JOIN tb_predio ON (tb_predio.cod_predio = tb_pi.cod_predio) AND (tb_pi.id_predio = tb_predio.id_predio) WHERE tb_pi.cod_predio = ?" 
+'rs_filtro_combo_cmd.Prepared = true
+'rs_filtro_combo_cmd.Parameters.Append rs_filtro_combo_cmd.CreateParameter("param1", 200, 1, 255, rs_filtro_combo__MMColParam) ' adVarChar
 
-Set rs_filtro_combo = rs_filtro_combo_cmd.Execute
+'Set rs_filtro_combo = rs_filtro_combo_cmd.Execute
+
+sql = "SELECT * FROM c_lista_dados_obras WHERE cod_predio = '" & Replace(rs_filtro_combo__MMColParam, "'", "''") & "'"
+
+Set rs_filtro_combo = Server.CreateObject("ADODB.Recordset")
+rs_filtro_combo.ActiveConnection = MM_cpf_STRING
+rs_filtro_combo.Source = sql
+rs_filtro_combo.CursorType = 0
+rs_filtro_combo.CursorLocation = 2
+rs_filtro_combo.LockType = 1
+rs_filtro_combo.Open()
+
 rs_filtro_combo_numRows = 0
 %>
 <%
@@ -34,7 +47,7 @@ Dim rs_predio_numRows
 
 Set rs_predio = Server.CreateObject("ADODB.Recordset")
 rs_predio.ActiveConnection = MM_cpf_STRING
-rs_predio.Source = "SELECT cod_predio, Município FROM tb_predio WHERE cod_predio = '" + Replace(rs_predio__MMColParam, "'", "''") + "'"
+rs_predio.Source = "SELECT * FROM c_lista_predios WHERE cod_predio = '" + Replace(rs_predio__MMColParam, "'", "''") + "'"
 rs_predio.CursorType = 0
 rs_predio.CursorLocation = 2
 rs_predio.LockType = 1
@@ -76,11 +89,11 @@ rs_filtro_combo_numRows = rs_filtro_combo_numRows + Repeat2__numRows
 <div align="center">
   <table border="0">
     <tr bgcolor="#666666">
-      <td width="311"><span class="style9">Município</span></td>
+      <td align="center" width="311"><span class="style9">Município</span></td>
     </tr>
     <% While ((Repeat1__numRows <> 0) AND (NOT rs_predio.EOF)) %>
       <tr bgcolor="#CCCCCC">
-        <td><span class="style13"><%=(rs_predio.Fields.Item("Município").Value)%></span></td>
+        <td align="center"><span class="style13"><%=(rs_predio.Fields.Item("nme_municipio").Value)%></span></td>
       </tr>
       <% 
   Repeat1__index=Repeat1__index+1
@@ -95,13 +108,16 @@ Wend
 <div align="center">
   <table border="0">
     <tr bgcolor="#666666">
-      <td width="108"><span class="style9">Autos</span></td>
-      <td width="308"><span class="style9">Nome do Empreendimento</span></td>
+      <td>&nbsp;</td>
+      <td align="center" width="208"><span class="style9">Nome do Empreendimento</span></td>
+      <td align="center" width="108"><span class="style9">Nº Autos Contrato</span></td>
+      <td align="center" width="108"><span class="style9">Nº Autos Convênio</span></td>
+      <td align="center" width="108"><span class="style9">Nº Autos Licitação</span></td>
       <%
         If Session("MM_UserAuthorization") = 3 Then
       %>
 
-      <td><span class="style9">Situação Externa</span></td>
+      <td><span class="style9">Situação Atual do Empreendimento</span></td>
 
       <%
         End If
@@ -109,7 +125,7 @@ Wend
         If Session("MM_UserAuthorization") = 1 Or Session("MM_UserAuthorization") = 4 Then
       %>
 
-      <td><span class="style9">Situação Interna</span></td>
+      <td><span class="style9">Situação da Obra</span></td>
 
       <%
         End If
@@ -126,14 +142,21 @@ Wend
     </tr>
     <% While ((Repeat2__numRows <> 0) AND (NOT rs_filtro_combo.EOF)) %>
       <tr bgcolor="#CCCCCC">
-        <td><a href="acompanhamento_inclui_admin.asp?pi=<%=(rs_filtro_combo.Fields.Item("PI").Value)%>" target="_blank" class="style15"><%=(rs_filtro_combo.Fields.Item("PI").Value)%></a></td>
-        <td><div align="left"><span class="style15"><%=(rs_filtro_combo.Fields.Item("nome_empreendimento").Value)%></span></div></td>
+        <td>
+          <a href="acompanhamento_inclui_admin.asp?pi=<%=(rs_filtro_combo.Fields.Item("PI").Value)%>" class="style15">
+            Registros
+          </a>
+        </td>
+        <td><div align="center"><span class="style15"><%=(rs_filtro_combo.Fields.Item("nome_empreendimento").Value)%></span></div></td>
+        <td><div align="center"><span class="style15"><%=(rs_filtro_combo.Fields.Item("PI").Value)%></span></div></td>
+        <td><div align="center"><span class="style15"><%=(rs_filtro_combo.Fields.Item("num_autos_convenio").Value)%></span></div></td>
+        <td><div align="center"><span class="style15"><%=(rs_filtro_combo.Fields.Item("num_autos_licitacao").Value)%></span></div></td>
 
         <%
           If Session("MM_UserAuthorization") = 3 Then
         %>
 
-        <td><div align="left"><span class="style15"><%=(rs_filtro_combo.Fields.Item("situacao_externa").Value)%></span></div></td>
+        <td><div align="center"><span class="style15"><%=(rs_filtro_combo.Fields.Item("desc_situacao_externa").Value)%></span></div></td>
 
         <%
           End If
@@ -141,7 +164,7 @@ Wend
           If Session("MM_UserAuthorization") = 1 Or Session("MM_UserAuthorization") = 4 Then
         %>
 
-        <td><div align="left"><span class="style15"><%=(rs_filtro_combo.Fields.Item("situacao_interna").Value)%></span></div></td>
+        <td><div align="center"><span class="style15"><%=(rs_filtro_combo.Fields.Item("desc_situacao_interna").Value)%></span></div></td>
 
         <%
           End If
@@ -150,16 +173,16 @@ Wend
         %>
 
         <td>
-          <span class="style15"><a href="cad_licenca.asp?cod_empreendimento=<%=(rs_filtro_combo.Fields.Item("PI").Value)%>&nme_municipio=<%=(rs_filtro_combo.Fields.Item("Município").Value)%>&nme_empreendimento=<%=(rs_filtro_combo.Fields.Item("nome_empreendimento").Value)%>">Licenças Ambientais</a></span>
+          <span class="style15"><a href="cad_licenca.asp?cod_empreendimento=<%=(rs_filtro_combo.Fields.Item("PI").Value)%>&nme_municipio=<%=(rs_filtro_combo.Fields.Item("municipio").Value)%>&nme_empreendimento=<%=(rs_filtro_combo.Fields.Item("nome_empreendimento").Value)%>">Licenças Ambientais</a></span>
         </td>
         <td>
-          <span class="style15"><a href="cad_outorga.asp?cod_empreendimento=<%=(rs_filtro_combo.Fields.Item("PI").Value)%>&nme_municipio=<%=(rs_filtro_combo.Fields.Item("Município").Value)%>&nme_empreendimento=<%=(rs_filtro_combo.Fields.Item("nome_empreendimento").Value)%>">Outorgas</a></span>
+          <span class="style15"><a href="cad_outorga.asp?cod_empreendimento=<%=(rs_filtro_combo.Fields.Item("PI").Value)%>&nme_municipio=<%=(rs_filtro_combo.Fields.Item("municipio").Value)%>&nme_empreendimento=<%=(rs_filtro_combo.Fields.Item("nome_empreendimento").Value)%>">Outorgas</a></span>
         </td>
         <td>
-          <span class="style15"><a href="cad_app.asp?cod_empreendimento=<%=(rs_filtro_combo.Fields.Item("PI").Value)%>&nme_municipio=<%=(rs_filtro_combo.Fields.Item("Município").Value)%>&nme_empreendimento=<%=(rs_filtro_combo.Fields.Item("nome_empreendimento").Value)%>">Intervenções em App</a></span>
+          <span class="style15"><a href="cad_app.asp?cod_empreendimento=<%=(rs_filtro_combo.Fields.Item("PI").Value)%>&nme_municipio=<%=(rs_filtro_combo.Fields.Item("municipio").Value)%>&nme_empreendimento=<%=(rs_filtro_combo.Fields.Item("nome_empreendimento").Value)%>">Intervenções em App</a></span>
         </td>
         <td>
-          <span class="style15"><a href="cad_tcra.asp?cod_empreendimento=<%=(rs_filtro_combo.Fields.Item("PI").Value)%>&nme_municipio=<%=(rs_filtro_combo.Fields.Item("Município").Value)%>&nme_empreendimento=<%=(rs_filtro_combo.Fields.Item("nome_empreendimento").Value)%>">TCRA</a></span>
+          <span class="style15"><a href="cad_tcra.asp?cod_empreendimento=<%=(rs_filtro_combo.Fields.Item("PI").Value)%>&nme_municipio=<%=(rs_filtro_combo.Fields.Item("municipio").Value)%>&nme_empreendimento=<%=(rs_filtro_combo.Fields.Item("nome_empreendimento").Value)%>">TCRA</a></span>
         </td>
 
         <%

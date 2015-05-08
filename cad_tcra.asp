@@ -20,8 +20,15 @@
 			' INÍCIO CAMPOS
 			rs_update("cod_empreendimento") = Trim(Request.Form("cod_empreendimento"))
 			rs_update("cod_tcra") 			= Trim(Request.Form("cod_tcra"))
-			rs_update("dta_concessao") 		= Trim(Request.Form("dta_concessao"))
-			rs_update("dta_vencimento") 	= Trim(Request.Form("dta_vencimento"))
+			
+			If(Request.Form("dta_concessao") <> "") Then
+				rs_update("dta_concessao") 	= Request.Form("dta_concessao")
+			End If
+			
+			If(Request.Form("dta_vencimento") <> "") Then
+				rs_update("dta_vencimento") = Request.Form("dta_vencimento")
+			End If
+
 			rs_update("dsc_observacoes") 	= Trim(Request.Form("dsc_observacoes"))
 			' FIM CAMPOS
 			
@@ -63,13 +70,24 @@
 
 		<form method="post" name="form1">
 			<input type="hidden" name="cod_empreendimento" value="<%=(Request.QueryString("cod_empreendimento"))%>" />
+			<%
+				Dim rs_dados_empreendimento
+
+				strQ = "SELECT * FROM c_lista_dados_obras WHERE PI = '"& Request.QueryString("cod_empreendimento") &"'"
+
+				Set rs_dados_empreendimento = Server.CreateObject("ADODB.Recordset")
+				rs_dados_empreendimento.CursorLocation = 3
+				rs_dados_empreendimento.CursorType = 3
+				rs_dados_empreendimento.LockType = 1
+				rs_dados_empreendimento.Open strQ, objCon, , , &H0001
+			%>
 			<table align="center">
 				<tr valign="baseline">
 					<td align="right" nowrap bgcolor="#CCCCCC" class="style7">
 						<span class="style22">Município:</span>
 					</td>
 					<td bgcolor="#CCCCCC">
-						<%=(Request.QueryString("nme_municipio"))%>
+						<%=(rs_dados_empreendimento.Fields.Item("municipio").Value)%>
 					</td>
 				</tr>
 				<tr valign="baseline">
@@ -77,7 +95,7 @@
 						<span class="style22">Empreendimento:</span>
 					</td>
 					<td bgcolor="#CCCCCC">
-						<%=(Request.QueryString("nme_empreendimento"))%>
+						<%=(rs_dados_empreendimento.Fields.Item("PI").Value)%> - <%=(rs_dados_empreendimento.Fields.Item("nome_empreendimento").Value)%>
 					</td>
 				</tr>
 				<tr valign="baseline">
@@ -124,8 +142,8 @@
 		<div align="center">
 			<table border="0">
 				<tr bgcolor="#999999">
-					<!-- <td>&nbsp;</td>
-					<td>&nbsp;</td> -->
+					<td>&nbsp;</td>
+					<td>&nbsp;</td>
 					<td>
 						<span class="style7">Código</span>
 					</td>
@@ -154,16 +172,16 @@
 						While Not rs_lista.EOF
 				%>
 				<tr bgcolor="#CCCCCC">
-					<!-- <td>
-						<a href="altera_convenio.asp?cod_convenio=cod_convenio">
+					<td>
+						<a href="altera_tcra.asp?id=<%=(rs_lista.Fields.Item("id").Value)%>&nme_municipio=<%=(Request.QueryString("nme_municipio"))%>&cod_empreendimento=<%=(Request.QueryString("cod_empreendimento"))%>&nme_empreendimento=<%=(Request.QueryString("nme_empreendimento"))%>">
 							<img src="const/imagens/edit.gif" width="16" height="15" border="0" />
 						</a>
 					</td>
 					<td>
-						<a href="del_convenio.asp?cod_convenio=cod_convenio">
+						<a href="delete_tcra.asp?id=<%=(rs_lista.Fields.Item("id").Value)%>&nme_municipio=<%=(Request.QueryString("nme_municipio"))%>&cod_empreendimento=<%=(Request.QueryString("cod_empreendimento"))%>&nme_empreendimento=<%=(Request.QueryString("nme_empreendimento"))%>">
 							<img src="const/imagens/delete.gif" width="16" height="15" border="0" />
 						</a>
-					</td> -->
+					</td>
 					<td>
 						<span class="style5"><%=(rs_lista.Fields.Item("cod_tcra").Value)%></span>
 					</td>
@@ -199,7 +217,7 @@
 						%>
 							<ul>
 								<li>
-									<a href="download.asp?path=<%=(rs_files.Fields.Item("pth_arquivo").Value)%>&filename=<%=(rs_lista.Fields.Item("id").Value)%>_<%=(rs_files.Fields.Item("nme_arquivo").Value)%>">
+									<a href="download.asp?path=/ARQUIVOS/TCRA&filename=<%=(rs_lista.Fields.Item("id").Value)%>_<%=(rs_files.Fields.Item("nme_arquivo").Value)%>">
 										<%=(rs_files.Fields.Item("nme_arquivo").Value)%>
 									</a>
 								</li>

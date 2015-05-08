@@ -180,6 +180,7 @@ If (CStr(Request("MM_insert")) <> "") Then
   Set frmField_cod_engenheiro_daee = Request.Form("cod_engenheiro_daee")
   Set frmField_cod_engenheiro_plan_consorcio = Request.Form("cod_engenheiro_plan_consorcio")
   Set frmField_cod_fiscal_consorcio = Request.Form("cod_fiscal_consorcio")
+  Set frmField_cod_engenheiro_medicao = Request.Form("cod_engenheiro_medicao")
   Set frmField_cod_engenheiro_construtora = Request.Form("cod_engenheiro_construtora")
   Set frmField_cod_situacao = Request.Form("cod_situacao")
   
@@ -201,7 +202,7 @@ If (CStr(Request("MM_insert")) <> "") Then
     MM_editQuery = MM_editQuery & ",email,telefone,qtd_populacao_urbana_2010" ',qtd_populacao_urbana_2030'
   End If
   
-  MM_editQuery = MM_editQuery & ",cod_fiscal,cod_engenheiro_daee,cod_engenheiro_plan_consorcio,cod_fiscal_consorcio,cod_engenheiro_construtora,cod_situacao"
+  MM_editQuery = MM_editQuery & ",cod_fiscal,cod_engenheiro_daee,cod_engenheiro_plan_consorcio,cod_fiscal_consorcio,cod_engenheiro_medicao,cod_engenheiro_construtora,cod_situacao"
 
   If Session("MM_UserAuthorization") = 3 Then
     MM_editQuery = MM_editQuery & ",cod_situacao_externa"
@@ -239,6 +240,7 @@ If (CStr(Request("MM_insert")) <> "") Then
   MM_editQuery = MM_editQuery & ","  & frmField_cod_engenheiro_daee           & ""  'cod_engenheiro_daee'
   MM_editQuery = MM_editQuery & ","  & frmField_cod_engenheiro_plan_consorcio & ""  'cod_engenheiro_plan_consorcio'
   MM_editQuery = MM_editQuery & ","  & frmField_cod_fiscal_consorcio          & ""  'cod_fiscal_consorcio'
+  MM_editQuery = MM_editQuery & ","  & frmField_cod_engenheiro_medicao        & ""  'cod_engenheiro_medicao'
   MM_editQuery = MM_editQuery & ","  & frmField_cod_engenheiro_construtora    & ""  'cod_engenheiro_construtora'
   MM_editQuery = MM_editQuery & ","  & frmField_cod_situacao                  & ""  'cod_situacao'
   
@@ -370,7 +372,7 @@ Dim rs_lista_pi_numRows
 
 Set rs_lista_pi = Server.CreateObject("ADODB.Recordset")
 rs_lista_pi.ActiveConnection = MM_cpf_STRING
-rs_lista_pi.Source = "SELECT tb_PI.*, tb_tipo_empreendimento.desc_tipo AS tipo_empreendimento, [tb_depto].[sigla]+' - '+[tb_depto].[desc_depto] AS programa, tb_predio.Município, tb_responsavel.Responsável AS eng_obras_consorcio, tb_responsavel_1.Responsável AS eng_daee, tb_responsavel_2.Responsável AS eng_plan_consorcio, tb_responsavel_3.Responsável AS fiscal_consorcio, tb_responsavel_4.Responsável AS eng_obras_construtora, [num_autos]+' - '+[num_convenio] AS convenio, tb_situacao_pi.desc_situacao AS desc_situacao_interna, tb_situacao_pi_1.desc_situacao AS desc_situacao_externa, tb_predio.[Diretoria de Ensino] AS bacia_daee FROM ((tb_convenio RIGHT JOIN (tb_responsavel AS tb_responsavel_4 RIGHT JOIN (tb_responsavel AS tb_responsavel_3 RIGHT JOIN (tb_responsavel AS tb_responsavel_2 RIGHT JOIN (tb_responsavel AS tb_responsavel_1 RIGHT JOIN (tb_depto RIGHT JOIN (tb_tipo_empreendimento RIGHT JOIN (tb_responsavel RIGHT JOIN (tb_predio RIGHT JOIN tb_PI ON tb_predio.cod_predio = tb_PI.cod_predio) ON tb_responsavel.cod_fiscal = tb_PI.cod_fiscal) ON tb_tipo_empreendimento.id = tb_PI.cod_tipo_empreendimento) ON tb_depto.cod_depto = tb_PI.cod_programa) ON tb_responsavel_1.cod_fiscal = tb_PI.cod_engenheiro_daee) ON tb_responsavel_2.cod_fiscal = tb_PI.cod_engenheiro_plan_consorcio) ON tb_responsavel_3.cod_fiscal = tb_PI.cod_fiscal_consorcio) ON tb_responsavel_4.cod_fiscal = tb_PI.cod_engenheiro_construtora) ON tb_convenio.id = tb_PI.cod_convênio) LEFT JOIN tb_situacao_pi ON tb_PI.cod_situacao = tb_situacao_pi.cod_situacao) LEFT JOIN tb_situacao_pi AS tb_situacao_pi_1 ON tb_PI.cod_situacao_externa = tb_situacao_pi_1.cod_situacao;"
+rs_lista_pi.Source = "SELECT tb_PI.*, tb_tipo_empreendimento.desc_tipo AS tipo_empreendimento, [tb_depto].[sigla]+' - '+[tb_depto].[desc_depto] AS programa, tb_predio.Município, tb_responsavel.Responsável AS eng_obras_consorcio, tb_responsavel_1.Responsável AS eng_daee, tb_responsavel_2.Responsável AS eng_plan_consorcio, tb_responsavel_3.Responsável AS fiscal_consorcio, tb_responsavel_5.Responsável AS eng_medicao, tb_responsavel_4.Responsável AS eng_obras_construtora, [num_autos]+' - '+[num_convenio] AS convenio, tb_situacao_pi.desc_situacao AS desc_situacao_interna, tb_situacao_pi_1.desc_situacao AS desc_situacao_externa, tb_predio.[Diretoria de Ensino] AS bacia_daee FROM (((tb_convenio RIGHT JOIN (tb_responsavel AS tb_responsavel_4 RIGHT JOIN (tb_responsavel AS tb_responsavel_3 RIGHT JOIN (tb_responsavel AS tb_responsavel_2 RIGHT JOIN (tb_responsavel AS tb_responsavel_1 RIGHT JOIN (tb_depto RIGHT JOIN (tb_tipo_empreendimento RIGHT JOIN (tb_responsavel RIGHT JOIN (tb_predio RIGHT JOIN tb_PI ON tb_predio.cod_predio = tb_PI.cod_predio) ON tb_responsavel.cod_fiscal = tb_PI.cod_fiscal) ON tb_tipo_empreendimento.id = tb_PI.cod_tipo_empreendimento) ON tb_depto.cod_depto = tb_PI.cod_programa) ON tb_responsavel_1.cod_fiscal = tb_PI.cod_engenheiro_daee) ON tb_responsavel_2.cod_fiscal = tb_PI.cod_engenheiro_plan_consorcio) ON tb_responsavel_3.cod_fiscal = tb_PI.cod_fiscal_consorcio) ON tb_responsavel_4.cod_fiscal = tb_PI.cod_engenheiro_construtora) ON tb_convenio.id = tb_PI.cod_convênio) LEFT JOIN tb_situacao_pi ON tb_PI.cod_situacao = tb_situacao_pi.cod_situacao) LEFT JOIN tb_situacao_pi AS tb_situacao_pi_1 ON tb_PI.cod_situacao_externa = tb_situacao_pi_1.cod_situacao) LEFT JOIN tb_responsavel AS tb_responsavel_5 ON tb_PI.cod_engenheiro_medicao = tb_responsavel_5.cod_fiscal ORDER BY tb_predio.Município, tb_PI.nome_empreendimento"
 rs_lista_pi.CursorType = 0
 rs_lista_pi.CursorLocation = 2
 rs_lista_pi.LockType = 1
@@ -1069,11 +1071,34 @@ function MM_validateForm() { //v4.0
         </td>
       </tr>
 
-      <!-- FISCAL CONSÓRCIO -->
+      <!-- FISCAL -->
       <tr valign="baseline">
-        <td align="right" nowrap bgcolor="#CCCCCC" class="style9"><span class="style10">Selecione o Fiscal Consórcio:</span></td>
+        <td align="right" nowrap bgcolor="#CCCCCC" class="style9"><span class="style10">Selecione o Fiscal do Consórcio:</span></td>
         <td bgcolor="#CCCCCC">
           <select name="cod_fiscal_consorcio" class="style9">
+            <option value=""></option>
+            <%
+              While (NOT rs_fiscal.EOF)
+            %>
+            <option value="<%=(rs_fiscal.Fields.Item("cod_fiscal").Value)%>"><%=(rs_fiscal.Fields.Item("Responsável").Value)%></option>
+            <%
+                rs_fiscal.MoveNext()
+              Wend
+              If (rs_fiscal.CursorType > 0) Then
+                rs_fiscal.MoveFirst
+              Else
+                rs_fiscal.Requery
+              End If
+            %>
+          </select>
+        </td>
+      </tr>
+
+      <!-- ENG. RESP. MEDIÇÕES -->
+      <tr valign="baseline">
+        <td align="right" nowrap bgcolor="#CCCCCC" class="style9"><span class="style10">Selecione o Eng. Resp. Medições:</span></td>
+        <td bgcolor="#CCCCCC">
+          <select name="cod_engenheiro_medicao" class="style9">
             <option value=""></option>
             <%
               While (NOT rs_fiscal.EOF)
@@ -1125,7 +1150,7 @@ function MM_validateForm() { //v4.0
       <!-- SITUAÇÃO INTERNA -->
       <tr valign="baseline">
         <td align="right" nowrap bgcolor="#CCCCCC" class="style9">
-          <span class="style10">Situação Interna:</span>
+          <span class="style10">Situação da Obra:</span>
         </td>
         <td bgcolor="#CCCCCC">
           <select name="cod_situacao" class="style9">
@@ -1156,7 +1181,7 @@ function MM_validateForm() { //v4.0
       <!-- SITUAÇÃO EXTERNA -->
       <tr valign="baseline">
         <td align="right" nowrap bgcolor="#CCCCCC" class="style9">
-          <span class="style10">Situação Externa:</span>
+          <span class="style10">Situação Atual do Empreendimento:</span>
         </td>
         <td bgcolor="#CCCCCC">
           <select name="cod_situacao_externa" class="style9">
@@ -1249,7 +1274,8 @@ function MM_validateForm() { //v4.0
         <td style="min-width: 150px;"><span class="style7">Eng. Obras Consórcio</span></td>
         <td style="min-width: 150px;"><span class="style7">Eng. DAEE</span></td>
         <td style="min-width: 150px;"><span class="style7">Eng. Plan. Obras Consórcio</span></td>
-        <td style="min-width: 150px;"><span class="style7">Fiscal Consórcio</span></td>
+        <td style="min-width: 150px;"><span class="style7">Fiscal do Consórcio</span></td>
+        <td style="min-width: 150px;"><span class="style7">Eng. Resp. Medições</span></td>
         <td style="min-width: 150px;"><span class="style7">Eng. Obras Construtora</span></td>
 
         <%
@@ -1265,7 +1291,7 @@ function MM_validateForm() { //v4.0
           If Session("MM_UserAuthorization") = 3 Then
         %>
 
-        <td style="min-width: 150px;"><span class="style7">Situação Externa</span></td>
+        <td style="min-width: 150px;"><span class="style7">Situação Atual do Empreendimento</span></td>
         <td style="min-width: 150px;"><span class="style7">Observações Rel. Mensal</span></td>
 
         <%
@@ -1352,6 +1378,7 @@ function MM_validateForm() { //v4.0
         <td><div align="left"><span class="style9"><%=(rs_lista_pi.Fields.Item("eng_daee").Value)%></span></div></td>
         <td><div align="left"><span class="style9"><%=(rs_lista_pi.Fields.Item("eng_plan_consorcio").Value)%></span></div></td>
         <td><div align="left"><span class="style9"><%=(rs_lista_pi.Fields.Item("fiscal_consorcio").Value)%></span></div></td>
+        <td><div align="left"><span class="style9"><%=(rs_lista_pi.Fields.Item("eng_medicao").Value)%></span></div></td>
         <td><div align="left"><span class="style9"><%=(rs_lista_pi.Fields.Item("eng_obras_construtora").Value)%></span></div></td>
 
         <%

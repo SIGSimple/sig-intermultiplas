@@ -99,6 +99,7 @@
 						$("#txt-nome-prefeitura").text(dadosObra['prefeitura']);
 						$("#txt-nome-prefeito").text(dadosObra['prefeito']);
 						$("#txt-nome-bacia-daee").text(dadosObra['bacia_daee']);
+						$("#txt-situacao").text(dadosObra['desc_situacao_externa']);
 						$("#txt-pop-2010").text(dadosObra['qtd_populacao_urbana_2010']);
 						$("#txt-pop-2030").text(pop2030);
 
@@ -127,7 +128,7 @@
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
 				</button>
-				<a class="navbar-brand" href="#">SIG - Ficha Técnica de Obra c/ Atendimento Potencial</a>
+				<a class="navbar-brand" href="#">SIG - Ficha Técnica da Obra</a>
 			</div>
 
 			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
@@ -194,6 +195,17 @@
 								<tr>
 									<td class="text-middle text-bold" width="200">Diretoria de Bacia - DAEE</td>
 									<td class="text-middle" id="txt-nome-bacia-daee"></td>
+								</tr>
+							</tbody>
+						</table>
+
+						<table class="table table-bordered table-condensed">
+							<tbody>
+								<tr>
+									<td class="text-middle text-bold">
+										Situação
+									</td>
+									<td class="text-right" id="txt-situacao"></td>
 								</tr>
 							</tbody>
 						</table>

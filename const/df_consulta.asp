@@ -115,7 +115,7 @@ function confirm_delete(form) {
 </SCRIPT>
 </HEAD>
 <body class="texto_pagina">
-Links: <a href="<%=pagina_consulta%>" class="texto_pagina">Página de Consulta</a> | <a href="<%=pagina_inclusao%>" class="texto_pagina">Página de Inclusão<hr size=1 color=gainsboro></a><br/>
+<b>Cadastro de Empresas</b> | Links: <a href="<%=pagina_consulta%>" class="texto_pagina">Página de Consulta</a> | <a href="<%=pagina_inclusao%>" class="texto_pagina">Página de Inclusão<hr size=1 color=gainsboro></a>
 
 <%
 If Request.QueryString("PagAtual") = "" Then
@@ -213,7 +213,6 @@ Set objRS.ActiveConnection = Nothing
 objCon.Close
 Set objCon = Nothing
 %>
-
 <b>Consultar Registros</b>
 <br/>
 Visualize os registros da  tabela abaixo:<br/>

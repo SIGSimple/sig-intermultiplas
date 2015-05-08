@@ -140,13 +140,25 @@ function FP_getObjectByID(id,o) {//v1.0
 	    <td style="color: windowtext; font-size: 10.0pt; font-weight: 400; font-style: normal; text-decoration: none; font-family: Arial; text-align: center; vertical-align: bottom; white-space: nowrap; border: medium none; padding: 0px" width="185">&nbsp;</td>
     </tr>
     <tr height="18" style="height: 13.5pt">
-      <td height="18" style="height: 13.5pt; color: windowtext; font-size: 10.0pt; font-weight: 400; font-style: normal; text-decoration: none; font-family: Arial; text-align: center; vertical-align: bottom; white-space: nowrap; border: medium none; padding: 0px" width="237">
-        <a href="filtro_acomp.asp">Acompanhamento de Empreendimento</a>
+      <td style="color: windowtext; font-size: 10.0pt; font-weight: 400; font-style: normal; text-decoration: none; font-family: Arial; text-align: center; vertical-align: bottom; white-space: nowrap; border: medium none; padding: 0px" width="185">
+        <%
+          If Session("MM_UserAuthorization") = 6 Then
+        %>
+        <a href="cad_contrato.asp">Cadastro de Contratos</a>
+        <%
+          Else
+        %>
+        &nbsp;
+        <%
+          End If
+        %>
       </td>
-	    <td style="color: windowtext; font-size: 10.0pt; font-weight: 400; font-style: normal; text-decoration: none; font-family: Arial; text-align: center; vertical-align: bottom; white-space: nowrap; border: medium none; padding: 0px" width="26">
-		  <!-- <a href="filtro_cod_predio_fiscal.asp">Busca por Num. Autos</a> -->
+      <td style="color: windowtext; font-size: 10.0pt; font-weight: 400; font-style: normal; text-decoration: none; font-family: Arial; text-align: center; vertical-align: bottom; white-space: nowrap; border: medium none; padding: 0px" width="26">
+      <!-- <a href="filtro_cod_predio_fiscal.asp">Busca por Num. Autos</a> -->
     </td>
-      <td style="color: windowtext; font-size: 10.0pt; font-weight: 400; font-style: normal; text-decoration: none; font-family: Arial; text-align: center; vertical-align: bottom; white-space: nowrap; border: medium none; padding: 0px" width="185">&nbsp;</td>
+      <td height="18" style="height: 13.5pt; color: windowtext; font-size: 10.0pt; font-weight: 400; font-style: normal; text-decoration: none; font-family: Arial; text-align: center; vertical-align: bottom; white-space: nowrap; border: medium none; padding: 0px" width="237">
+        <a href="filtro_acomp.asp">Acompanhamento de Obra</a>
+      </td>
     </tr>
     <tr height="18" style="height: 13.5pt">
       <td height="18" style="height: 13.5pt; color: windowtext; font-size: 10.0pt; font-weight: 400; font-style: normal; text-decoration: none; font-family: Arial; text-align: center; vertical-align: bottom; white-space: nowrap; border: medium none; padding: 0px" width="237">		</td>

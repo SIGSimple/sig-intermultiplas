@@ -23,6 +23,10 @@
 	<script type="text/javascript" src="js/jquery.number.min.js"></script>
 	<script type="text/javascript" src="js/fullscreen.js"></script>
 	<style type="text/css">
+		body {
+			padding-top: 60px !important;
+		}
+
 		.container {
 			width: 100%;
 		}
@@ -153,7 +157,7 @@
 					var location = new google.maps.LatLng(latitude, longitude);
 
 					var marker = new google.maps.Marker({
-						icon: 'img/location-'+ item.classStatus +'.png',
+						icon: 'img/point_'+ item.classStatus +'.png',
 						map: map,
 						position: location,
 						title: item.nme_municipio +" - "+ item.nme_empreendimento
@@ -558,9 +562,42 @@
 			}
 		}
 
+		function createAlfaLinks() {
+			for (var i = 0; i != 26; ++i){
+				alfa = String.fromCharCode(i + 65);
+				tmp = '<a href="#" class="alfa-link-item" data-alfa-letter="'+ alfa +'">'+ alfa +'</a>&nbsp;&nbsp;';
+				$(".alfa-links").append(tmp);
+			}
+			addAlfaItemEventListener();
+		}
+
+		function addAlfaItemEventListener() {
+			$("a.alfa-link-item").on("click", function(){
+				$("#txt-municipio").val($(this).data().alfaLetter);
+				$("#form-search").submit();
+			});
+		}
+
+		function loadAllMarkers() {
+			sqlFiltroSituacao += " AND cod_situacao = 39 OR cod_situacao IN (40,42,43) OR cod_situacao = 44 OR cod_situacao = 41 OR cod_situacao = 45"
+			loadEmpreendimentos(sqlFiltroSituacao);
+			hasAndSqlQuery = true;
+
+			$.each($("input[type=checkbox]"), function(i, item){
+			   $(this).trigger("click");
+			});
+		}
+
+		var sqlFiltroSituacao = "SELECT tb_pi.PI, tb_pi.nome_empreendimento, tb_pi.municipio, tb_pi.qtd_populacao_urbana_2010, tb_pi.latitude_longitude, tb_pi.cod_situacao FROM tb_pi WHERE 1 = 1 ";
+		var hasAndSqlQuery = false;
+
 		$(function() {
 			setLayersHeight();
 			initMap();
+
+			//createAlfaLinks();
+
+			loadAllMarkers();
 
 			$(window).on("resize", function(){
 				setLayersHeight();
@@ -582,9 +619,6 @@
 				else
 					$("#txt-municipio").closest(".form-group").addClass("has-error");
 			});
-
-			var sqlFiltroSituacao = "SELECT * FROM c_lista_pi WHERE 1 = 1 ";
-			var hasAndSqlQuery = false;
 
 			$("#chk-concluidas").on("click", function(){
 				var context = "";
@@ -764,7 +798,7 @@
 			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 				<ul class="nav navbar-nav navbar-right">
 					<li><a href="javascript:window.history.back();"><i class="fa fa-chevron-left"></i> Voltar</a></li>
-					<li><a href="#" class="expand"><i class="fa fa-expand"></i>&nbsp;&nbsp;Tela Cheia</a></li>
+					<li><a href="#" class="expand"><i class="fa fa-expand"></i>&nbsp; Tela Cheia</a></li>
 					<li><a href="<%= MM_Logout %>" class="sign-out"><i class="fa fa-sign-out"></i> Sair do Sistema</a></li>
 				</ul>
 			</div>
@@ -773,58 +807,14 @@
 
 	<div class="container">
 		<div class="row">
-			<div class="col-xs-3 sidebar">
-				<div class="form-group">
-					<label class="control-label">Relatórios Consolidados:</label>
-				</div>
-
-				<div class="form-group">
-					<label class="control-label sr-only"></label>
-					<a href="resumo-situacao.asp?rep_universo_programa=sim" class="btn btn-info btn-block btn-sm btn-text-left"><i class="fa fa-file-text-o"></i> Universo do Programa</a>
-				</div>
-
-				<div class="form-group">
-					<label class="control-label sr-only"></label>
-					<a href="resumo-situacao.asp?rep_universo_atendimento_programa=sim" class="btn btn-info btn-block btn-sm btn-text-left"><i class="fa fa-file-text-o"></i> Universo de Atendimento</a>
-				</div>
-
-				<div class="form-group">
-					<label class="control-label">Filtro por Situação:</label>
-				</div>
-
-				<div class="checkbox">
-					<label>
-						<input id="chk-concluidas" type="checkbox"><i class="fa fa-map-marker text-success"></i> Localidades c/ obras concluídas
-					</label>
-				</div>
-
-				<div class="checkbox">
-					<label>
-						<input id="chk-em-andamento" type="checkbox"><i class="fa fa-map-marker text-warning"></i> Localidades c/ obras em andamento
-					</label>
-				</div>
-
-				<div class="checkbox">
-					<label>
-						<input id="chk-atendimento-programado" type="checkbox"><i class="fa fa-map-marker text-info"></i> Localidades c/ atendimento programado
-					</label>
-				</div>
-
-				<div class="checkbox">
-					<label>
-						<input id="chk-nao-atendida" type="checkbox"><i class="fa fa-map-marker text-danger"></i> Localidades não atendidas
-					</label>
-				</div>
-
-				<div class="checkbox">
-					<label>
-						<input id="chk-atendimento-potencial" type="checkbox"><i class="fa fa-map-marker text-primary"></i> Localidades c/ atendimento potencial
-					</label>
-				</div>
-
+			<div class="col-xs-4 sidebar">
 				<form id="form-search" class="form" role="form">
 					<div class="form-group find">
-						<label class="control-label">Pesquisa de Muncípios:</label>
+						<label class="control-label">
+							Pesquisa de Municípios:
+							<br/>
+							<div class="alfa-links"></div>
+						</label>
 						<input class="form-control" id="txt-municipio" placeholder="Digite o nome do muncípio"></input>
 					</div>
 
@@ -842,9 +832,58 @@
 					</table>
 					<button type="button" id="btn-clear" class="btn btn-danger btn-sm btn-block hide"><i class="fa fa-trash-o"></i> Limpar pesquisa</button>
 				</div>
+
+				<div class="form-group">
+					<label class="control-label">Relatórios Consolidados:</label>
+				</div>
+
+				<div class="form-group">
+					<label class="control-label sr-only"></label>
+					<a href="resumo-situacao.asp?rep_universo_atendimento_programa=sim" class="btn btn-info btn-block btn-sm btn-text-left"><i class="fa fa-file-text-o"></i> Universo de Atendimento</a>
+				</div>
+
+				<div class="form-group">
+					<label class="control-label sr-only"></label>
+					<a href="resumo-situacao.asp?rep_universo_programa=sim" class="btn btn-info btn-block btn-sm btn-text-left"><i class="fa fa-file-text-o"></i> Universo do Programa</a>
+				</div>
+
+
+				<div class="form-group">
+					<label class="control-label">Filtro por Situação:</label>
+				</div>
+
+				<div class="checkbox">
+					<label>
+						<input id="chk-concluidas" type="checkbox"><img src="img/point_success.png"> Localidades c/ obras concluídas
+					</label>
+				</div>
+
+				<div class="checkbox">
+					<label>
+						<input id="chk-em-andamento" type="checkbox"><img src="img/point_warning.png"> Localidades c/ obras em andamento
+					</label>
+				</div>
+
+				<div class="checkbox">
+					<label>
+						<input id="chk-atendimento-programado" type="checkbox"><img src="img/point_info.png"> Localidades c/ atendimento programado
+					</label>
+				</div>
+
+				<div class="checkbox">
+					<label>
+						<input id="chk-nao-atendida" type="checkbox"><img src="img/point_danger.png"> Localidades não atendidas
+					</label>
+				</div>
+
+				<div class="checkbox">
+					<label>
+						<input id="chk-atendimento-potencial" type="checkbox"><img src="img/point_primary.png"> Localidades c/ atendimento potencial
+					</label>
+				</div>
 			</div>
 
-			<div class="col-xs-9 mapa">
+			<div class="col-xs-8 mapa">
 				<div id="map-canvas"></div>
 			</div>
 		</div>

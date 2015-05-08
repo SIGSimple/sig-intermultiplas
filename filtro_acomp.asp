@@ -4,9 +4,13 @@
 Dim Recordset2
 Dim Recordset2_numRows
 
+sql = "SELECT tb_predio.cod_predio, tb_predio.Município FROM tb_predio RIGHT JOIN tb_PI ON tb_predio.cod_predio = tb_PI.cod_predio GROUP BY tb_predio.cod_predio, tb_predio.Município "
+
+sql = sql & " ORDER BY tb_predio.Município;"
+
 Set Recordset2 = Server.CreateObject("ADODB.Recordset")
 Recordset2.ActiveConnection = MM_cpf_STRING
-Recordset2.Source = "SELECT tb_predio.cod_predio, tb_predio.Município FROM tb_predio RIGHT JOIN tb_PI ON tb_predio.cod_predio = tb_PI.cod_predio GROUP BY tb_predio.cod_predio, tb_predio.Município ORDER BY tb_predio.Município;  "
+Recordset2.Source = sql
 Recordset2.CursorType = 0
 Recordset2.CursorLocation = 2
 Recordset2.LockType = 1

@@ -1,25 +1,28 @@
 <%@LANGUAGE="VBSCRIPT" CODEPAGE="1252"%>
 <!--#include file="Connections/cpf.asp" -->
 <%
+
 Dim Recordset1__MMColParam
-Recordset1__MMColParam = "1"
-If (Request.Form("dt_registro") <> "") Then 
-  Recordset1__MMColParam = Request.Form("dt_registro")
+
+If (Request.QueryString("data") <> "" And Request.QueryString("data") <> "0") Then 
+  Recordset1__MMColParam = Request.QueryString("data")
+  dta = Split(Recordset1__MMColParam,"/")
+  sql = "SELECT * FROM c_lista_rel_ultimas_ocorrencias WHERE [Data do Registro] = #" & dta(1) & "/" & dta(0) & "/" & dta(2) & "#"
 End If
-%>
-<%
+
 Dim Recordset1
 Dim Recordset1_numRows
 
 Set Recordset1 = Server.CreateObject("ADODB.Recordset")
 Recordset1.ActiveConnection = MM_cpf_STRING
-Recordset1.Source = "SELECT cultimasocorrencias.*, IIf([data da abertura] Is Null,0,IIf([data da abertura]<>0,Now()-[data da abertura],0)/[prazo do contrato]) AS [Dias Corridos X Prazo Contratual], tb_Acompanhamento.Registro, tb_Acompanhamento.n_LO, tb_Acompanhamento.dt_vistoria  FROM cultimasocorrencias INNER JOIN tb_Acompanhamento ON (cultimasocorrencias.[PI-item] = tb_Acompanhamento.PI) AND (cultimasocorrencias.dt_registro = tb_Acompanhamento.[Data do Registro])  WHERE dt_registro = " + Replace(Recordset1__MMColParam, "'", "''") + " or dt_registro like '%" + Replace(Recordset1__MMColParam, "'", "''") + "%'"
+Recordset1.Source = sql
 Recordset1.CursorType = 0
 Recordset1.CursorLocation = 2
 Recordset1.LockType = 1
 Recordset1.Open()
 
 Recordset1_numRows = 0
+
 %>
 <%
 Dim Recordset2
@@ -62,65 +65,98 @@ Recordset1_numRows = Recordset1_numRows + Repeat1__numRows
 }
 -->
 </style>
+<script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
+<script type="text/javascript">
+  $(function() {
+    $("form#form1").on("submit", function(e){
+      if(e.currentTarget.data.value != "0")
+        return true;
+      else
+        return false;
+    });
+  });
+</script>
 </head>
 
 <body>
 <div align="center"><span class="style19">RELAT&Oacute;RIO DAS &Uacute;LTIMAS OCORR&Ecirc;NCIAS</span>
-  <span class="style19">EM <span class="style28"><%=(Recordset1.Fields.Item("dt_registro").Value)%></span></span></div>
+  <span class="style19">EM <span class="style28"><%=(Recordset1__MMColParam)%></span></span></div>
 
-<form id="form1" name="form1" method="post" action="">
-  <label for="dt_registro"></label>
+<form id="form1" name="form1" method="get" action="">
+  <label for="data"></label>
   <span class="style6">Selecione a Data </span>
-  <label></label>
   <label for="Submit"></label>
-  <select name="dt_registro" id="dt_registro">
-    <option value="">Todos</option>
+  <select name="data" id="data">
+    <option value="0">selecione</option>
     <%
-While (NOT Recordset2.EOF)
-%>
-    <option value="<%=(Recordset2.Fields.Item("Data do Registro").Value)%>"><%=(Recordset2.Fields.Item("Data do Registro").Value)%></option>
-    <%
-  Recordset2.MoveNext()
-Wend
-If (Recordset2.CursorType > 0) Then
-  Recordset2.MoveFirst
-Else
-  Recordset2.Requery
-End If
-%>
+      While (NOT Recordset2.EOF)
+        If Trim(Recordset2.Fields.Item("Data do Registro").Value) <> "" Then
+          Response.Write "      <OPTION value='" & (Recordset2.Fields.Item("Data do Registro").Value) & "'"
+          If Lcase(Recordset2.Fields.Item("Data do Registro").Value) = Lcase(Recordset1__MMColParam) then
+            Response.Write "selected"
+          End If
+          Response.Write ">" & (Recordset2.Fields.Item("Data do Registro").Value) & "</OPTION>"
+        End If
+        Recordset2.MoveNext()
+      Wend
+      If (Recordset2.CursorType > 0) Then
+        Recordset2.MoveFirst
+      Else
+        Recordset2.Requery
+      End If
+    %>
   </select>
-  <input type="submit" name="Submit" value="Buscar" id="Submit" />
-  <label for="select"></label>
+  <input type="submit" value="Buscar" id="Submit" />
 </form>
 <table border="0">
   <tr bgcolor="#999999">
-    <td width="34"><span class="style26">PI-item</span></td>
-    <td width="114"><span class="style26">cod_predio</span></td>
-    <td width="135"><span class="style26">Nome_Unidade</span></td>
-    <td width="120"><span class="style26">Respons&aacute;vel</span></td>
-    <td width="85"><span class="style26">Fiscal</span></td>
-    <td width="90"><span class="style26">&Oacute;rg&atilde;o</span></td>
-    <td width="110"><span class="style26">Data</span></td>
-    <td width="99"><span class="style26">A&ccedil;&atilde;o</span></td>
-    <td width="127"><span class="style26">Situa&ccedil;&atilde;o</span></td>
-    <td width="186"><span class="style26">Previs&atilde;o de T&eacute;rmino </span></td>
-    <td width="122"><span class="style26">N&ordm; do LO </span></td>
-    <td width="119"><span class="style26">Data da Vistoria </span></td>
+    <%
+      If Session("MM_UserAuthorization") = 1 or Session("MM_UserAuthorization") = 4 Then
+    %>
+    <td><span class="style26">Editar</span></td>
+    <%
+      End If
+    %>
+    <td><span class="style26">Ver RDO</span></td>
+    <td width="150" align="center"><span class="style26">Município</span></td>
+    <td width="150" align="center"><span class="style26">Localidade</span></td>
+    <td width="100" align="center"><span class="style26">Nº Autos</span></td>
+    <td width="250" align="center"><span class="style26">Respons&aacute;vel</span></td>
+    <td width="100" align="center"><span class="style26">Data</span></td>
+    <td width="400" align="center"><span class="style26">A&ccedil;&atilde;o</span></td>
+    <td width="200" align="center"><span class="style26">Situa&ccedil;&atilde;o Obra</span></td>
+    <td width="200" align="center"><span class="style26">Situa&ccedil;&atilde;o MSST</span></td>
+    <td width="200" align="center"><span class="style26">Foi Relizada a Vistoria?</span></td>
+    <td width="200" align="center"><span class="style26">Data da Vistoria</span></td>
+    <td width="200" align="center"><span class="style26">É Pendência?</span></td>
+    <td width="200" align="center"><span class="style26">Tipo de Pendência</span></td>
+    <td width="200" align="center"><span class="style26">Descrição</span></td>
+    <td width="200" align="center"><span class="style26">Tipo de Registro</span></td>
   </tr>
-  <% While ((Repeat1__numRows <> 0) AND (NOT Recordset1.EOF)) %>
+  <% While (NOT Recordset1.EOF) %>
     <tr bgcolor="#F4F4F4">
-      <td><span class="style22"><%=(Recordset1.Fields.Item("PI-item").Value)%></span></td>
-      <td><span class="style22"><%=(Recordset1.Fields.Item("cod_predio").Value)%></span></td>
-      <td><span class="style22"><%=(Recordset1.Fields.Item("Nome_Unidade").Value)%></span></td>
-      <td><span class="style22"><%=(Recordset1.Fields.Item("Responsável").Value)%></span></td>
-      <td class="style22"><%=(Recordset1.Fields.Item("fiscal").Value)%></td>
-      <td><span class="style22"><%=(Recordset1.Fields.Item("Órgão").Value)%></span></td>
-      <td><span class="style22"><%=(Recordset1.Fields.Item("dt_registro").Value)%></span></td>
+      <%
+        If Session("MM_UserAuthorization") = 1 or Session("MM_UserAuthorization") = 4 Then
+      %>
+      <td><a target="_blank" href="altera_acomp.asp?cod_acompanhamento=<%=(Recordset1.Fields.Item("cod_acompanhamento").Value)%>"><img src="img/edit.gif"></a></td>
+      <%
+        End If
+      %>
+      <td><a target="_blank" href="rel_rdo.asp?cod_empreendimento=<%=(Recordset1.Fields.Item("num_autos").Value)%>&data=<%=(Recordset1.Fields.Item("Data do Registro").Value)%>"><img src="img/doc.png"></a></td>
+      <td><span class="style22"><%=(Recordset1.Fields.Item("municipio").Value)%></span></td>
+      <td><span class="style22"><%=(Recordset1.Fields.Item("nome_empreendimento").Value)%></span></td>
+      <td><span class="style22"><%=(Recordset1.Fields.Item("num_autos").Value)%></span></td>
+      <td><span class="style22"><%=(Recordset1.Fields.Item("nme_responsavel").Value)%></span></td>
+      <td><span class="style22"><%=(Recordset1.Fields.Item("Data do Registro").Value)%></span></td>
       <td><span class="style22"><%=(Recordset1.Fields.Item("Registro").Value)%></span></td>
       <td><span class="style22"><%=(Recordset1.Fields.Item("desc_situacao").Value)%></span></td>
-      <td class="style22"><%=(Recordset1.Fields.Item("Data Prevista para o Término").Value)%></td>
-      <td class="style22"><%=(Recordset1.Fields.Item("n_LO").Value)%></td>
-      <td class="style22"><%=(Recordset1.Fields.Item("dt_vistoria").Value)%></td>
+      <td><span class="style22"><%=(Recordset1.Fields.Item("dsc_situacao_sso").Value)%></span></td>
+      <td align="center"><span class="style22"><%=(Recordset1.Fields.Item("e_vistoria").Value)%></span></td>
+      <td><span class="style22"><%=(Recordset1.Fields.Item("dt_vistoria").Value)%></span></td>
+      <td align="center"><span class="style22"><%=(Recordset1.Fields.Item("e_pendencia").Value)%></span></td>
+      <td><span class="style22"><%=(Recordset1.Fields.Item("dsc_tipo_pendencia").Value)%></span></td>
+      <td><span class="style22"><%=(Recordset1.Fields.Item("dsc_pendencia").Value)%></span></td>
+      <td align="center"><span class="style22"><%=(Recordset1.Fields.Item("dsc_tipo_registro").Value)%></span></td>
     </tr>
     <% 
   Repeat1__index=Repeat1__index+1

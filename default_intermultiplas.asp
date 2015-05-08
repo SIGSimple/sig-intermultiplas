@@ -32,16 +32,9 @@ If MM_valUsername <> "" Then
 				Session("MM_UserAuthorization") = CStr(MM_rsUser.Fields.Item(MM_fldUserAuthorization).Value)
 				If Session("MM_UserAuthorization") = 1 Then
 					Session("MM_UserAuthorization_Admin") = True
+					MM_redirectLoginFailed = ""
 				Else
-					If Session("MM_UserAuthorization") = 8 Then
-						MM_redirectLoginSuccess = "inicio-daee.asp"
-					Else
-						If Session("MM_UserAuthorization") = 9 Then
-							MM_redirectLoginSuccess = "atendimento-prefeito.asp"
-						Else
-							Session("MM_UserAuthorization_Admin") = False
-						End If
-					End If
+					MM_redirectLoginFailed = "default.asp?msgError=Você não possúi acesso a esta área! O acesso é permitido apenas a Administradores do Sistema."
 				End If
 			Else
 				Session("MM_UserAuthorization") = ""
@@ -49,6 +42,11 @@ If MM_valUsername <> "" Then
 
 		If CStr(Request.QueryString("accessdenied")) <> "" And true Then
 			MM_redirectLoginSuccess = Request.QueryString("accessdenied")
+		Else
+			If MM_redirectLoginFailed <> "" Then
+				MM_rsUser.Close
+				Response.Redirect(MM_redirectLoginFailed)
+			End If
 		End If
 		
 		MM_rsUser.Close

@@ -131,28 +131,28 @@ function FP_getObjectByID(id,o) {//v1.0
 </script>
 </head>
 <body onLoad="FP_preloadImgs(/*url*/'button8D.jpg', /*url*/'button8E.jpg', /*url*/'button9A.jpg', /*url*/'button9B.jpg', /*url*/'button7.jpg', /*url*/'button8.jpg', /*url*/'button10.jpg', /*url*/'button11.jpg', /*url*/'button129.jpg', /*url*/'button130.jpg')" style="text-align: center">
-	<table border="0" cellpadding="0" cellspacing="0" width="799" height="543">
+	<table border="0" cellpadding="0" cellspacing="0" width="100%" height="543">
 		<tr>
 			<td valign="top">
-				<table cellpadding="0" cellspacing="0" width="935" height="98">
+				<table cellpadding="0" cellspacing="0" width="100%" height="98">
 					<tr>
 						<td width="925">
-							<table cellpadding="0" cellspacing="0" border="0" width="925" height="88">
+							<table cellpadding="0" cellspacing="0" border="0" width="100%" height="88">
 								<tr>
-									<td valign="top" height="88" width="925">
+									<td valign="top" height="88" width="100%">
 										<table border="1" width="100%" id="table1" style="border-width: 0px">
 											<tr>
 												<td style="border-style: none; border-width: medium" width="8">&nbsp;</td>
-												<td width="901" style="border-style: none; border-width: medium">
+												<td width="100%" style="border-style: none; border-width: medium">
 													<p style="margin-top: 0; margin-bottom: 0">
 														<a href="<%= MM_Logout %>"></a>
 													</p>
-													<table width="898" border="1" style="margin-bottom: 0">
+													<table width="100%" border="1" style="margin-bottom: 0">
 	          											<tr>
 	            											<td width="95" style="text-align:center">
 	            												<img border="0" src="consorcio.jpg" style="max-width:50px;">
 	        												</td>
-	            											<td width="319">
+	            											<td width="319" style="text-align:center">
 	            												<img src="cabecalho.png" style="max-width:320px;"/>
 	        												</td>
 	        												<td width="356" align="center">
@@ -230,13 +230,13 @@ function FP_getObjectByID(id,o) {//v1.0
 				<%
 					If Session("MM_UserAuthorization") = 1 Then
 				%>
-				<iframe name="I1" src="login_adm.asp" width="944" height="675" border="0" frameborder="0" style="border-style: outset; border-width: 3px; background-color: #E2E2E2">
+				<iframe name="I1" src="login_adm.asp" onload="this.width=screen.width-40;this.height=screen.height-230;" border="0" frameborder="0" style="border-style: outset; border-width: 3px; background-color: #E2E2E2">
 					Seu navegador não oferece suporte para quadros embutidos ou está configurado para não exibi-los.
 				</iframe>
 				<%
 					Else
 				%>
-				<iframe name="I1" src="login_fiscal.asp" width="944" height="675" border="0" frameborder="0" style="border-style: outset; border-width: 3px; background-color: #E2E2E2">
+				<iframe name="I1" src="login_fiscal.asp" onload="this.width=screen.width-40;this.height=screen.height-230;" border="0" frameborder="0" style="border-style: outset; border-width: 3px; background-color: #E2E2E2">
 					Seu navegador não oferece suporte para quadros embutidos ou está configurado para não exibi-los.
 				</iframe>
 				<%

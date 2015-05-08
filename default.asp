@@ -28,6 +28,7 @@ If MM_valUsername <> "" Then
 			' username and password match - this is a valid user
 			Session("MM_Username") = MM_valUsername
 			Session("MM_Userid") = CStr(MM_rsUser.Fields.Item("idusuario").Value)
+
 			If (MM_fldUserAuthorization <> "") Then
 				Session("MM_UserAuthorization") = CStr(MM_rsUser.Fields.Item(MM_fldUserAuthorization).Value)
 				If Session("MM_UserAuthorization") = 1 Then

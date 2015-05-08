@@ -245,8 +245,8 @@
 					End If
 				%>
 			</td>
-			<td class="text-middle text-center" style="max-width: 150px;"><%=(rs_lista.Fields.Item("desc_situacao_interna").Value)%></td>
-			<td class="text-middle text-center vlr" style="max-width: 150px;"><%=(rs_lista.Fields.Item("Valor do Contrato").Value)%></td>
+			<td class="text-middle text-center" style="max-width: 150px;"><%=(rs_lista.Fields.Item("desc_situacao_externa").Value)%></td>
+			<td class="text-middle text-center vlr" style="max-width: 150px;"><%=(rs_lista.Fields.Item("Valor do Aditamento").Value)%></td>
 			<td class="text-middle text-center" style="max-width: 120px;">
 				<%
 					If Not IsNull(rs_lista.Fields.Item("mes_inicio_obras").Value) And Not IsEmpty(rs_lista.Fields.Item("mes_inicio_obras").Value) And rs_lista.Fields.Item("mes_inicio_obras").Value <> "" Then
@@ -410,8 +410,8 @@
 							End If
 						%>
 					</td>
-					<td class="text-middle text-center" style="max-width: 150px;"><%=(rs_lista.Fields.Item("desc_situacao_interna").Value)%></td>
-					<td class="text-middle text-center vlr <% If Request.QueryString("rep_universo_programa") <> "" Then Response.Write "hide" End If %>" style="max-width: 150px;"><%=(rs_lista.Fields.Item("Valor do Contrato").Value)%></td>
+					<td class="text-middle text-center" style="max-width: 150px;"><%=(rs_lista.Fields.Item("desc_situacao_externa").Value)%></td>
+					<td class="text-middle text-center vlr <% If Request.QueryString("rep_universo_programa") <> "" Then Response.Write "hide" End If %>" style="max-width: 150px;"><%=(rs_lista.Fields.Item("Valor do Aditamento").Value)%></td>
 					<td class="text-middle text-center <% If Request.QueryString("rep_universo_programa") <> "" Then Response.Write "hide" End If %>" style="max-width: 120px;">
 						<%
 							If Not IsNull(rs_lista.Fields.Item("mes_inicio_obras").Value) And Not IsEmpty(rs_lista.Fields.Item("mes_inicio_obras").Value) And rs_lista.Fields.Item("mes_inicio_obras").Value <> "" Then

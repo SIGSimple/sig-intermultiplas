@@ -214,6 +214,7 @@ If (CStr(Request("MM_update")) <> "" And CStr(Request("MM_recordId")) <> "") The
     frmField_cod_engenheiro_daee            = IIf(Request.Form("cod_engenheiro_daee") = "", "NULL", Request.Form("cod_engenheiro_daee"))
     frmField_cod_engenheiro_plan_consorcio  = IIf(Request.Form("cod_engenheiro_plan_consorcio") = "", "NULL", Request.Form("cod_engenheiro_plan_consorcio"))
     frmField_cod_fiscal_consorcio           = IIf(Request.Form("cod_fiscal_consorcio") = "", "NULL", Request.Form("cod_fiscal_consorcio"))
+    frmField_cod_engenheiro_medicao         = IIf(Request.Form("cod_engenheiro_medicao") = "", "NULL", Request.Form("cod_engenheiro_medicao"))
     frmField_cod_engenheiro_construtora     = IIf(Request.Form("cod_engenheiro_construtora") = "", "NULL", Request.Form("cod_engenheiro_construtora"))
     frmField_cod_situacao                   = IIf(Request.Form("cod_situacao") = "", "NULL", Request.Form("cod_situacao"))
   End If
@@ -259,7 +260,7 @@ If (CStr(Request("MM_update")) <> "" And CStr(Request("MM_recordId")) <> "") The
   End If
   
   If Session("MM_UserAuthorization") = 1 Then
-    MM_editQuery = MM_editQuery & ",cod_fiscal="& frmField_cod_fiscal &",cod_engenheiro_daee="& frmField_cod_engenheiro_daee &",cod_engenheiro_plan_consorcio="& frmField_cod_engenheiro_plan_consorcio &",cod_fiscal_consorcio="& frmField_cod_fiscal_consorcio &",cod_engenheiro_construtora="& frmField_cod_engenheiro_construtora
+    MM_editQuery = MM_editQuery & ",cod_fiscal="& frmField_cod_fiscal &",cod_engenheiro_daee="& frmField_cod_engenheiro_daee &",cod_engenheiro_plan_consorcio="& frmField_cod_engenheiro_plan_consorcio &",cod_fiscal_consorcio="& frmField_cod_fiscal_consorcio &",cod_engenheiro_medicao="& frmField_cod_engenheiro_medicao &",cod_engenheiro_construtora="& frmField_cod_engenheiro_construtora
   End If
 
   If Session("MM_UserAuthorization") = 1 Or Session("MM_UserAuthorization") = 4 Then
@@ -873,9 +874,9 @@ rs_situacao_numRows = 0
         </td>
       </tr>
 
-      <!-- FISCAL CONSÓRCIO -->
+      <!-- FISCAL -->
       <tr valign="baseline">
-        <td align="right" nowrap bgcolor="#CCCCCC" class="style9"><span class="style10">Selecione o Fiscal Consórcio:</span></td>
+        <td align="right" nowrap bgcolor="#CCCCCC" class="style9"><span class="style10">Selecione o Fiscal do Consórcio:</span></td>
         <td bgcolor="#CCCCCC">
           <select name="cod_fiscal_consorcio" class="style9">
             <option value=""></option>
@@ -884,6 +885,33 @@ rs_situacao_numRows = 0
                 If Trim(rs_fiscal.Fields.Item("Responsável").Value) <> "" Then
                   Response.Write "      <OPTION value='" & (rs_fiscal.Fields.Item("cod_fiscal").Value) & "'"
                   If Lcase(rs_fiscal.Fields.Item("cod_fiscal").Value) = Lcase(rs_pi.Fields.Item("cod_fiscal_consorcio").Value) then
+                    Response.Write "selected"
+                  End If
+                  Response.Write ">" & (rs_fiscal.Fields.Item("Responsável").Value) & "</OPTION>"
+                End If
+                rs_fiscal.MoveNext()
+              Wend
+              If (rs_fiscal.CursorType > 0) Then
+                rs_fiscal.MoveFirst
+              Else
+                rs_fiscal.Requery
+              End If
+            %>
+          </select>
+        </td>
+      </tr>
+
+      <!-- ENG. RESP. MEDIÇÕES -->
+      <tr valign="baseline">
+        <td align="right" nowrap bgcolor="#CCCCCC" class="style9"><span class="style10">Selecione o Eng. Resp. Medições:</span></td>
+        <td bgcolor="#CCCCCC">
+          <select name="cod_engenheiro_medicao" class="style9">
+            <option value=""></option>
+            <%
+              While (NOT rs_fiscal.EOF)
+                If Trim(rs_fiscal.Fields.Item("Responsável").Value) <> "" Then
+                  Response.Write "      <OPTION value='" & (rs_fiscal.Fields.Item("cod_fiscal").Value) & "'"
+                  If Lcase(rs_fiscal.Fields.Item("cod_fiscal").Value) = Lcase(rs_pi.Fields.Item("cod_engenheiro_medicao").Value) then
                     Response.Write "selected"
                   End If
                   Response.Write ">" & (rs_fiscal.Fields.Item("Responsável").Value) & "</OPTION>"
@@ -937,7 +965,7 @@ rs_situacao_numRows = 0
       <!-- SITUAÇÃO INTERNA -->
       <tr valign="baseline">
         <td align="right" nowrap bgcolor="#CCCCCC" class="style9">
-          <span class="style10">Situação Interna:</span>
+          <span class="style10">Situação da Obra:</span>
         </td>
         <td bgcolor="#CCCCCC">
           <select name="cod_situacao" class="style9">
@@ -972,7 +1000,7 @@ rs_situacao_numRows = 0
       <!-- SITUAÇÃO EXTERNA -->
       <tr valign="baseline">
         <td align="right" nowrap bgcolor="#CCCCCC" class="style9">
-          <span class="style10">Situação Externa:</span>
+          <span class="style10">Situação Atual do Empreendimento:</span>
         </td>
         <td bgcolor="#CCCCCC">
           <select name="cod_situacao_externa" class="style9">

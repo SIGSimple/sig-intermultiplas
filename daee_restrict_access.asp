@@ -1,6 +1,6 @@
 <%
 ' *** Restrict Access To Page: Grant or deny access to this page
-MM_authorizedUsers="1,8,9"
+MM_authorizedUsers="1,2,3,4,5,6,7,8,9"
 MM_authFailedURL="default.asp"
 MM_grantAccess=false
 If Session("MM_Username") <> "" Then

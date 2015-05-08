@@ -19,7 +19,7 @@ pagina_alteracao = "df_alteracao.asp"
 'Nome da página de inclusão
 pagina_inclusao = "df_inclusao.asp"
 
-'Nome da página de login
+'Nome da página de pagina_login
 pagina_login = "df_login.asp"
 
 '*******************************************************************
@@ -253,7 +253,7 @@ alert("Data inválida!");
 </script>
 </HEAD>
 <BODY class=texto_pagina>
-Links: <a href="<%=pagina_consulta%>" class="texto_pagina">Página de Consulta</a> | <a href="<%=pagina_inclusao%>" class="texto_pagina">Página de Inclusão<hr size=1 color=gainsboro></a><br>
+<b>Cadastro de Programas</b> | Links: <a href="<%=pagina_consulta%>" class="texto_pagina">Página de Consulta</a> | <a href="<%=pagina_inclusao%>" class="texto_pagina">Página de Inclusão<hr size=1 color=gainsboro></a>
 
 <%
 If Not IsEmpty(Request.Form) Then

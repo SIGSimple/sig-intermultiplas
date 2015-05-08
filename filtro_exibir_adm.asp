@@ -74,6 +74,7 @@ rs_filtro_combo_numRows = rs_filtro_combo_numRows + Repeat2__numRows
 
 <body>
 <div align="center">
+  <p align="center"><strong><span class="style17">Acompanhamento de Obra</span></strong></p>
   <table border="0">
     <tr bgcolor="#666666">
       <td width="427"><span class="style9">Município</span></td>
@@ -97,8 +98,8 @@ Wend
     <tr bgcolor="#666666">
       <td width="108"><span class="style9">Autos</span></td>
       <td width="308"><span class="style9">Nome do Empreendimento</span></td>
-      <td width="180"><span class="style9">Situação Interna</span></td>
-      <td width="180"><span class="style9">Situação Externa</span></td>
+      <td width="180"><span class="style9">Situação da Obra</span></td>
+      <td width="180"><span class="style9">Situação Atual do Empreendimento</span></td>
     </tr>
     <% While ((Repeat2__numRows <> 0) AND (NOT rs_filtro_combo.EOF)) %>
       <tr bgcolor="#CCCCCC">

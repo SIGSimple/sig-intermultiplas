@@ -2,6 +2,7 @@ body { padding-top: 70px !important; }
 body.login { padding-top: 50px !important; }
 body#body { width: 100%; height: 100%; }
 .container-box { max-width: 768px; }
+.container-box.ficha-andamento { max-width: 1200px; }
 .page-title { font-size: 20px; }
 .page-title small { font-size: 90%; font-weight: bold !important; color: #00B2EC; }
 .img-topo { height: 100px; }

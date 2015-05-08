@@ -115,7 +115,7 @@ function confirm_delete(form) {
 </SCRIPT>
 </HEAD>
 <BODY class=texto_pagina>
-Links: <a href="<%=pagina_consulta%>" class="texto_pagina">Página de Consulta</a> | <a href="<%=pagina_inclusao%>" class="texto_pagina">Página de Inclusão<hr size=1 color=gainsboro></a><br>
+<b>Cadastro de Municípios</b> | Links: <a href="<%=pagina_consulta%>" class="texto_pagina">Página de Consulta</a> | <a href="<%=pagina_inclusao%>" class="texto_pagina">Página de Inclusão<hr size=1 color=gainsboro></a>
 
 <%
 If Request.QueryString("PagAtual") = "" Then
@@ -259,6 +259,7 @@ End IF
   <TD width="123" valign=top nowrap style="cursor: hand" onClick="window.open('<%=Request.ServerVariables("SCRIPT_NAME")%>?Ordem=cod_bacia_secretaria+<%=Ordem%>', '_self')"><%If Left(Request.QueryString("Ordem"), 19) = "cod_bacia_secretaria" Then : Response.Write "<img src=""imagens\ordem_" & Ordem & ".gif"" width=9 height=10>&nbsp;" : End If%><b>Partido</b></TD>
   <TD width="123" valign=top nowrap style="cursor: hand" onClick="window.open('<%=Request.ServerVariables("SCRIPT_NAME")%>?Ordem=cod_bacia_secretaria+<%=Ordem%>', '_self')"><%If Left(Request.QueryString("Ordem"), 19) = "cod_bacia_secretaria" Then : Response.Write "<img src=""imagens\ordem_" & Ordem & ".gif"" width=9 height=10>&nbsp;" : End If%><b>População Urbana - IBGE 2010</b></TD>
   <TD width="123" valign=top nowrap style="cursor: hand" onClick="window.open('<%=Request.ServerVariables("SCRIPT_NAME")%>?Ordem=cod_bacia_secretaria+<%=Ordem%>', '_self')"><%If Left(Request.QueryString("Ordem"), 19) = "cod_bacia_secretaria" Then : Response.Write "<img src=""imagens\ordem_" & Ordem & ".gif"" width=9 height=10>&nbsp;" : End If%><b>Projeção de População 2030</b></TD>
+  <TD width="123" valign=top nowrap style="cursor: hand" onClick="window.open('<%=Request.ServerVariables("SCRIPT_NAME")%>?Ordem=latitude_longitude+<%=Ordem%>', '_self')"><%If Left(Request.QueryString("Ordem"), 19) = "latitude_longitude" Then : Response.Write "<img src=""imagens\ordem_" & Ordem & ".gif"" width=9 height=10>&nbsp;" : End If%><b>Localização Geográfica</b></TD>
   <TD width="168" valign=top nowrap style="cursor: hand" onClick="window.open('<%=Request.ServerVariables("SCRIPT_NAME")%>?Ordem=Observação sobre o Prédio+<%=Ordem%>', '_self')"><%If Left(Request.QueryString("Ordem"), 25) = "Observação sobre o Prédio" Then : Response.Write "<img src=""imagens\ordem_" & Ordem & ".gif"" width=9 height=10>&nbsp;" : End If%><b>Observação</b></TD>
   </TR>
 
@@ -292,6 +293,7 @@ End If
     <TD><%=(objRS.Fields.Item("nme_partido").Value)%></TD>
     <TD><%=(objRS.Fields.Item("qtd_populacao_urbana_2010").Value)%></TD>
     <TD><%=(objRS.Fields.Item("qtd_populacao_urbana_2030").Value)%></TD>
+    <TD><%=(objRS.Fields.Item("latitude_longitude").Value)%></TD>
     <TD><%=(objRS.Fields.Item("Observação sobre o Prédio").Value)%></TD>
   </TR>
 

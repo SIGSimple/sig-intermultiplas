@@ -100,6 +100,7 @@
 						$("#txt-nome-prefeito").text(dadosObra['prefeito']);
 						$("#txt-nome-bacia-daee").text(dadosObra['bacia_daee']);
 						$("#txt-objeto-obra").text((dadosObra['Descrição da Intervenção FDE']) ? dadosObra['Descrição da Intervenção FDE'] : "");
+						$("#txt-situacao").text(dadosObra['desc_situacao_externa']);
 						$("#txt-pop-2010").text(dadosObra['qtd_populacao_urbana_2010']);
 						$("#txt-pop-2030").text(pop2030);
 						$("#txt-nota-obra").text((dadosObra['dsc_observacoes_relatorio_mensal']) ? dadosObra['dsc_observacoes_relatorio_mensal'] : "");
@@ -129,7 +130,7 @@
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
 				</button>
-				<a class="navbar-brand" href="#">SIG - Ficha Técnica de Obra Programada p/ Atendimento</a>
+				<a class="navbar-brand" href="#">SIG - Ficha Técnica da Obra</a>
 			</div>
 
 			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
@@ -215,6 +216,17 @@
 							<tbody>
 								<tr>
 									<td class="text-middle text-bold">
+										Situação
+									</td>
+									<td class="text-right" id="txt-situacao"></td>
+								</tr>
+							</tbody>
+						</table>
+
+						<table class="table table-bordered table-condensed">
+							<tbody>
+								<tr>
+									<td class="text-middle text-bold">
 										População Beneficiada em 2010
 									</td>
 									<td class="text-middle text-right num" id="txt-pop-2010"></td>
@@ -232,7 +244,7 @@
 							<tbody>
 								<tr>
 									<td class="text-middle text-bold" width="150">
-										Nota:
+										Última Informação:
 									</td>
 									<td id="txt-nota-obra"></td>
 								</tr>
@@ -240,6 +252,228 @@
 						</table>
 					</div>
 				</div>
+
+				<%
+					If (Session("MM_UserAuthorization") <> 8 AND Session("MM_UserAuthorization") <> 9) Then
+						strQueryLicencas = "SELECT * FROM tb_licenca_ambiental INNER JOIN tb_tipo_licenca ON tb_tipo_licenca.id = tb_licenca_ambiental.cod_tipo_licenca WHERE cod_empreendimento = " & cod_empreendimento & ""
+
+						Set rs_licencas = Server.CreateObject("ADODB.Recordset")
+							rs_licencas.CursorLocation = 3
+							rs_licencas.CursorType = 3
+							rs_licencas.LockType = 1
+							rs_licencas.Open strQueryLicencas, objCon, , , &H0001
+
+						strQueryOutorgas = "SELECT * FROM tb_outorga WHERE cod_empreendimento = " & cod_empreendimento & ""
+
+						Set rs_outorgas = Server.CreateObject("ADODB.Recordset")
+							rs_outorgas.CursorLocation = 3
+							rs_outorgas.CursorType = 3
+							rs_outorgas.LockType = 1
+							rs_outorgas.Open strQueryOutorgas, objCon, , , &H0001
+
+						strQueryApps = "SELECT * FROM tb_app WHERE cod_empreendimento = " & cod_empreendimento & ""
+
+						Set rs_apps = Server.CreateObject("ADODB.Recordset")
+							rs_apps.CursorLocation = 3
+							rs_apps.CursorType = 3
+							rs_apps.LockType = 1
+							rs_apps.Open strQueryApps, objCon, , , &H0001
+
+						strQueryTCRAs = "SELECT * FROM tb_tcra WHERE cod_empreendimento = " & cod_empreendimento & ""
+
+						Set rs_tcras = Server.CreateObject("ADODB.Recordset")
+							rs_tcras.CursorLocation = 3
+							rs_tcras.CursorType = 3
+							rs_tcras.LockType = 1
+							rs_tcras.Open strQueryTCRAs, objCon, , , &H0001
+
+						If Not rs_licencas.EOF Or Not rs_outorgas.EOF Or Not rs_apps.EOF Or Not rs_tcras.EOF Then
+				%>
+				<div class="row">
+					<div class="col-xs-12">
+						<div class="panel panel-default">
+							<div class="panel-heading">
+								<h3 class="panel-title"><i class="fa fa-recycle"></i> Meio Ambiente</h3>
+							</div>
+
+							<div class="panel-body">
+								<%
+									If Not rs_licencas.EOF Then
+								%>
+								<div class="form-group">
+									<label class="control-label">Licenças Ambientais</label>
+									<table class="table table-history table-bordered table-hover table-striped table-condensed">
+										<thead>
+											<th>Nº Licença</th>
+											<th class="text-center">Tipo de Licença</th>
+											<th class="text-center">Data de Concessão</th>
+											<th class="text-center">Data de Vencimento</th>
+										</thead>
+										<tbody>
+											<%
+												While Not rs_licencas.EOF
+											%>
+											<tr>
+												<td><%=(rs_licencas.Fields.Item("num_licenca").Value)%></td>
+												<td><%=(rs_licencas.Fields.Item("dsc_tipo_licenca").Value)%></td>
+												<td class="text-center"><%=(rs_licencas.Fields.Item("dta_concessao").Value)%></td>
+												<td class="text-center"><%=(rs_licencas.Fields.Item("dta_vencimento").Value)%></td>
+											</tr>
+											<%
+													rs_licencas.MoveNext
+												Wend
+											%>
+										</tbody>
+									</table>
+								</div>
+								<%
+									End If
+
+									If Not rs_outorgas.EOF Then
+								%>
+								<div class="form-group">
+									<label class="control-label">Outorgas</label>
+									<table class="table table-history table-bordered table-hover table-striped table-condensed">
+										<thead>
+											<th>Nº Outorga</th>
+											<th class="text-center">Data de Concessão</th>
+											<th class="text-center">Data de Vencimento</th>
+										</thead>
+										<tbody>
+											<%
+												While Not rs_outorgas.EOF
+											%>
+											<tr>
+												<td><%=(rs_outorgas.Fields.Item("num_outorga").Value)%></td>
+												<td class="text-center"><%=(rs_outorgas.Fields.Item("dta_concessao").Value)%></td>
+												<td class="text-center"><%=(rs_outorgas.Fields.Item("dta_vencimento").Value)%></td>
+											</tr>
+											<%
+													rs_outorgas.MoveNext
+												Wend
+											%>
+										</tbody>
+									</table>
+								</div>
+								<%
+									End If
+
+									If Not rs_apps.EOF Then
+								%>
+								<div class="form-group">
+									<label class="control-label">Autorizações p/ Intervenção em APPs</label>
+									<table class="table table-history table-bordered table-hover table-striped table-condensed">
+										<thead>
+											<th>Nº App</th>
+											<th class="text-center">Data de Concessão</th>
+											<th class="text-center">Data de Vencimento</th>
+										</thead>
+										<tbody>
+											<%
+												While Not rs_apps.EOF
+											%>
+											<tr>
+												<td><%=(rs_apps.Fields.Item("num_app").Value)%></td>
+												<td class="text-center"><%=(rs_apps.Fields.Item("dta_concessao").Value)%></td>
+												<td class="text-center"><%=(rs_apps.Fields.Item("dta_vencimento").Value)%></td>
+											</tr>
+											<%
+													rs_apps.MoveNext
+												Wend
+											%>
+										</tbody>
+									</table>
+								</div>
+								<%
+									End If
+
+									If Not rs_tcras.EOF Then
+								%>
+								<div class="form-group">
+									<label class="control-label">TCRAs</label>
+									<table class="table table-history table-bordered table-hover table-striped table-condensed">
+										<thead>
+											<th>Cod. TCRA</th>
+											<th class="text-center">Data de Concessão</th>
+											<th class="text-center">Data de Vencimento</th>
+										</thead>
+										<tbody>
+											<%
+												While Not rs_tcras.EOF
+											%>
+											<tr>
+												<td><%=(rs_tcras.Fields.Item("cod_tcra").Value)%></td>
+												<td class="text-center"><%=(rs_tcras.Fields.Item("dta_concessao").Value)%></td>
+												<td class="text-center"><%=(rs_tcras.Fields.Item("dta_vencimento").Value)%></td>
+											</tr>
+											<%
+													rs_tcras.MoveNext
+												Wend
+											%>
+										</tbody>
+									</table>
+								</div>
+								<%
+									End If
+								%>
+							</div>
+						</div>
+					</div>
+				</div>
+				<%
+						End If
+					End If
+
+					strQueryPendencias = "SELECT * FROM c_lista_rel_pendencias WHERE cod_tipo_pendencia IN (1,6,7,8) AND PI = '"& cod_empreendimento &"'"
+
+					Set rs_pendencias = Server.CreateObject("ADODB.Recordset")
+						rs_pendencias.CursorLocation = 3
+						rs_pendencias.CursorType = 3
+						rs_pendencias.LockType = 1
+						rs_pendencias.Open strQueryPendencias, objCon, , , &H0001
+
+					If Not rs_pendencias.EOF Then
+				%>
+				<div class="row">
+					<div class="col-xs-12">
+						<div class="panel panel-default">
+							<div class="panel-heading">
+								<h3 class="panel-title">
+									<i class="fa fa-warning"></i> Pendências
+								</h3>
+							</div>
+
+							<div class="panel-body">
+								<table class="table table-history table-bordered table-hover table-striped table-condensed">
+									<thead>
+										<th class="text-center">Data Criação</th>
+										<th class="text-center">Tipo de Pendência</th>
+										<th class="text-center">Data Limíte</th>
+										<th class="text-center">Descrição</th>
+									</thead>
+									<tbody>
+										<%
+											While Not rs_pendencias.EOF
+										%>
+										<tr>
+											<td><%=(rs_pendencias.Fields.Item("Data do Registro").Value)%></td>
+											<td class="text-center"><%=(rs_pendencias.Fields.Item("dsc_tipo_pendencia").Value)%></td>
+											<td class="text-center"><%=(rs_pendencias.Fields.Item("dta_limite_pendencia").Value)%></td>
+											<td class="text-center"><%=(rs_pendencias.Fields.Item("dsc_pendencia").Value)%></td>
+										</tr>
+										<%
+												rs_pendencias.MoveNext
+											Wend
+										%>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+				<%
+					End If
+				%>
 			</div>
 		</div>
 

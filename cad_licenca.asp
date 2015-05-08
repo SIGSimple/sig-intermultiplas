@@ -1,13 +1,14 @@
 <%@LANGUAGE="VBSCRIPT" CODEPAGE="65001"%>
 <!--#include file="Connections/cpf.asp" -->
-<%
+<%	
 	Response.CharSet = "UTF-8"
-	
+
 	Dim objCon
 	Set objCon = Server.CreateObject("ADODB.Connection")
   		objCon.Open MM_cpf_STRING
 
 	If Not IsEmpty(Request.Form) Then
+
 		strQ = "SELECT * FROM tb_licenca_ambiental Where 1 <> 1"
 
 		Set rs_update = Server.CreateObject("ADODB.Recordset")
@@ -20,9 +21,23 @@
 			' INÍCIO CAMPOS
 			rs_update("cod_empreendimento") = Trim(Request.Form("cod_empreendimento"))
 			rs_update("num_licenca") 		= Trim(Request.Form("num_licenca"))
-			rs_update("cod_tipo_licenca") 	= Trim(Request.Form("cod_tipo_licenca"))
-			rs_update("dta_concessao") 		= Trim(Request.Form("dta_concessao"))
-			rs_update("dta_vencimento") 	= Trim(Request.Form("dta_vencimento"))
+			
+			If Request.Form("cod_tipo_licenca") <> "" Then
+				rs_update("cod_tipo_licenca") 	= Trim(Request.Form("cod_tipo_licenca"))
+			End If
+			
+			If Request.Form("dta_concessao") <> "" Then
+				rs_update("dta_concessao") 	= Request.Form("dta_concessao")
+			End If
+			
+			If Request.Form("dta_vencimento") <> "" Then
+				rs_update("dta_vencimento") = Request.Form("dta_vencimento")
+			End If
+
+			If Request.Form("cod_agencia_liberacao") <> "" Then
+				rs_update("cod_agencia_liberacao") 	= Trim(Request.Form("cod_agencia_liberacao"))
+			End If
+
 			rs_update("dsc_observacoes") 	= Trim(Request.Form("dsc_observacoes"))
 			' FIM CAMPOS
 			
@@ -33,7 +48,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
-		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<title>Untitled Document</title>
 		<style type="text/css">
 			<!--
@@ -64,13 +79,24 @@
 
 		<form method="post" name="form1">
 			<input type="hidden" name="cod_empreendimento" value="<%=(Request.QueryString("cod_empreendimento"))%>"/>
+			<%
+				Dim rs_dados_empreendimento
+
+				strQ = "SELECT * FROM c_lista_dados_obras WHERE PI = '"& Request.QueryString("cod_empreendimento") &"'"
+
+				Set rs_dados_empreendimento = Server.CreateObject("ADODB.Recordset")
+				rs_dados_empreendimento.CursorLocation = 3
+				rs_dados_empreendimento.CursorType = 3
+				rs_dados_empreendimento.LockType = 1
+				rs_dados_empreendimento.Open strQ, objCon, , , &H0001
+			%>
 			<table align="center">
 				<tr valign="baseline">
 					<td align="right" nowrap bgcolor="#CCCCCC" class="style7">
 						<span class="style22">Município:</span>
 					</td>
 					<td bgcolor="#CCCCCC">
-						<%=(Request.QueryString("nme_municipio"))%>
+						<%=(rs_dados_empreendimento.Fields.Item("municipio").Value)%>
 					</td>
 				</tr>
 				<tr valign="baseline">
@@ -78,7 +104,7 @@
 						<span class="style22">Empreendimento:</span>
 					</td>
 					<td bgcolor="#CCCCCC">
-						<%=(Request.QueryString("nme_empreendimento"))%>
+						<%=(rs_dados_empreendimento.Fields.Item("PI").Value)%> - <%=(rs_dados_empreendimento.Fields.Item("nome_empreendimento").Value)%>
 					</td>
 				</tr>
 				<tr valign="baseline">
@@ -137,6 +163,36 @@
 				</tr>
 				<tr valign="baseline">
 					<td align="right" nowrap bgcolor="#CCCCCC" class="style7">
+						<span class="style22">Agência Liberação (CETESB):</span>
+					</td>
+					<td bgcolor="#CCCCCC">
+						<select name="cod_agencia_liberacao">
+							<option value=""></option>
+							<%
+								strQ = "SELECT * FROM c_lista_agencias_cetesb ORDER BY nme_agencia ASC"
+
+								Set rs_combo = Server.CreateObject("ADODB.Recordset")
+									rs_combo.CursorLocation = 3
+									rs_combo.CursorType = 3
+									rs_combo.LockType = 1
+									rs_combo.Open strQ, objCon, , , &H0001
+
+								If Not rs_combo.EOF Then
+									While Not rs_combo.EOF
+										If Trim(rs_combo.Fields.Item("nme_agencia").Value) <> "" Then
+							%>
+							<option value="<%=(rs_combo.Fields.Item("id").Value)%>"><%=(rs_combo.Fields.Item("nme_agencia").Value)%></option>
+							<%
+										End If
+										rs_combo.MoveNext
+									Wend
+								End If
+							%>
+						</select>
+					</td>
+				</tr>
+				<tr valign="baseline">
+					<td align="right" nowrap bgcolor="#CCCCCC" class="style7">
 						<span class="style22">Observações:</span>
 					</td>
 					<td bgcolor="#CCCCCC">
@@ -155,8 +211,8 @@
 		<div align="center">
 			<table border="0">
 				<tr bgcolor="#999999">
-					<!-- <td>&nbsp;</td>
-					<td>&nbsp;</td> -->
+					<td>&nbsp;</td>
+					<td>&nbsp;</td>
 					<td>
 						<span class="style7">Núm. Licença</span>
 					</td>
@@ -169,6 +225,9 @@
 					<td>
 						<span class="style7">Data de Vencimento</span>
 					</td>
+					<td align="center">
+						<span class="style7">Agência Liberação (CETESB)</span>
+					</td>
 					<td>
 						<span class="style7">Observações</span>
 					</td>
@@ -176,7 +235,7 @@
 				</tr>
 				<%
 					cod_empreendimento = Request.QueryString("cod_empreendimento")
-					strQ = "select * from tb_licenca_ambiental INNER JOIN tb_tipo_licenca ON tb_licenca_ambiental.cod_tipo_licenca = tb_tipo_licenca.id where cod_empreendimento = " & cod_empreendimento
+					strQ = "SELECT * FROM c_lista_licencas_ambientais where cod_empreendimento = " & cod_empreendimento
 
 					Set rs_lista = Server.CreateObject("ADODB.Recordset")
 						rs_lista.CursorLocation = 3
@@ -188,16 +247,16 @@
 						While Not rs_lista.EOF
 				%>
 				<tr bgcolor="#CCCCCC">
-					<!-- <td>
-						<a href="altera_convenio.asp?cod_convenio=cod_convenio">
+					<td>
+						<a href="altera_licenca.asp?id=<%=(rs_lista.Fields.Item("id").Value)%>&nme_municipio=<%=(Request.QueryString("nme_municipio"))%>&cod_empreendimento=<%=(Request.QueryString("cod_empreendimento"))%>&nme_empreendimento=<%=(Request.QueryString("nme_empreendimento"))%>">
 							<img src="const/imagens/edit.gif" width="16" height="15" border="0" />
 						</a>
 					</td>
 					<td>
-						<a href="del_convenio.asp?cod_convenio=cod_convenio">
+						<a href="delete_licenca.asp?id=<%=(rs_lista.Fields.Item("id").Value)%>&nme_municipio=<%=(Request.QueryString("nme_municipio"))%>&cod_empreendimento=<%=(Request.QueryString("cod_empreendimento"))%>&nme_empreendimento=<%=(Request.QueryString("nme_empreendimento"))%>">
 							<img src="const/imagens/delete.gif" width="16" height="15" border="0" />
 						</a>
-					</td> -->
+					</td>
 					<td>
 						<span class="style5"><%=(rs_lista.Fields.Item("num_licenca").Value)%></span>
 					</td>
@@ -211,18 +270,21 @@
 						<span class="style5"><%=(rs_lista.Fields.Item("dta_vencimento").Value)%></span>
 					</td>
 					<td align="center">
+						<span class="style5"><%=(rs_lista.Fields.Item("nme_agencia").Value)%></span>
+					</td>
+					<td align="center">
 						<span class="style5"><%=(rs_lista.Fields.Item("dsc_observacoes").Value)%></span>
 					</td>
 					<td>
 						<form id="form-upload" method="post" enctype="multipart/form-data"
-							action="novo_upload.asp?id=<%=(rs_lista.Fields.Item("tb_licenca_ambiental.id").Value)%>&folder=LICENCA&retUrl=<%=(Request.ServerVariables("URL"))%>?<%=(Request.QueryString)%>">
+							action="novo_upload.asp?id=<%=(rs_lista.Fields.Item("id").Value)%>&folder=LICENCA&retUrl=<%=(Request.ServerVariables("URL"))%>?<%=(Request.QueryString)%>">
 							<input type="file" name="blob">
 							<br/>
 							<input type="submit" id="btnSubmit" value="Upload">
 						</form>
 						
 						<%
-							cod_convenio = rs_lista.Fields.Item("tb_licenca_ambiental.id").Value
+							cod_convenio = rs_lista.Fields.Item("id").Value
 							strF = "SELECT * FROM tb_licenca_ambiental_arquivo WHERE cod_referencia = " & cod_convenio
 
 							Set rs_files = Server.CreateObject("ADODB.Recordset")
@@ -236,7 +298,7 @@
 						%>
 							<ul>
 								<li>
-									<a href="download.asp?path=<%=(rs_files.Fields.Item("pth_arquivo").Value)%>&filename=<%=(rs_lista.Fields.Item("tb_licenca_ambiental.id").Value)%>_<%=(rs_files.Fields.Item("nme_arquivo").Value)%>">
+									<a href="download.asp?path=/ARQUIVOS/LICENCA&filename=<%=(rs_lista.Fields.Item("id").Value)%>_<%=(rs_files.Fields.Item("nme_arquivo").Value)%>">
 										<%=(rs_files.Fields.Item("nme_arquivo").Value)%>
 									</a>
 								</li>

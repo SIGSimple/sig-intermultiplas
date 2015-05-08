@@ -1,4 +1,3 @@
-<%@LANGUAGE="VBSCRIPT" CODEPAGE="65001"%>
 <!--#include file="Connections/cpf.asp" -->
 <!--#include file="logout.asp" -->
 <%
@@ -20,6 +19,7 @@
 	<script type="text/javascript" src="//code.jquery.com/jquery-1.11.2.min.js"></script>
 	<script type="text/javascript" src="//code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
 	<script type="text/javascript" src="js/fullscreen.js"></script>
+	<script type="text/javascript" src="js/moment.min.js"></script>
 	<script type="text/javascript" src="js/datepicker-pt-BR.js"></script>
 	<script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
 	<script type="text/javascript">
@@ -33,10 +33,52 @@
 			$("#general_info").removeAttr("checked")
 			$("#situation_overview").removeAttr("checked")
 		}
+
+		function getAvailabeDates(cod_empreendimento){
+			var sql = "SELECT [Data do Registro] FROM c_lista_acompanhamento";
+
+			if(parseInt(cod_empreendimento, 10) > 0)
+				sql += " WHERE PI = '"+ cod_empreendimento +"'";
+
+			$.ajax({
+				url: "query-to-json-util.asp",
+				method: "POST",
+				data: {
+					sql: sql
+				},
+				beforeSend: function() {
+					$("#modalLoading").modal("show");
+				},
+				success: function(data, textStatus, jqXHR){
+					data = JSON.parse(data);
+
+					if(data.length > 0) {
+						var items = [];
+
+						$.each(data, function(i, item){
+							items.push(moment(item['Data do Registro'], "DD/MM/YYYY").format("YYYY/MM/DD"));
+						});
+
+						// $(".datepicker").datepicker($.datepicker.regional["pt-BR"]);
+						$(".datepicker").datepicker({
+							beforeShowDay: function(date){
+								var string = jQuery.datepicker.formatDate('yy/mm/dd', date);
+								return [$.inArray(string, items) != -1];
+							}
+						});
+					}
+					else
+						$(".alert-danger").removeClass("hide");
+
+					$("#modalLoading").modal("hide");
+				},
+				error: function(jqXHR, textStatus, errorThrown){
+					console.log(jqXHR, textStatus, errorThrown);
+				}
+			});
+		}
 				
 		$(function() {
-			$(".datepicker").datepicker($.datepicker.regional["pt-BR"]);
-
 			$(".input-group-addon.calendar, .fa-calendar").on("click", function() {
 				$(".datepicker").trigger("focus");
 			});
@@ -48,11 +90,16 @@
 				var cod_empreendimento = $("#cod_empreendimento").val();
 
 				if(selectedDate){
+					var optionSelected = $("#modelo_relatorio option:selected");
 					if (optionSelected) {
 						optionData = optionSelected.data();
 						if(!optionData.habilitaBotoes && optionData.exibeData && cod_empreendimento != ""){
 							$("#btnClearForm").removeAttr("disabled");
 							$("#btnGenerateReport").removeAttr("disabled");
+						}
+						else if(!optionData.habilitaBotoes && !optionData.exibeLocalidade && optionData.exibeData){
+							$("#btnClearForm").removeAttr("disabled");
+							$("#btnGenerateReport").removeAttr("disabled");	
 						}
 					}
 				}
@@ -80,10 +127,16 @@
 				if(cod_emp != "")
 					report_page += "&cod_empreendimento=" + cod_emp
 
+				var optionSelected = $("#modelo_relatorio option:selected");
 				if (optionSelected) {
 					optionData = optionSelected.data();
 					if(optionData.exibeData && selectedDate){
-						report_page += "&data=" + selectedDate
+						if(report_page.indexOf("?") != -1)
+							report_page += "&"
+						else
+							report_page += "?"
+
+						report_page += "data=" + selectedDate
 					}
 				}
 
@@ -125,12 +178,13 @@
 							$("#btnClearForm").removeAttr("disabled");
 							$("#btnGenerateReport").removeAttr("disabled");
 						}
-						else if(!optionData.habilitaBotoes && optionData.exibeData && selectedDate){
+						else if(!optionData.habilitaBotoes && optionData.exibeData && !selectedDate)
+							getAvailabeDates(cod_empreendimento);
+						else if(!optionData.habilitaBotoes && optionData.exibeData && !selectedDate){
 							$("#btnClearForm").removeAttr("disabled");
 							$("#btnGenerateReport").removeAttr("disabled");
 						}
 					}
-
 				}
 			});
 
@@ -151,6 +205,7 @@
 
 				$("#cod_municipio").val("");
 				$("#cod_empreendimento").val("");
+				$("#data").val("");
 
 				if(optionData.exibeMunicipio){
 					$("#cod_municipio").closest("div.row").removeClass("hide");
@@ -166,6 +221,8 @@
 
 				if(optionData.exibeData) {
 					$("#data").closest("div.row").removeClass("hide");
+					if (!optionData.exibeLocalidade)
+						getAvailabeDates();
 				}
 				else if(!$("#data").closest("div.row").hasClass("hide"))
 					$("#data").closest("div.row").addClass("hide");
@@ -195,14 +252,61 @@
 							<select id="modelo_relatorio" class="form-control">
 								<option></option>
 								<option 
+									<% If Session("MM_UserAuthorization") <> 1 Then Response.Write "disabled='disabled'" End If %>
 									<% If Request("cod_modelo_relatorio") <> "" Then If Request("cod_modelo_relatorio") = "ficha-tecnica-obra.asp" Then Response.Write "selected='selected'" End If End If %>
 									data-habilita-botoes="true" data-exibe-municipio="true" data-exibe-localidade="true" data-exibe-data="false" value="ficha-tecnica-obra.asp">
 									Ficha Técnica da Obra
 								</option>
 								<option 
+									<% If Session("MM_UserAuthorization") <> 1 Then Response.Write "disabled='disabled'" End If %>
+									<% If Request("cod_modelo_relatorio") <> "" Then If Request("cod_modelo_relatorio") = "rel_convenio.asp" Then Response.Write "selected='selected'" End If End If %>
+									data-habilita-botoes="true" data-exibe-municipio="false" data-exibe-localidade="false" value="rel_convenio.asp">
+									Listagem de Convênios
+								</option>
+								<option 
+									<% If Session("MM_UserAuthorization") <> 1 Then Response.Write "disabled='disabled'" End If %>
+									<% If Request("cod_modelo_relatorio") <> "" Then If Request("cod_modelo_relatorio") = "rel_contrato.asp" Then Response.Write "selected='selected'" End If End If %>
+									data-habilita-botoes="true" data-exibe-municipio="false" data-exibe-localidade="false" value="rel_contrato.asp">
+									Listagem de Contratos
+								</option>
+								<option 
+									<% If Session("MM_UserAuthorization") <> 1 Then Response.Write "disabled='disabled'" End If %>
+									<% If Request("cod_modelo_relatorio") <> "" Then If Request("cod_modelo_relatorio") = "rel_gestores.asp" Then Response.Write "selected='selected'" End If End If %>
+									data-habilita-botoes="true" data-exibe-municipio="false" data-exibe-localidade="false" value="rel_gestores.asp">
+									Listagem de Gestores
+								</option>
+								<option 
+									<% If Session("MM_UserAuthorization") <> 1 Then Response.Write "disabled='disabled'" End If %>
+									<% If Request("cod_modelo_relatorio") <> "" Then If Request("cod_modelo_relatorio") = "rel_licitacao.asp" Then Response.Write "selected='selected'" End If End If %>
+									data-habilita-botoes="true" data-exibe-municipio="false" data-exibe-localidade="false" value="rel_licitacao.asp">
+									Listagem de Licitações
+								</option>
+								<option 
+									<% If Session("MM_UserAuthorization") <> 1 Then Response.Write "disabled='disabled'" End If %>
+									<% If Request("cod_modelo_relatorio") <> "" Then If Request("cod_modelo_relatorio") = "rel_info_complementares.asp" Then Response.Write "selected='selected'" End If End If %>
+									data-habilita-botoes="true" data-exibe-municipio="false" data-exibe-localidade="false" value="rel_info_complementares.asp">
+									Informações Complementares das Obras
+								</option>
+								<option 
+									<% If Session("MM_UserAuthorization") <> 1 Then Response.Write "disabled='disabled'" End If %>
+									<% If Request("cod_modelo_relatorio") <> "" Then If Request("cod_modelo_relatorio") = "resumo-situacao.asp" Then Response.Write "selected='selected'" End If End If %>
+									data-habilita-botoes="true" data-exibe-municipio="false" data-exibe-localidade="false" value="resumo-situacao.asp">
+									Resumo da Situação por Município e Localidade
+								</option>
+								<option
+									<% If Request("cod_modelo_relatorio") <> "" Then If Request("cod_modelo_relatorio") = "rel_pendencias.asp" Then Response.Write "selected='selected'" End If End If %>
+									data-habilita-botoes="true" data-exibe-municipio="false" data-exibe-localidade="false" data-exibe-data="false" value="rel_pendencias.asp">
+									Relatório de Pendências
+								</option>
+								<option 
 									<% If Request("cod_modelo_relatorio") <> "" Then If Request("cod_modelo_relatorio") = "rel_rdo.asp" Then Response.Write "selected='selected'" End If End If %>
 									data-habilita-botoes="false" data-exibe-municipio="true" data-exibe-localidade="true" data-exibe-data="true" value="rel_rdo.asp">
-									Relatório Diário de obra
+									Relatório de Obra
+								</option>
+								<option 
+									<% If Request("cod_modelo_relatorio") <> "" Then If Request("cod_modelo_relatorio") = "rel_ultimas_ocorrencias.asp" Then Response.Write "selected='selected'" End If End If %>
+									data-habilita-botoes="false" data-exibe-municipio="false" data-exibe-localidade="false" data-exibe-data="true" value="rel_ultimas_ocorrencias.asp">
+									Relatório de Últimas Ocorrências
 								</option>
 							</select>
 						</div>
@@ -309,6 +413,20 @@
 					<button type="button" id="btnGenerateReport" disabled="disabled" class="btn btn-primary" data-loading-text="Aguarde...">
 						<i class="fa fa-files-o"></i> Gerar Relatório
 					</button>
+				</div>
+			</div>
+		</div>
+
+		<div class="modal fade" id="modalLoading" tabindex="-1" role="dialog" aria-labelledby="modalLoadingLabel" aria-hidden="true">
+			<div class="modal-dialog modal-sm">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+						<h4 class="modal-title" id="modalLoadingLabel">Aguarde!</h4>
+					</div>
+					<div class="modal-body">
+						<i class="fa fa-spinner fa-spin"></i> Buscando informações...
+					</div>
 				</div>
 			</div>
 		</div>

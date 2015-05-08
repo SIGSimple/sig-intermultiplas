@@ -288,7 +288,7 @@
 						%>
 							<ul>
 								<li>
-									<a href="download.asp?path=<%=(rs_files.Fields.Item("pth_arquivo").Value)%>&filename=<%=(rs_lista.Fields.Item("id").Value)%>_<%=(rs_files.Fields.Item("nme_arquivo").Value)%>">
+									<a href="download.asp?path=/ARQUIVOS/ADITAMENTO&filename=<%=(rs_lista.Fields.Item("id").Value)%>_<%=(rs_files.Fields.Item("nme_arquivo").Value)%>">
 										<%=(rs_files.Fields.Item("nme_arquivo").Value)%>
 									</a>
 								</li>

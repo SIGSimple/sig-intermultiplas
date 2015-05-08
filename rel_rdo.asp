@@ -63,36 +63,39 @@
 	<script type="text/javascript">
 		function calcDates() {
 			// Dias Corridos
-			var dta_assinatura = '<%=(rs_dados_contrato.Fields.Item("dta_assinatura").Value)%>';
+			var dta_assinatura = '<% If Not rs_dados_contrato.EOF Then Response.Write rs_dados_contrato.Fields.Item("dta_assinatura").Value End If %>';
+
+			if (dta_assinatura != ""){
 				dta_assinatura = moment(dta_assinatura, "DD/MM/YYYY");
-			var dta_rdo = '<%=(dta_rdo)%>';
-				dta_rdo = moment(dta_rdo, "DD/MM/YYYY");
-			var dias_decorridos = dta_rdo.diff(dta_assinatura, 'days');
-			
-			// Dias Faltantes
-			var dta_assinatura_ = '<%=(rs_dados_contrato.Fields.Item("dta_assinatura").Value)%>';
-				dta_assinatura_ = moment(dta_assinatura_, "DD/MM/YYYY");
-			var prz_execucao = parseInt('<%=(rs_dados_contrato.Fields.Item("prz_original_execucao_meses").Value)%>',10);
-			var dta_encerramento = dta_assinatura_.add(prz_execucao, 'months');
-			var dias_totais = dta_encerramento.diff(dta_assinatura, "days");
-			var dias_faltantes = (dias_totais - dias_decorridos);
-			
-			// % de Andamento
-			var perc_andamento = parseInt(((dias_decorridos / dias_totais) * 100), 10);
+				var dta_rdo = '<%=(dta_rdo)%>';
+					dta_rdo = moment(dta_rdo, "DD/MM/YYYY");
+				var dias_decorridos = dta_rdo.diff(dta_assinatura, 'days');
+				
+				// Dias Faltantes
+				var dta_assinatura_ = '<%  If Not rs_dados_contrato.EOF Then Response.Write rs_dados_contrato.Fields.Item("dta_assinatura").Value End If %>';
+					dta_assinatura_ = moment(dta_assinatura_, "DD/MM/YYYY");
+				var prz_execucao = parseInt('<%  If Not rs_dados_contrato.EOF Then Response.Write rs_dados_contrato.Fields.Item("prz_original_execucao_meses").Value End If %>',10);
+				var dta_encerramento = dta_assinatura_.add(prz_execucao, 'months');
+				var dias_totais = dta_encerramento.diff(dta_assinatura, "days");
+				var dias_faltantes = (dias_totais - dias_decorridos);
+				
+				// % de Andamento
+				var perc_andamento = parseInt(((dias_decorridos / dias_totais) * 100), 10);
 
-			$(".dias-decorridos").text(dias_decorridos);
-			$(".dias-faltantes").text(dias_faltantes);
-			$(".progress-bar").css("width", perc_andamento + "%");
-			$(".progress").attr("title", perc_andamento + "%");
+				$(".dias-decorridos").text(dias_decorridos);
+				$(".dias-faltantes").text(dias_faltantes);
+				$(".progress-bar").css("width", perc_andamento + "%");
+				$(".progress").attr("title", perc_andamento + "%");
 
-			if(perc_andamento > 0 && perc_andamento < 100)
-				$(".progress-bar").addClass("progress-bar-warning");
-			else if(perc_andamento == 100)
-				$(".progress-bar").addClass("progress-bar-success");
-			else if(perc_andamento > 100)
-				$(".progress-bar").addClass("progress-bar-danger");
+				if(perc_andamento > 0 && perc_andamento < 100)
+					$(".progress-bar").addClass("progress-bar-warning");
+				else if(perc_andamento == 100)
+					$(".progress-bar").addClass("progress-bar-success");
+				else if(perc_andamento > 100)
+					$(".progress-bar").addClass("progress-bar-danger");
 
-			$('[data-toggle="tooltip"]').tooltip();
+				$('[data-toggle="tooltip"]').tooltip();
+			}
 		}
 
 		$(function(){
@@ -158,6 +161,12 @@
 				<%
 					If Not rs_dados_rdo.EOF Then
 				%>
+
+				<div class="row header-details">
+					<div class="col-xs-12 text-left">
+						<strong>Município: </strong> <%=(rs_dados_obra.Fields.Item("municipio").Value)%>
+					</div>
+				</div>
 
 				<div class="row header-details">
 					<div class="col-xs-6 text-left">
@@ -351,38 +360,17 @@
 						<table class="table table-condensed table-boxed">
 							<thead>
 								<tr class="primary">
-									<td colspan="2" class="text-center">Evolução</td>
+									<td class="text-center">Evolução</td>
 								</tr>
 							</thead>
 							<tbody>
 								<tr>
-									<td>
-										<%
-											If Not IsNull(rs_dados_rdo.Fields.Item("flg_dia_trabalhado").Value) And Not IsEmpty(rs_dados_rdo.Fields.Item("flg_dia_trabalhado").Value) Then
-												If rs_dados_rdo.Fields.Item("flg_dia_trabalhado").Value = "Não" Then
-										%>
-										<i class="fa fa-check-square"></i>
-										<%
-												Else
-													If rs_dados_rdo.Fields.Item("flg_dia_trabalhado").Value = "Sim" Then
-										%>
-										<i class="fa fa-square"></i>
-										<%
-													End If
-												End If
-											Else
-										%>
-										<i class="fa fa-square"></i>
-										<%
-											End If
-										%>
-										Dia Perdido
+									<td class="text-center text-90">
+										Decorridos: <span class="dias-decorridos"></span> | Faltantes: <span class="dias-faltantes"></span>
 									</td>
-									<td class="text-center text-90">Decorridos: <span class="dias-decorridos"></span> | Faltantes: <span class="dias-faltantes"></span></td>
 								</tr>
 								<tr>
-									<td><small><strong>12</strong> dias perdidos (acum.)</small></td>
-									<td class="">
+									<td>
 										<div class="progress progress-striped active" data-toggle="tooltip" data-placement="bottom">
 											<div class="progress-bar"></div>
 										</div>

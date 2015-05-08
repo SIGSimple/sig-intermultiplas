@@ -99,6 +99,9 @@
 
 						var cargaOrganizaRetirada = (pop2030 * 0.0018).toFixed(2);
 
+						moment.locale("pt-br");
+						var dta_inauguracao = (dadosObra['dta_inauguracao']) ? moment(dadosObra['dta_inauguracao'], "DD/MM/YYYY").format("MMMM/YYYY") : "";
+
 						$("#txt-municipio-localidade").text(dadosObra['Município'] +" - "+ dadosObra['nome_empreendimento']);
 						$("#txt-nome-prefeitura").text(dadosObra['prefeitura']);
 						$("#txt-nome-prefeito").text(dadosObra['prefeito']);
@@ -106,9 +109,13 @@
 						$("#txt-objeto-obra").text((dadosObra['Descrição da Intervenção FDE']) ? dadosObra['Descrição da Intervenção FDE'] : "");
 						$("#txt-empresa-contratada").text(dadosObra['empresa_contratada']);
 						$("#txt-prazo-execucao").text((dadosObra.dta_assinatura) ? dtaAssinatura +" à "+ dtaVigencia : "");
+						$("#txt-situacao").text(dadosObra['desc_situacao_externa']);
 						$("#txt-investimento-governo").text(dadosObra['Valor do Contrato']);
 						$("#txt-pop-2010").text(dadosObra['qtd_populacao_urbana_2010']);
 						$("#txt-pop-2030").text(pop2030);
+						
+						$("#txt-dta-inauguracao").text(dta_inauguracao);
+						
 						$("#txt-beneficio-obra").text((dadosObra['dsc_resultado_obtido']) ? dadosObra['dsc_resultado_obtido'] : "");
 						$("#txt-beneficio-ambiental").text("Carga Orgânica Retirada: "+ cargaOrganizaRetirada +" (toneladas/mês)");
 						$("#txt-parceria-realizacao").text((dadosObra['dsc_parceria_realizacao']) ? dadosObra['dsc_parceria_realizacao'] : "");
@@ -140,7 +147,7 @@
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
 				</button>
-				<a class="navbar-brand" href="#">SIG - Ficha Técnica de Obra Concluída</a>
+				<a class="navbar-brand" href="#">SIG - Ficha Técnica da Obra</a>
 			</div>
 
 			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
@@ -233,6 +240,17 @@
 							<tbody>
 								<tr>
 									<td class="text-middle text-bold">
+										Situação
+									</td>
+									<td class="text-right" id="txt-situacao"></td>
+								</tr>
+							</tbody>
+						</table>
+
+						<table class="table table-bordered table-condensed">
+							<tbody>
+								<tr>
+									<td class="text-middle text-bold">
 										Recursos do Governo do Estado de São Paulo
 									</td>
 									<td class="text-middle text-right vlr" id="txt-investimento-governo"></td>
@@ -248,6 +266,12 @@
 										População Beneficiada em Demanda Futura - 2030
 									</td>
 									<td class="text-middle text-right num" id="txt-pop-2030"></td>
+								</tr>
+								<tr>
+									<td class="text-middle text-bold">
+										Conclusão/Inauguração em
+									</td>
+									<td class="text-middle text-right" id="txt-dta-inauguracao"></td>
 								</tr>
 							</tbody>
 						</table>
@@ -277,9 +301,21 @@
 					</div>
 				</div>
 
+				<%
+					strQueryFotos = "SELECT * FROM c_lista_fotos_obra WHERE PI = '" & cod_empreendimento & "'"
+
+					Set rs_fotos = Server.CreateObject("ADODB.Recordset")
+						rs_fotos.CursorLocation = 3
+						rs_fotos.CursorType = 3
+						rs_fotos.LockType = 1
+						rs_fotos.Open strQueryFotos, objCon, , , &H0001
+
+					If Not rs_fotos.EOF Then
+				%>
+
 				<div class="row">
 					<div class="col-xs-12">
-						<div class="panel panel-primary">
+						<div class="panel panel-default">
 							<div class="panel-heading">
 								<h3 class="panel-title"><i class="fa fa-picture-o"></i> Galeria de Fotos</h3>
 							</div>
@@ -287,27 +323,19 @@
 							<div class="panel-body">
 								<div class="row">
 									<%
-										strQ = "SELECT * FROM c_lista_fotos_obra WHERE PI = '" & cod_empreendimento & "'"
+										While Not rs_fotos.EOF
+											pth_url = LCase(rs_fotos.Fields.Item("pth_arquivo").Value)
+											pth_url = Replace(pth_url, "\\10.0.75.125\intermultiplas.net\public\", "")
+											pth_url = Replace(pth_url, "e:\home\programaagualimpa\web\", "")
+											pth_url = Replace(pth_url, "\", "/")
+											img_url = pth_url
 
-										Set rs_fotos = Server.CreateObject("ADODB.Recordset")
-											rs_fotos.CursorLocation = 3
-											rs_fotos.CursorType = 3
-											rs_fotos.LockType = 1
-											rs_fotos.Open strQ, objCon, , , &H0001
+											If Not rs_fotos.Fields.Item("flg_pmweb_file").Value Then
+												img_url = img_url & rs_fotos.Fields.Item("cod_referencia").Value & "_"
+											End If
 
-										dta_registro = ""
-										dsc_registro = ""
-
-										If Not rs_fotos.EOF Then
-											While Not rs_fotos.EOF
-												dta_registro = rs_fotos.Fields.Item("Data do Registro").Value
-												dsc_registro = rs_fotos.Fields.Item("Registro").Value
-												pth_url = rs_fotos.Fields.Item("pth_arquivo").Value
-												pth_url = Replace(pth_url, "\\10.0.75.125\intermultiplas.net\public\", "")
-												pth_url = Replace(pth_url, "\", "/")
-												img_url = pth_url & rs_fotos.Fields.Item("id_arquivo").Value &"_"& rs_fotos.Fields.Item("nme_arquivo").Value
+											img_url = img_url & rs_fotos.Fields.Item("nme_arquivo").Value
 									%>
-
 									<div class="col-xs-12 col-sm-4 col-md-4">
 										<div class="thumbnail">
 											<img src="<%=(img_url)%>" alt="">
@@ -321,9 +349,8 @@
 										</div>
 									</div>
 									<%
-												rs_fotos.MoveNext
-											Wend
-										End If
+											rs_fotos.MoveNext
+										Wend
 									%>
 								</div>
 							</div>
@@ -331,9 +358,210 @@
 					</div>
 				</div>
 
+				<%
+					End If
+
+					If (Session("MM_UserAuthorization") = 8 OR Session("MM_UserAuthorization") = 9) Then
+				%>
 				<div class="row">
 					<div class="col-xs-12">
-						<div class="panel panel-primary">
+						<div class="panel panel-default">
+							<div class="panel-heading">
+								<h3 class="panel-title"><i class="fa fa-info-circle"></i> Situação da Obra</h3>
+							</div>
+
+							<div class="panel-body">
+								<%=(rs_dados_obra.Fields.Item("dsc_observacoes_relatorio_mensal").Value)%>
+							</div>
+						</div>
+					</div>
+				</div>
+				<%
+					Else
+						strQueryLicencas = "SELECT * FROM tb_licenca_ambiental INNER JOIN tb_tipo_licenca ON tb_tipo_licenca.id = tb_licenca_ambiental.cod_tipo_licenca WHERE cod_empreendimento = " & cod_empreendimento & ""
+
+						Set rs_licencas = Server.CreateObject("ADODB.Recordset")
+							rs_licencas.CursorLocation = 3
+							rs_licencas.CursorType = 3
+							rs_licencas.LockType = 1
+							rs_licencas.Open strQueryLicencas, objCon, , , &H0001
+
+						strQueryOutorgas = "SELECT * FROM tb_outorga WHERE cod_empreendimento = " & cod_empreendimento & ""
+
+						Set rs_outorgas = Server.CreateObject("ADODB.Recordset")
+							rs_outorgas.CursorLocation = 3
+							rs_outorgas.CursorType = 3
+							rs_outorgas.LockType = 1
+							rs_outorgas.Open strQueryOutorgas, objCon, , , &H0001
+
+						strQueryApps = "SELECT * FROM tb_app WHERE cod_empreendimento = " & cod_empreendimento & ""
+
+						Set rs_apps = Server.CreateObject("ADODB.Recordset")
+							rs_apps.CursorLocation = 3
+							rs_apps.CursorType = 3
+							rs_apps.LockType = 1
+							rs_apps.Open strQueryApps, objCon, , , &H0001
+
+						strQueryTCRAs = "SELECT * FROM tb_tcra WHERE cod_empreendimento = " & cod_empreendimento & ""
+
+						Set rs_tcras = Server.CreateObject("ADODB.Recordset")
+							rs_tcras.CursorLocation = 3
+							rs_tcras.CursorType = 3
+							rs_tcras.LockType = 1
+							rs_tcras.Open strQueryTCRAs, objCon, , , &H0001
+
+						If Not rs_licencas.EOF Or Not rs_outorgas.EOF Or Not rs_apps.EOF Or Not rs_tcras.EOF Then
+				%>
+
+				<div class="row">
+					<div class="col-xs-12">
+						<div class="panel panel-default">
+							<div class="panel-heading">
+								<h3 class="panel-title"><i class="fa fa-recycle"></i> Meio Ambiente</h3>
+							</div>
+
+							<div class="panel-body">
+								<%
+									If Not rs_licencas.EOF Then
+								%>
+								<div class="form-group">
+									<label class="control-label">Licenças Ambientais</label>
+									<table class="table table-history table-bordered table-hover table-striped table-condensed">
+										<thead>
+											<th>Nº Licença</th>
+											<th class="text-center">Tipo de Licença</th>
+											<th class="text-center">Data de Concessão</th>
+											<th class="text-center">Data de Vencimento</th>
+										</thead>
+										<tbody>
+											<%
+												While Not rs_licencas.EOF
+											%>
+											<tr>
+												<td><%=(rs_licencas.Fields.Item("num_licenca").Value)%></td>
+												<td><%=(rs_licencas.Fields.Item("dsc_tipo_licenca").Value)%></td>
+												<td class="text-center"><%=(rs_licencas.Fields.Item("dta_concessao").Value)%></td>
+												<td class="text-center"><%=(rs_licencas.Fields.Item("dta_vencimento").Value)%></td>
+											</tr>
+											<%
+													rs_licencas.MoveNext
+												Wend
+											%>
+										</tbody>
+									</table>
+								</div>
+								<%
+									End If
+
+									If Not rs_outorgas.EOF Then
+								%>
+								<div class="form-group">
+									<label class="control-label">Outorgas</label>
+									<table class="table table-history table-bordered table-hover table-striped table-condensed">
+										<thead>
+											<th>Nº Outorga</th>
+											<th class="text-center">Data de Concessão</th>
+											<th class="text-center">Data de Vencimento</th>
+										</thead>
+										<tbody>
+											<%
+												While Not rs_outorgas.EOF
+											%>
+											<tr>
+												<td><%=(rs_outorgas.Fields.Item("num_outorga").Value)%></td>
+												<td class="text-center"><%=(rs_outorgas.Fields.Item("dta_concessao").Value)%></td>
+												<td class="text-center"><%=(rs_outorgas.Fields.Item("dta_vencimento").Value)%></td>
+											</tr>
+											<%
+													rs_outorgas.MoveNext
+												Wend
+											%>
+										</tbody>
+									</table>
+								</div>
+								<%
+									End If
+
+									If Not rs_apps.EOF Then
+								%>
+								<div class="form-group">
+									<label class="control-label">Autorizações p/ Intervenção em APPs</label>
+									<table class="table table-history table-bordered table-hover table-striped table-condensed">
+										<thead>
+											<th>Nº App</th>
+											<th class="text-center">Data de Concessão</th>
+											<th class="text-center">Data de Vencimento</th>
+										</thead>
+										<tbody>
+											<%
+												While Not rs_apps.EOF
+											%>
+											<tr>
+												<td><%=(rs_apps.Fields.Item("num_app").Value)%></td>
+												<td class="text-center"><%=(rs_apps.Fields.Item("dta_concessao").Value)%></td>
+												<td class="text-center"><%=(rs_apps.Fields.Item("dta_vencimento").Value)%></td>
+											</tr>
+											<%
+													rs_apps.MoveNext
+												Wend
+											%>
+										</tbody>
+									</table>
+								</div>
+								<%
+									End If
+
+									If Not rs_tcras.EOF Then
+								%>
+								<div class="form-group">
+									<label class="control-label">TCRAs</label>
+									<table class="table table-history table-bordered table-hover table-striped table-condensed">
+										<thead>
+											<th>Cod. TCRA</th>
+											<th class="text-center">Data de Concessão</th>
+											<th class="text-center">Data de Vencimento</th>
+										</thead>
+										<tbody>
+											<%
+												While Not rs_tcras.EOF
+											%>
+											<tr>
+												<td><%=(rs_tcras.Fields.Item("cod_tcra").Value)%></td>
+												<td class="text-center"><%=(rs_tcras.Fields.Item("dta_concessao").Value)%></td>
+												<td class="text-center"><%=(rs_tcras.Fields.Item("dta_vencimento").Value)%></td>
+											</tr>
+											<%
+													rs_tcras.MoveNext
+												Wend
+											%>
+										</tbody>
+									</table>
+								</div>
+								<%
+									End If
+								%>
+							</div>
+						</div>
+					</div>
+				</div>
+				
+				<%
+						End If
+
+						strQueryHistoricoObra = "SELECT * FROM c_lista_acompanhamento WHERE PI = '" & cod_empreendimento & "' ORDER BY [Data do Registro] DESC"
+
+						Set rs_historicoObra = Server.CreateObject("ADODB.Recordset")
+							rs_historicoObra.CursorLocation = 3
+							rs_historicoObra.CursorType = 3
+							rs_historicoObra.LockType = 1
+							rs_historicoObra.Open strQueryHistoricoObra, objCon, , , &H0001
+
+						If Not rs_historicoObra.EOF Then
+				%>
+
+				<div class="row">
+					<div class="col-xs-12">
+						<div class="panel panel-default">
 							<div class="panel-heading">
 								<h3 class="panel-title"><i class="fa fa-clock-o"></i> Histórico da Obra</h3>
 							</div>
@@ -346,25 +574,15 @@
 									</thead>
 									<tbody>
 										<%
-											strQ = "SELECT * FROM c_lista_acompanhamento WHERE PI = '" & cod_empreendimento & "' ORDER BY [Data do Registro] DESC"
-
-											Set rs_fotos = Server.CreateObject("ADODB.Recordset")
-												rs_fotos.CursorLocation = 3
-												rs_fotos.CursorType = 3
-												rs_fotos.LockType = 1
-												rs_fotos.Open strQ, objCon, , , &H0001
-
-											If Not rs_fotos.EOF Then
-												While Not rs_fotos.EOF
+											While Not rs_historicoObra.EOF
 										%>
 										<tr>
-											<td class="text-center text-middle"><%=(rs_fotos.Fields.Item("Data do Registro").Value)%></td>
-											<td><%=(rs_fotos.Fields.Item("Registro").Value)%></td>
+											<td class="text-center text-middle"><%=(rs_historicoObra.Fields.Item("Data do Registro").Value)%></td>
+											<td><%=(rs_historicoObra.Fields.Item("Registro").Value)%></td>
 										</tr>
 										<%
-													rs_fotos.MoveNext
-												Wend
-											End If
+												rs_historicoObra.MoveNext
+											Wend
 										%>
 									</tbody>
 								</table>
@@ -373,6 +591,10 @@
 						</div>
 					</div>
 				</div>
+				<%
+						End If
+					End If
+				%>
 			</div>
 		</div>
 

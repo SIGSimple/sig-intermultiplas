@@ -1,4 +1,4 @@
-<%@LANGUAGE="VBSCRIPT" CODEPAGE="1252"%>
+<%@LANGUAGE="VBSCRIPT" CODEPAGE="65001"%>
 <!--#include file="Connections/cpf.asp" -->
 <%
 ' *** Restrict Access To Page: Grant or deny access to this page
@@ -194,7 +194,7 @@ rs_lista_numRows = rs_lista_numRows + Repeat1__numRows
 %><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <title>Cadastro de Usu&aacute;rios</title>
 <style type="text/css">
 <!--
@@ -208,6 +208,7 @@ rs_lista_numRows = rs_lista_numRows + Repeat1__numRows
 </head>
 
 <body>
+<p align="center"><strong><span class="style17">Cadastro de Usuários </span></strong></p>
 <form method="POST" action="<%=MM_editAction%>" name="form1">
   <table align="center">
     <tr valign="baseline">

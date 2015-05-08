@@ -54,6 +54,7 @@ function FP_getObjectByID(id,o) {//v1.0
 </head>
 
 <body onload="FP_preloadImgs(/*url*/'button52.jpg', /*url*/'button53.jpg')">
+<p align="center"><strong><span class="style17">Acompanhamento de Obra</span></strong></p>
 <form id="form1" name="form1" method="post" action="filtro_exibir_adm.asp?cod_predio=<%=(Recordset1.Fields.Item("cod_predio").Value)%>">
   <label>
   <div align="center">

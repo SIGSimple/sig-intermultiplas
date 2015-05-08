@@ -116,7 +116,7 @@ function confirm_delete(form) {
 </SCRIPT>
 </HEAD>
 <BODY class=texto_pagina>
-Links: <a href="<%=pagina_consulta%>" class="texto_pagina">Página de Consulta</a> | <a href="<%=pagina_inclusao%>" class="texto_pagina">Página de Inclusão<hr size=1 color=gainsboro></a><br>
+<b>Cadastro de Programas</b> | Links: <a href="<%=pagina_consulta%>" class="texto_pagina">Página de Consulta</a> | <a href="<%=pagina_inclusao%>" class="texto_pagina">Página de Inclusão<hr size=1 color=gainsboro></a>
 
 <%
 If Request.QueryString("PagAtual") = "" Then

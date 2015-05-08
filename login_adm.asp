@@ -108,7 +108,7 @@ function FP_getObjectByID(id,o) {//v1.0
         </a></td>
 	    <td height="18" style="height: 13.5pt; color: windowtext; font-size: 10.0pt; font-weight: 400; font-style: normal; text-decoration: none; font-family: Arial; text-align: center; vertical-align: bottom; white-space: nowrap; border: medium none; padding: 0px" width="17">		</td>
 	    <td height="18" style="height: 13.5pt; color: windowtext; font-size: 10.0pt; font-weight: 400; font-style: normal; text-decoration: none; font-family: Arial; text-align: center; vertical-align: bottom; white-space: nowrap; border: medium none; padding: 0px" width="222">
-	      <a href="cad_convenio.asp">Cadastro de Conv&ecirc;nios</a><a href="cadastro_pi.asp"></a></td>
+	      <a href="cad_convenio.asp">Cadastro/Acompanhamento de Conv&ecirc;nios</a><a href="cadastro_pi.asp"></a></td>
 	    <td style="color: windowtext; font-size: 10.0pt; font-weight: 400; font-style: normal; text-decoration: none; font-family: Arial; text-align: center; vertical-align: bottom; white-space: nowrap; border: medium none; padding: 0px" width="220">
 		<p align="center">&nbsp;</td>
 	    <td style="color: windowtext; font-size: 10.0pt; font-weight: 400; font-style: normal; text-decoration: none; font-family: Arial; text-align: center; vertical-align: bottom; white-space: nowrap; border: medium none; padding: 0px" width="332">&nbsp;</td>
@@ -163,7 +163,7 @@ function FP_getObjectByID(id,o) {//v1.0
         </a></td>
 	    <td height="18" style="height: 13.5pt; color: windowtext; font-size: 10.0pt; font-weight: 400; font-style: normal; text-decoration: none; font-family: Arial; text-align: center; vertical-align: bottom; white-space: nowrap; border: medium none; padding: 0px" width="17">		</td>
 	    <td height="18" style="height: 13.5pt; color: windowtext; font-size: 10.0pt; font-weight: 400; font-style: normal; text-decoration: none; font-family: Arial; text-align: center; vertical-align: bottom; white-space: nowrap; border: medium none; padding: 0px" width="222">
-          <!-- <a href="msg_construcao.asp"><img src="button3D.jpg" alt="Medição Gerenciadora" name="img11" width="200" height="26" border="0" id="img11" onMouseDown="FP_swapImg(1,0,/*id*/'img11',/*url*/'button3F.jpg')" onMouseUp="FP_swapImg(0,0,/*id*/'img11',/*url*/'button3E.jpg')" onMouseOver="FP_swapImg(1,0,/*id*/'img11',/*url*/'button3E.jpg')" onMouseOut="FP_swapImg(0,0,/*id*/'img11',/*url*/'button3D.jpg')" fp-style="fp-btn: Embossed Capsule 5; fp-proportional: 0" fp-title="Medição Gerenciadora"></a> --><a href="filtro_adm.asp">Acompanhamento de Empreendimento</a></td>
+          <!-- <a href="msg_construcao.asp"><img src="button3D.jpg" alt="Medição Gerenciadora" name="img11" width="200" height="26" border="0" id="img11" onMouseDown="FP_swapImg(1,0,/*id*/'img11',/*url*/'button3F.jpg')" onMouseUp="FP_swapImg(0,0,/*id*/'img11',/*url*/'button3E.jpg')" onMouseOver="FP_swapImg(1,0,/*id*/'img11',/*url*/'button3E.jpg')" onMouseOut="FP_swapImg(0,0,/*id*/'img11',/*url*/'button3D.jpg')" fp-style="fp-btn: Embossed Capsule 5; fp-proportional: 0" fp-title="Medição Gerenciadora"></a> --><a href="filtro_adm.asp">Acompanhamento de Obra</a></td>
 	    <td style="color: windowtext; font-size: 10.0pt; font-weight: 400; font-style: normal; text-decoration: none; font-family: Arial; text-align: center; vertical-align: bottom; white-space: nowrap; border: medium none; padding: 0px" width="220">&nbsp;</td>
 	    <td style="color: windowtext; font-size: 10.0pt; font-weight: 400; font-style: normal; text-decoration: none; font-family: Arial; text-align: center; vertical-align: bottom; white-space: nowrap; border: medium none; padding: 0px" width="332">&nbsp;		</td>
     </tr>
@@ -181,10 +181,12 @@ function FP_getObjectByID(id,o) {//v1.0
         </a></td>
 	    <td height="17" style="height: 12.75pt; color: windowtext; font-size: 10.0pt; font-weight: 400; font-style: normal; text-decoration: none; font-family: Arial; text-align: center; vertical-align: bottom; white-space: nowrap; border: medium none; padding: 0px" width="17">		</td>
 	    <td height="17" style="height: 12.75pt; color: windowtext; font-size: 10.0pt; font-weight: 400; font-style: normal; text-decoration: none; font-family: Arial; text-align: center; vertical-align: bottom; white-space: nowrap; border: medium none; padding: 0px" width="222">
-          </td>
+          <a href="cad_contrato.asp">
+    Cadastro/Acompanhamento de Contratos
+        </a></td>
 	    <td style="color: windowtext; font-size: 10.0pt; font-weight: 400; font-style: normal; text-decoration: none; font-family: Arial; text-align: center; vertical-align: bottom; white-space: nowrap; border: medium none; padding: 0px" width="220">&nbsp;        </td>
 	    <td style="color: windowtext; font-size: 10.0pt; font-weight: 400; font-style: normal; text-decoration: none; font-family: Arial; text-align: center; vertical-align: bottom; white-space: nowrap; border: medium none; padding: 0px" width="332">
-          <a href="rel_adm.asp">
+          <a href="reports.asp">
           Relatórios
           </a></td>
     </tr>
@@ -196,18 +198,73 @@ function FP_getObjectByID(id,o) {//v1.0
 	    <td style="color: windowtext; font-size: 10.0pt; font-weight: 400; font-style: normal; text-decoration: none; font-family: Arial; text-align: center; vertical-align: bottom; white-space: nowrap; border: medium none; padding: 0px" width="332">&nbsp;</td>
     </tr>
     <tr height="17" style="height: 12.75pt">
-      <td height="17" style="height: 12.75pt; color: windowtext; font-size: 10.0pt; font-weight: 400; font-style: normal; text-decoration: none; font-family: Arial; text-align: center; vertical-align: bottom; white-space: nowrap; border: medium none; padding: 0px" width="221">		</td>
+      <td height="17" style="height: 12.75pt; color: windowtext; font-size: 10.0pt; font-weight: 400; font-style: normal; text-decoration: none; font-family: Arial; text-align: center; vertical-align: bottom; white-space: nowrap; border: medium none; padding: 0px" width="221">
+        <a href="cad_licitacao.asp">
+    Cadastro de Licitações
+        </a>
+      </td>
+      <td height="17" style="height: 12.75pt; color: windowtext; font-size: 10.0pt; font-weight: 400; font-style: normal; text-decoration: none; font-family: Arial; text-align: center; vertical-align: bottom; white-space: nowrap; border: medium none; padding: 0px" width="17">    </td>
+      <td height="17" style="height: 12.75pt; color: windowtext; font-size: 10.0pt; font-weight: 400; font-style: normal; text-decoration: none; font-family: Arial; text-align: center; vertical-align: bottom; white-space: nowrap; border: medium none; padding: 0px" width="222">
+         <a href="cad_contrato_empreendimento.asp">
+    Associação Empreendimento x Contrato
+        </a>
+      </td>
+      <td style="color: windowtext; font-size: 10.0pt; font-weight: 400; font-style: normal; text-decoration: none; font-family: Arial; text-align: center; vertical-align: bottom; white-space: nowrap; border: medium none; padding: 0px" width="220">&nbsp;</td>
+      <td style="color: windowtext; font-size: 10.0pt; font-weight: 400; font-style: normal; text-decoration: none; font-family: Arial; text-align: center; vertical-align: bottom; white-space: nowrap; border: medium none; padding: 0px" width="332">&nbsp;</td>
+    </tr>
+    <tr height="17" style="height: 12.75pt">
+      <td height="17" style="height: 12.75pt; color: windowtext; font-size: 10.0pt; font-weight: 400; font-style: normal; text-decoration: none; font-family: Arial; text-align: center; vertical-align: bottom; white-space: nowrap; border: medium none; padding: 0px" width="221">   </td>
 	    <td height="17" style="height: 12.75pt; color: windowtext; font-size: 10.0pt; font-weight: 400; font-style: normal; text-decoration: none; font-family: Arial; text-align: center; vertical-align: bottom; white-space: nowrap; border: medium none; padding: 0px" width="17">		</td>
 	    <td height="17" style="height: 12.75pt; color: windowtext; font-size: 10.0pt; font-weight: 400; font-style: normal; text-decoration: none; font-family: Arial; text-align: center; vertical-align: bottom; white-space: nowrap; border: medium none; padding: 0px" width="222">		</td>
 	    <td style="color: windowtext; font-size: 10.0pt; font-weight: 400; font-style: normal; text-decoration: none; font-family: Arial; text-align: center; vertical-align: bottom; white-space: nowrap; border: medium none; padding: 0px" width="220">&nbsp;</td>
 	    <td style="color: windowtext; font-size: 10.0pt; font-weight: 400; font-style: normal; text-decoration: none; font-family: Arial; text-align: center; vertical-align: bottom; white-space: nowrap; border: medium none; padding: 0px" width="332">&nbsp;</td>
     </tr>
     <tr height="17" style="height: 12.75pt">
-      <td height="17" style="height: 12.75pt; color: windowtext; font-size: 10.0pt; font-weight: 400; font-style: normal; text-decoration: none; font-family: Arial; text-align: center; vertical-align: bottom; white-space: nowrap; border: medium none; padding: 0px" width="221">		</td>
-	    <td height="17" style="height: 12.75pt; color: windowtext; font-size: 10.0pt; font-weight: 400; font-style: normal; text-decoration: none; font-family: Arial; text-align: center; vertical-align: bottom; white-space: nowrap; border: medium none; padding: 0px" width="17">		</td>
-	    <td height="17" style="height: 12.75pt; color: windowtext; font-size: 10.0pt; font-weight: 400; font-style: normal; text-decoration: none; font-family: Arial; text-align: center; vertical-align: bottom; white-space: nowrap; border: medium none; padding: 0px" width="222">		</td>
-	    <td style="color: windowtext; font-size: 10.0pt; font-weight: 400; font-style: normal; text-decoration: none; font-family: Arial; text-align: center; vertical-align: bottom; white-space: nowrap; border: medium none; padding: 0px" width="220">&nbsp;</td>
-	    <td style="color: windowtext; font-size: 10.0pt; font-weight: 400; font-style: normal; text-decoration: none; font-family: Arial; text-align: center; vertical-align: bottom; white-space: nowrap; border: medium none; padding: 0px" width="332">&nbsp;</td>
+      <td height="17" style="height: 12.75pt; color: windowtext; font-size: 10.0pt; font-weight: 400; font-style: normal; text-decoration: none; font-family: Arial; text-align: center; vertical-align: bottom; white-space: nowrap; border: medium none; padding: 0px" width="221">
+         <a href="cad_convenio_licitacao.asp">
+    Associação Convênio x Licitação
+        </a>
+      </td>
+      <td height="17" style="height: 12.75pt; color: windowtext; font-size: 10.0pt; font-weight: 400; font-style: normal; text-decoration: none; font-family: Arial; text-align: center; vertical-align: bottom; white-space: nowrap; border: medium none; padding: 0px" width="17">    </td>
+      <td height="17" style="height: 12.75pt; color: windowtext; font-size: 10.0pt; font-weight: 400; font-style: normal; text-decoration: none; font-family: Arial; text-align: center; vertical-align: bottom; white-space: nowrap; border: medium none; padding: 0px" width="222">   </td>
+      <td style="color: windowtext; font-size: 10.0pt; font-weight: 400; font-style: normal; text-decoration: none; font-family: Arial; text-align: center; vertical-align: bottom; white-space: nowrap; border: medium none; padding: 0px" width="220">&nbsp;</td>
+      <td style="color: windowtext; font-size: 10.0pt; font-weight: 400; font-style: normal; text-decoration: none; font-family: Arial; text-align: center; vertical-align: bottom; white-space: nowrap; border: medium none; padding: 0px" width="332">&nbsp;</td>
+    </tr>
+    <tr height="17" style="height: 12.75pt">
+      <td height="17" style="height: 12.75pt; color: windowtext; font-size: 10.0pt; font-weight: 400; font-style: normal; text-decoration: none; font-family: Arial; text-align: center; vertical-align: bottom; white-space: nowrap; border: medium none; padding: 0px" width="221">   </td>
+      <td height="17" style="height: 12.75pt; color: windowtext; font-size: 10.0pt; font-weight: 400; font-style: normal; text-decoration: none; font-family: Arial; text-align: center; vertical-align: bottom; white-space: nowrap; border: medium none; padding: 0px" width="17">    </td>
+      <td height="17" style="height: 12.75pt; color: windowtext; font-size: 10.0pt; font-weight: 400; font-style: normal; text-decoration: none; font-family: Arial; text-align: center; vertical-align: bottom; white-space: nowrap; border: medium none; padding: 0px" width="222">   </td>
+      <td style="color: windowtext; font-size: 10.0pt; font-weight: 400; font-style: normal; text-decoration: none; font-family: Arial; text-align: center; vertical-align: bottom; white-space: nowrap; border: medium none; padding: 0px" width="220">&nbsp;</td>
+      <td style="color: windowtext; font-size: 10.0pt; font-weight: 400; font-style: normal; text-decoration: none; font-family: Arial; text-align: center; vertical-align: bottom; white-space: nowrap; border: medium none; padding: 0px" width="332">&nbsp;</td>
+    </tr>
+    <tr height="17" style="height: 12.75pt">
+      <td height="17" style="height: 12.75pt; color: windowtext; font-size: 10.0pt; font-weight: 400; font-style: normal; text-decoration: none; font-family: Arial; text-align: center; vertical-align: bottom; white-space: nowrap; border: medium none; padding: 0px" width="221">
+        <a href="cad_agencia_cetesb.asp">
+    Cadastro de Agências CETESB
+        </a>
+      </td>
+      <td height="17" style="height: 12.75pt; color: windowtext; font-size: 10.0pt; font-weight: 400; font-style: normal; text-decoration: none; font-family: Arial; text-align: center; vertical-align: bottom; white-space: nowrap; border: medium none; padding: 0px" width="17">    </td>
+      <td height="17" style="height: 12.75pt; color: windowtext; font-size: 10.0pt; font-weight: 400; font-style: normal; text-decoration: none; font-family: Arial; text-align: center; vertical-align: bottom; white-space: nowrap; border: medium none; padding: 0px" width="222">   </td>
+      <td style="color: windowtext; font-size: 10.0pt; font-weight: 400; font-style: normal; text-decoration: none; font-family: Arial; text-align: center; vertical-align: bottom; white-space: nowrap; border: medium none; padding: 0px" width="220">&nbsp;</td>
+      <td style="color: windowtext; font-size: 10.0pt; font-weight: 400; font-style: normal; text-decoration: none; font-family: Arial; text-align: center; vertical-align: bottom; white-space: nowrap; border: medium none; padding: 0px" width="332">&nbsp;</td>
+    </tr>
+    <tr height="17" style="height: 12.75pt">
+      <td height="17" style="height: 12.75pt; color: windowtext; font-size: 10.0pt; font-weight: 400; font-style: normal; text-decoration: none; font-family: Arial; text-align: center; vertical-align: bottom; white-space: nowrap; border: medium none; padding: 0px" width="221">   </td>
+      <td height="17" style="height: 12.75pt; color: windowtext; font-size: 10.0pt; font-weight: 400; font-style: normal; text-decoration: none; font-family: Arial; text-align: center; vertical-align: bottom; white-space: nowrap; border: medium none; padding: 0px" width="17">    </td>
+      <td height="17" style="height: 12.75pt; color: windowtext; font-size: 10.0pt; font-weight: 400; font-style: normal; text-decoration: none; font-family: Arial; text-align: center; vertical-align: bottom; white-space: nowrap; border: medium none; padding: 0px" width="222">   </td>
+      <td style="color: windowtext; font-size: 10.0pt; font-weight: 400; font-style: normal; text-decoration: none; font-family: Arial; text-align: center; vertical-align: bottom; white-space: nowrap; border: medium none; padding: 0px" width="220">&nbsp;</td>
+      <td style="color: windowtext; font-size: 10.0pt; font-weight: 400; font-style: normal; text-decoration: none; font-family: Arial; text-align: center; vertical-align: bottom; white-space: nowrap; border: medium none; padding: 0px" width="332">&nbsp;</td>
+    </tr>
+    <tr height="17" style="height: 12.75pt">
+      <td height="17" style="height: 12.75pt; color: windowtext; font-size: 10.0pt; font-weight: 400; font-style: normal; text-decoration: none; font-family: Arial; text-align: center; vertical-align: bottom; white-space: nowrap; border: medium none; padding: 0px" width="221">
+         <a href="cad_agencia_cetesb_municipio.asp">
+    Associação Agência CETESB x Município
+        </a>
+      </td>
+      <td height="17" style="height: 12.75pt; color: windowtext; font-size: 10.0pt; font-weight: 400; font-style: normal; text-decoration: none; font-family: Arial; text-align: center; vertical-align: bottom; white-space: nowrap; border: medium none; padding: 0px" width="17">    </td>
+      <td height="17" style="height: 12.75pt; color: windowtext; font-size: 10.0pt; font-weight: 400; font-style: normal; text-decoration: none; font-family: Arial; text-align: center; vertical-align: bottom; white-space: nowrap; border: medium none; padding: 0px" width="222">   </td>
+      <td style="color: windowtext; font-size: 10.0pt; font-weight: 400; font-style: normal; text-decoration: none; font-family: Arial; text-align: center; vertical-align: bottom; white-space: nowrap; border: medium none; padding: 0px" width="220">&nbsp;</td>
+      <td style="color: windowtext; font-size: 10.0pt; font-weight: 400; font-style: normal; text-decoration: none; font-family: Arial; text-align: center; vertical-align: bottom; white-space: nowrap; border: medium none; padding: 0px" width="332">&nbsp;</td>
     </tr>
   </table>
 </div>

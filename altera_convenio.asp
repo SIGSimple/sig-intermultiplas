@@ -52,8 +52,8 @@ If (CStr(Request("MM_update")) = "form1" And CStr(Request("MM_recordId")) <> "")
   MM_editColumn = "id"
   MM_recordId = "" + Request.Form("MM_recordId") + ""
   MM_editRedirectUrl = "cad_convenio.asp"
-  MM_fieldsStr  = "num_autos|value|cod_enquadramento|value|cod_programa|value|num_convenio|value|dta_assinatura|value|dta_publicacao_doe|value|vlr_original|value|prz_meses|value|dta_vigencia|value|nme_fonte_recurso|value|cod_coordenador_daee|value|dsc_observacoes|value"
-  MM_columnsStr = "num_autos|',none,''|cod_enquadramento|none,none,NULL|cod_programa|none,none,NULL|num_convenio|',none,''|dta_assinatura|',none,''|dta_publicacao_doe|',none,''|vlr_original|',none,''|prz_meses|',none,''|dta_vigencia|',none,''|nme_fonte_recurso|',none,''|cod_coordenador_daee|none,none,NULL|dsc_observacoes|',none,''"
+  MM_fieldsStr  = "num_autos|value|cod_projetista_convenio|value|cod_enquadramento|value|cod_programa|value|num_convenio|value|dta_assinatura|value|dta_publicacao_doe|value|vlr_original|value|prz_meses|value|dta_vigencia|value|nme_fonte_recurso|value|cod_coordenador_daee|value|dsc_observacoes|value"
+  MM_columnsStr = "num_autos|',none,''|cod_projetista_convenio|none,none,NULL|cod_enquadramento|none,none,NULL|cod_programa|none,none,NULL|num_convenio|',none,''|dta_assinatura|',none,NULL|dta_publicacao_doe|',none,NULL|vlr_original|',none,''|prz_meses|',none,''|dta_vigencia|',none,NULL|nme_fonte_recurso|',none,''|cod_coordenador_daee|none,none,NULL|dsc_observacoes|',none,''"
 
   ' create the MM_fields and MM_columns arrays
   MM_fields = Split(MM_fieldsStr, "|")
@@ -180,7 +180,7 @@ rs_numRows = 0
 </head>
 
 <body>
-<p align="center"><strong><span class="style17">Altera&ccedil;&atilde;o de Situa&ccedil;&atilde;o </span></strong></p>
+<p align="center"><strong><span class="style17">Alteração de Convênio </span></strong></p>
     <form method="post" action="<%=MM_editAction%>" name="form1">
       <input type="hidden" name="MM_update" value="form1">
       <input type="hidden" name="MM_recordId" value="<%= rs.Fields.Item("id").Value %>">
@@ -191,6 +191,38 @@ rs_numRows = 0
           </td>
           <td bgcolor="#CCCCCC">
             <input type="text" name="num_autos" value="<%=(rs.Fields.Item("num_autos").Value)%>" size="32">
+          </td>
+        </tr>
+        <tr valign="baseline">
+          <td align="right" nowrap bgcolor="#CCCCCC" class="style7">
+            <span class="style22">Projetista:</span>
+          </td>
+          <td bgcolor="#CCCCCC">
+            <select name="cod_projetista_convenio">
+              <option value=""></option>
+              <%
+                strQ = "SELECT * FROM tb_Construtora ORDER BY Construtora ASC "
+
+                Set rs_combo = Server.CreateObject("ADODB.Recordset")
+                  rs_combo.CursorLocation = 3
+                  rs_combo.CursorType = 3
+                  rs_combo.LockType = 1
+                  rs_combo.Open strQ, objCon, , , &H0001
+
+                If Not rs_combo.EOF Then
+                  While Not rs_combo.EOF
+                    If Trim(rs_combo.Fields.Item("Construtora").Value) <> "" Then
+                      Response.Write "      <OPTION value='" & (rs_combo.Fields.Item("cod_construtora").Value) & "'"
+                      If Lcase(rs_combo.Fields.Item("cod_construtora").Value) = Lcase(rs.Fields.Item("cod_projetista_convenio").Value) then
+                        Response.Write "selected"
+                      End If
+                      Response.Write ">" & (rs_combo.Fields.Item("Construtora").Value) & "</OPTION>"
+                    End If
+                    rs_combo.MoveNext
+                  Wend
+                End If
+              %>
+            </select>
           </td>
         </tr>
         <tr valign="baseline">

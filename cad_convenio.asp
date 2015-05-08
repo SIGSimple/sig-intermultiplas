@@ -19,12 +19,13 @@
 			
 			' INÍCIO CAMPOS
 			rs_update("num_autos") 					= Trim(Request.Form("num_autos"))
+			rs_update("cod_projetista_convenio") 	= Trim(Request.Form("cod_projetista_convenio"))
 			rs_update("cod_enquadramento") 			= Trim(Request.Form("cod_enquadramento"))
 			rs_update("cod_programa") 				= Trim(Request.Form("cod_programa"))
 			rs_update("num_convenio") 				= Trim(Request.Form("num_convenio"))
 			rs_update("dta_assinatura") 			= Trim(Request.Form("dta_assinatura"))
 			rs_update("dta_publicacao_doe")			= Trim(Request.Form("dta_publicacao_doe"))
-			rs_update("vlr_original") 				= Trim(Request.Form("vlr_original"))
+			rs_update("vlr_original") 				= Replace(Trim(Request.Form("vlr_original")), ",", ".")
 			rs_update("prz_meses") 					= Trim(Request.Form("prz_meses"))
 			rs_update("dta_vigencia") 				= Trim(Request.Form("dta_vigencia"))
 			rs_update("nme_fonte_recurso") 			= Trim(Request.Form("nme_fonte_recurso"))
@@ -89,6 +90,36 @@
 					</td>
 					<td bgcolor="#CCCCCC">
 						<input type="text" name="num_autos" value="" size="32">
+					</td>
+				</tr>
+				<tr valign="baseline">
+					<td align="right" nowrap bgcolor="#CCCCCC" class="style7">
+						<span class="style22">Projetista:</span>
+					</td>
+					<td bgcolor="#CCCCCC">
+						<select name="cod_projetista_convenio">
+							<option value=""></option>
+							<%
+								strQ = "SELECT * FROM tb_Construtora ORDER BY Construtora ASC "
+
+								Set rs_combo = Server.CreateObject("ADODB.Recordset")
+									rs_combo.CursorLocation = 3
+									rs_combo.CursorType = 3
+									rs_combo.LockType = 1
+									rs_combo.Open strQ, objCon, , , &H0001
+
+								If Not rs_combo.EOF Then
+									While Not rs_combo.EOF
+										If Trim(rs_combo.Fields.Item("Construtora").Value) <> "" Then
+							%>
+							<option value="<%=(rs_combo.Fields.Item("cod_construtora").Value)%>"><%=(rs_combo.Fields.Item("Construtora").Value)%></option>
+							<%
+										End If
+										rs_combo.MoveNext
+									Wend
+								End If
+							%>
+						</select>
 					</td>
 				</tr>
 				<tr valign="baseline">
@@ -263,6 +294,9 @@
 						<span class="style7">Autos</span>
 					</td>
 					<td>
+						<span class="style7">Projetista</span>
+					</td>
+					<td>
 						<span class="style7">Enquadramento</span>
 					</td>
 					<td>
@@ -336,6 +370,9 @@
 						<span class="style5"><%=(rs_lista.Fields.Item("num_autos").Value)%></span>
 					</td>
 					<td>
+						<span class="style5"><%=(rs_lista.Fields.Item("projetista").Value)%></span>
+					</td>
+					<td>
 						<span class="style5"><%=(rs_lista.Fields.Item("enquadramento").Value)%></span>
 					</td>
 					<td>
@@ -407,7 +444,7 @@
 						%>
 							<ul>
 								<li>
-									<a href="download.asp?path=<%=(rs_files.Fields.Item("pth_arquivo").Value)%>&filename=<%=(rs_lista.Fields.Item("id").Value)%>_<%=(rs_files.Fields.Item("nme_arquivo").Value)%>">
+									<a href="download.asp?path=/ARQUIVOS/CONVENIO&filename=<%=(rs_lista.Fields.Item("id").Value)%>_<%=(rs_files.Fields.Item("nme_arquivo").Value)%>">
 										<%=(rs_files.Fields.Item("nme_arquivo").Value)%>
 									</a>
 								</li>
