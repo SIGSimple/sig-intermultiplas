@@ -221,8 +221,8 @@ function FP_getObjectByID(id,o) {//v1.0
     </tr>
     <tr height="17" style="height: 12.75pt">
       <td height="17" style="height: 12.75pt; color: windowtext; font-size: 10.0pt; font-weight: 400; font-style: normal; text-decoration: none; font-family: Arial; text-align: center; vertical-align: bottom; white-space: nowrap; border: medium none; padding: 0px" width="221">
-         <a href="cad_convenio_licitacao.asp">
-    Associação Convênio x Licitação
+         <a href="cad_convenio_licitacao_contrato.asp">
+    Associação Convênio x Licitação x Contrato
         </a>
       </td>
       <td height="17" style="height: 12.75pt; color: windowtext; font-size: 10.0pt; font-weight: 400; font-style: normal; text-decoration: none; font-family: Arial; text-align: center; vertical-align: bottom; white-space: nowrap; border: medium none; padding: 0px" width="17">    </td>

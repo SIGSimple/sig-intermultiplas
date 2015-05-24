@@ -53,7 +53,7 @@ If (CStr(Request("MM_update")) = "form1" And CStr(Request("MM_recordId")) <> "")
   MM_recordId = "" + Request.Form("MM_recordId") + ""
   MM_editRedirectUrl = "cad_convenio.asp"
   MM_fieldsStr  = "num_autos|value|cod_projetista_convenio|value|cod_enquadramento|value|cod_programa|value|num_convenio|value|dta_assinatura|value|dta_publicacao_doe|value|vlr_original|value|prz_meses|value|dta_vigencia|value|nme_fonte_recurso|value|cod_coordenador_daee|value|dsc_observacoes|value"
-  MM_columnsStr = "num_autos|',none,''|cod_projetista_convenio|none,none,NULL|cod_enquadramento|none,none,NULL|cod_programa|none,none,NULL|num_convenio|',none,''|dta_assinatura|',none,NULL|dta_publicacao_doe|',none,NULL|vlr_original|',none,''|prz_meses|',none,''|dta_vigencia|',none,NULL|nme_fonte_recurso|',none,''|cod_coordenador_daee|none,none,NULL|dsc_observacoes|',none,''"
+  MM_columnsStr = "num_autos|',none,''|cod_projetista_convenio|none,none,NULL|cod_enquadramento|none,none,NULL|cod_programa|none,none,NULL|num_convenio|',none,''|dta_assinatura|',none,NULL|dta_publicacao_doe|',none,NULL|vlr_original|',none,NULL|prz_meses|none,none,NULL|dta_vigencia|',none,NULL|nme_fonte_recurso|',none,''|cod_coordenador_daee|none,none,NULL|dsc_observacoes|',none,''"
 
   ' create the MM_fields and MM_columns arrays
   MM_fields = Split(MM_fieldsStr, "|")

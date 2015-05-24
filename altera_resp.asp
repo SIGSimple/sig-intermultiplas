@@ -153,6 +153,20 @@ rs_construtora.Open()
 
 rs_construtora_numRows = 0
 %>
+<%
+Dim rs_usuario
+Dim rs_usuario_numRows
+
+Set rs_usuario = Server.CreateObject("ADODB.Recordset")
+rs_usuario.ActiveConnection = MM_cpf_STRING
+rs_usuario.Source = "SELECT idusuario, nome FROM login ORDER BY nome ASC"
+rs_usuario.CursorType = 0
+rs_usuario.CursorLocation = 2
+rs_usuario.LockType = 1
+rs_usuario.Open()
+
+rs_usuario_numRows = 0
+%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -198,6 +212,7 @@ rs_construtora_numRows = 0
     <tr valign="baseline">
       <td align="right" nowrap bgcolor="#CCCCCC" class="style7"><span class="style10">Empresa:</span></td>
       <td bgcolor="#CCCCCC"><select name="cod_empresa" class="style5">
+      <option value=""></option>
         <%
 While (NOT rs_construtora.EOF)
   If Trim(rs_construtora.Fields.Item("Construtora").Value) <> "" Then
@@ -214,6 +229,30 @@ If (rs_construtora.CursorType > 0) Then
   rs_construtora.MoveFirst
 Else
   rs_construtora.Requery
+End If
+%>
+      </select>      </td>
+    </tr>
+    <tr valign="baseline">
+      <td align="right" nowrap bgcolor="#CCCCCC" class="style7"><span class="style10">Login no Sistema:</span></td>
+      <td bgcolor="#CCCCCC"><select name="cod_usuario" class="style5">
+        <option value=""></option>
+        <%
+While (NOT rs_usuario.EOF)
+  If Trim(rs_usuario.Fields.Item("nome").Value) <> "" Then
+    Response.Write "      <OPTION value='" & (rs_usuario.Fields.Item("idusuario").Value) & "'"
+    If Lcase(rs_usuario.Fields.Item("idusuario").Value) = Lcase(rs_resp.Fields.Item("cod_usuario").Value) then
+      Response.Write "selected"
+    End If
+    Response.Write ">" & (rs_usuario.Fields.Item("nome").Value) & "</OPTION>"
+  End If
+
+  rs_usuario.MoveNext()
+Wend
+If (rs_usuario.CursorType > 0) Then
+  rs_usuario.MoveFirst
+Else
+  rs_usuario.Requery
 End If
 %>
       </select>      </td>

@@ -148,13 +148,8 @@
 
 					<div class="form-group">
 						<label for="inputNomePrefeito" class="col-lg-3 control-label">Nome do Prefeito:</label>
-						<div class="col-lg-6">
+						<div class="col-lg-9">
 							<input type="text" class="form-control" readonly="readonly" id="inputNomePrefeito"  value="<%=(rs.Fields.Item("Responsável").Value)%>">
-						</div>
-
-						<label for="inputNomePartido" class="col-lg-1 control-label">Partido:</label>
-						<div class="col-lg-2">
-							<input type="text" class="form-control text-center" readonly="readonly" id="inputNomePartido"  value="<%=(rs.Fields.Item("nme_partido").Value)%>">
 						</div>
 					</div>
 

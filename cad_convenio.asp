@@ -17,23 +17,78 @@
 			rs_update.Open strQ, objCon, , , &H0001
 			rs_update.Addnew()
 			
+			flg_vazio = True
+
 			' INÍCIO CAMPOS
-			rs_update("num_autos") 					= Trim(Request.Form("num_autos"))
-			rs_update("cod_projetista_convenio") 	= Trim(Request.Form("cod_projetista_convenio"))
-			rs_update("cod_enquadramento") 			= Trim(Request.Form("cod_enquadramento"))
-			rs_update("cod_programa") 				= Trim(Request.Form("cod_programa"))
-			rs_update("num_convenio") 				= Trim(Request.Form("num_convenio"))
-			rs_update("dta_assinatura") 			= Trim(Request.Form("dta_assinatura"))
-			rs_update("dta_publicacao_doe")			= Trim(Request.Form("dta_publicacao_doe"))
-			rs_update("vlr_original") 				= Replace(Trim(Request.Form("vlr_original")), ",", ".")
-			rs_update("prz_meses") 					= Trim(Request.Form("prz_meses"))
-			rs_update("dta_vigencia") 				= Trim(Request.Form("dta_vigencia"))
-			rs_update("nme_fonte_recurso") 			= Trim(Request.Form("nme_fonte_recurso"))
-			rs_update("cod_coordenador_daee") 		= Trim(Request.Form("cod_coordenador_daee"))
-			rs_update("dsc_observacoes")		 	= Trim(Request.Form("dsc_observacoes"))
+			If Request.Form("num_autos") <> "" Then
+				flg_vazio = False
+				rs_update("num_autos") 					= Trim(Request.Form("num_autos"))
+			End If
+
+			If Request.Form("cod_projetista_convenio") <> "" Then
+				flg_vazio = False
+				rs_update("cod_projetista_convenio") 	= Trim(Request.Form("cod_projetista_convenio"))
+			End If
+
+			If Request.Form("cod_enquadramento") <> "" Then
+				flg_vazio = False
+				rs_update("cod_enquadramento") 			= Trim(Request.Form("cod_enquadramento"))
+			End If
+
+			If Request.Form("cod_programa") <> "" Then
+				flg_vazio = False
+				rs_update("cod_programa") 				= Trim(Request.Form("cod_programa"))
+			End If
+
+			If Request.Form("num_convenio") <> "" Then
+				flg_vazio = False
+				rs_update("num_convenio") 				= Trim(Request.Form("num_convenio"))
+			End If
+
+			If Request.Form("dta_assinatura") <> "" Then
+				flg_vazio = False
+				rs_update("dta_assinatura") 			= Trim(Request.Form("dta_assinatura"))
+			End If
+
+			If Request.Form("dta_publicacao_doe") <> "" Then
+				flg_vazio = False
+				rs_update("dta_publicacao_doe")			= Trim(Request.Form("dta_publicacao_doe"))
+			End If
+
+			If Request.Form("vlr_original") <> "" Then
+				flg_vazio = False
+				rs_update("vlr_original") 				= Replace(Trim(Request.Form("vlr_original")), ",", ".")
+			End If
+
+			If Request.Form("prz_meses") <> "" Then
+				flg_vazio = False
+				rs_update("prz_meses") 					= Trim(Request.Form("prz_meses"))
+			End If
+
+			If Request.Form("dta_vigencia") <> "" Then
+				flg_vazio = False
+				rs_update("dta_vigencia") 				= Trim(Request.Form("dta_vigencia"))
+			End If
+
+			If Request.Form("nme_fonte_recurso") <> "" Then
+				flg_vazio = False
+				rs_update("nme_fonte_recurso") 			= Trim(Request.Form("nme_fonte_recurso"))
+			End If
+
+			If Request.Form("cod_coordenador_daee") <> "" Then
+				flg_vazio = False
+				rs_update("cod_coordenador_daee") 		= Trim(Request.Form("cod_coordenador_daee"))
+			End If
+
+			If Request.Form("dsc_observacoes") <> "" Then
+				flg_vazio = False
+				rs_update("dsc_observacoes")		 	= Trim(Request.Form("dsc_observacoes"))
+			End If
+
 			' FIM CAMPOS
-			
-			rs_update.Update
+			If Not flg_vazio Then
+				rs_update.Update
+			End If
 	End If
 %>
 
@@ -53,6 +108,7 @@
 		</style>
 		<link rel="stylesheet" href="//code.jquery.com/ui/1.11.3/themes/smoothness/jquery-ui.css">
 		<script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
+		<script type="text/javascript" src="js/jquery.floatThead.min.js"></script>
 		<script type="text/javascript" src="//code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
 		<script type="text/javascript" src="js/jquery.number.min.js"></script>
 		<script type="text/javascript" src="js/datepicker-pt-BR.js"></script>
@@ -71,6 +127,8 @@
 				$.each(vlr_lines, function(i, item){
 					$(item).html($.number($(item).html(), 2, ",", "."));
 				});
+
+				$("table#data").floatThead();
 			});
 		</script>
 	</head>
@@ -286,63 +344,65 @@
 		</form>
 
 		<div align="center">
-			<table border="0">
-				<tr bgcolor="#999999">
-					<td>&nbsp;</td>
-					<td>&nbsp;</td>
-					<td>
-						<span class="style7">Autos</span>
-					</td>
-					<td>
-						<span class="style7">Projetista</span>
-					</td>
-					<td>
-						<span class="style7">Enquadramento</span>
-					</td>
-					<td>
-						<span class="style7">Programa</span>
-					</td>
-					<td>
-						<span class="style7">Núm. Convênio</span>
-					</td>
-					<td>
-						<span class="style7">Data Assinatura</span>
-					</td>
-					<td>
-						<span class="style7">Data de Publicação DOE</span>
-					</td>
+			<table id="data" border="0">
+				<thead>
+					<tr bgcolor="#999999">
+						<td>&nbsp;</td>
+						<td>&nbsp;</td>
+						<td>
+							<span class="style7">Autos</span>
+						</td>
+						<td>
+							<span class="style7">Projetista</span>
+						</td>
+						<td>
+							<span class="style7">Enquadramento</span>
+						</td>
+						<td>
+							<span class="style7">Programa</span>
+						</td>
+						<td>
+							<span class="style7">Núm. Convênio</span>
+						</td>
+						<td>
+							<span class="style7">Data Assinatura</span>
+						</td>
+						<td>
+							<span class="style7">Data de Publicação DOE</span>
+						</td>
 
-					<td>
-						<span class="style7">Valor Original</span>
-					</td>
-					<td>
-						<span class="style7">Valor Total</span>
-					</td>
+						<td>
+							<span class="style7">Valor Original</span>
+						</td>
+						<td>
+							<span class="style7">Valor Total</span>
+						</td>
 
-					<td>
-						<span class="style7">Prazo Original (Meses)</span>
-					</td>
-					<td>
-						<span class="style7">Prazo Total (Meses)</span>
-					</td>
-					<td>
-						<span class="style7">Vigência Até</span>
-					</td>
+						<td>
+							<span class="style7">Prazo Original (Meses)</span>
+						</td>
+						<td>
+							<span class="style7">Prazo Total (Meses)</span>
+						</td>
+						<td>
+							<span class="style7">Vigência Até</span>
+						</td>
 
-					<td>
-						<span class="style7">Fonte de Recurso</span>
-					</td>
-					<td>
-						<span class="style7">Coord. DAEE</span>
-					</td>
-					<td>
-						<span class="style7">Observações</span>
-					</td>
-					<td>&nbsp;</td>
-					<td>
-						<span class="style7">Upload de Arquivos (Máx. 4MB)</span>
-					</td>
-				</tr>
+						<td>
+							<span class="style7">Fonte de Recurso</span>
+						</td>
+						<td>
+							<span class="style7">Coord. DAEE</span>
+						</td>
+						<td>
+							<span class="style7">Observações</span>
+						</td>
+						<td>&nbsp;</td>
+						<td>
+							<span class="style7">Upload de Arquivos (Máx. 2MB)</span>
+						</td>
+					</tr>
+				</thead>
 				<%
 					strQ = "SELECT * FROM c_lista_convenios ORDER BY id DESC"
 

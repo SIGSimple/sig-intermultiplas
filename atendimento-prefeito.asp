@@ -60,6 +60,10 @@
 			overflow-y: scroll !important;
 		}
 
+		#modalQtdObras {
+			overflow-y: scroll !important;
+		}
+
 		.btn-text-left {
 			text-align: left !important;
 		}
@@ -83,6 +87,10 @@
 
 			// inicializa o google maps and adiciona-o ao html
 			map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
+			centerMap();
+		}
+
+		function centerMap(){
 			var initialLocation = new google.maps.LatLng(-22.5455869,-48.6355226);
 			map.setCenter(initialLocation);
 		}
@@ -132,7 +140,7 @@
 						'<strong class="text-'+ item.classProgram +'">'+ item.textProgram +'</strong>'+
 						'<br/><br/>'+
 						'<a class="btn btn-sm btn-block btn-info" href="informacao-municipio-resumida.asp?cod_municipio='+ item.cod_municipio +'">'+
-							'+ Informações'+
+							'Ficha Técnica'+
 						'</a>';
 					var infowindow = new google.maps.InfoWindow();
 
@@ -181,7 +189,7 @@
 							link = "ficha-tecnica-obra-programada.asp?cod_empreendimento=" + item.cod_empreendimento;
 							break;
 						case 45: // Atendimento potencial
-							link = "";
+							link = "ficha-tecnica-obra-potencial.asp?cod_empreendimento=" + item.cod_empreendimento;
 							break;
 					}
 
@@ -190,7 +198,7 @@
 					var btnVoltarZoom = '<a href="#" class="btn btn-sm btn-block btn-primary btn-zoom-out hide">Voltar</a>';
 
 					if(link != "")
-						btnInformacoes = '<br/><br/><a href="'+ link +'" class="btn btn-sm btn-block btn-info btn-dados-municipio">+ Informações</a>'
+						btnInformacoes = '<br/><br/><a href="'+ link +'" class="btn btn-sm btn-block btn-info btn-dados-municipio">Ficha Técnica</a>'
 
 					var content = ''+
 					'<strong>'+ item.nme_municipio +" - "+ item.nme_empreendimento +'</strong>'+
@@ -279,6 +287,7 @@
 		}
 
 		function listEmpreendimentosTable(localidades) {
+			$("table.table-localidades tbody tr").remove();
 			$.each(localidades, function(i, item) {
 				var link = "";
 
@@ -296,13 +305,13 @@
 						link = "ficha-tecnica-obra-programada.asp?cod_empreendimento=" + item.cod_empreendimento;
 						break;
 					case 45: // Atendimento potencial
-						link = "";
+						link = "ficha-tecnica-obra-potencial.asp?cod_empreendimento=" + item.cod_empreendimento;
 						break;
 				}
 
 				var itemLayout = '<tr>'+
+									'<td class="text-middle">'+ item.nme_municipio + '</td>'+
 									'<td class="text-middle">'+ item.nme_empreendimento + '</td>'+
-									'<td class="text-middle">'+ item.dsc_situacao_interna + '</td>'+
 									'<td class="text-middle"><a href="'+ link +'" class="btn btn-sm btn-primary">Ficha Técnica</a></td>'+
 								'</tr>';
 				$("table.table-localidades tbody").append(itemLayout);
@@ -330,6 +339,9 @@
 					sql: 'SELECT * FROM c_status_municipios_programa WHERE municipio LIKE "'+ nmeMunicipio +'%"'
 				},
 				beforeSend: function() {
+					if(!$(".form-group.result").hasClass("hide"))
+						$(".form-group.result").addClass("hide");
+
 					if(!$(".alert-danger").hasClass("hide"))
 						$(".alert-danger").addClass("hide");
 					
@@ -368,7 +380,8 @@
 
 						addMunicipioMarkersToMap(items);
 						listMunicipiosTable(items);
-						$("#btn-clear").removeClass("hide");
+						$("#btn-clear")
+						$(".form-group.result").removeClass("hide");
 					}
 					else
 						$(".alert-danger").removeClass("hide");
@@ -524,22 +537,26 @@
 								};
 
 								switch(item.cod_situacao){
-									case 39:
-										markerData.classStatus = "success";
+									case 39: // concluídas
+										markerData.classStatus = "light_green";
 										break;
-									case 40:
-									case 42:
-									case 43:
-										markerData.classStatus = "warning";
+									case 40: // em atendimento
+										markerData.classStatus = "dark_green";
 										break;
-									case 44:
-										markerData.classStatus = "info";
+									case 42: // finalizada e não operando
+										markerData.classStatus = "orange";
 										break;
-									case 41:
-										markerData.classStatus = "danger";
+									case 43: // paralizada
+										markerData.classStatus = "purple";
 										break;
-									case 45:
-										markerData.classStatus = "primary";
+									case 44: // atendimento programado
+										markerData.classStatus = "light_blue";
+										break;
+									case 41: // não atendidas
+										markerData.classStatus = "red";
+										break;
+									case 45: // atendimento potencial
+										markerData.classStatus = "dark_blue";
 										break;
 								}
 
@@ -562,6 +579,127 @@
 			}
 		}
 
+		function hideCounterButtons() {
+			$(".fa-spin").removeClass("hide");
+			$(".btn-details").addClass("hide");
+		}
+
+		function showCounterButtons() {
+			$.ajax({
+				url: "query-to-json-util.asp",
+				method: "POST",
+				data: {
+					sql: "SELECT * FROM c_conta_situacao"
+				},
+				beforeSend: function() {
+					hideCounterButtons();
+				},
+				success: function(data, textStatus, jqXHR){
+					data = JSON.parse(data);
+
+					if(data.length > 0) {
+						$(".btn-show-obras-concluidas").text(data[0].qtd_concluida + " Obra(s)");
+						$(".btn-show-obras-em-andamento").text(data[0].qtd_em_andamento + " Obra(s)");
+						
+						$(".btn-show-obras-em-atendimento").text(data[0].qtd_em_atendimento + " Obra(s)");
+						$(".btn-show-obras-finalizada-nao-operando").text(data[0].qtd_finalizada_nao_operando + " Obra(s)");
+						$(".btn-show-obras-paralizadas").text(data[0].qtd_paralizadas + " Obra(s)");
+
+						$(".btn-show-obras-atendimento-programado").text(data[0].qtd_atendimento_programado + " Obra(s)");
+						$(".btn-show-obras-nao-atendidas").text(data[0].qtd_nao_atendidas + " Obra(s)");
+						$(".btn-show-obras-atendimento-potencial").text(data[0].qtd_atendimento_potencial + " Obra(s)");
+
+						addButtonDetailsClickListener();
+					}
+
+					$(".fa-spin").addClass("hide");
+					$(".btn-details").removeClass("hide");
+				},
+				error: function(jqXHR, textStatus, errorThrown){
+					console.log(jqXHR, textStatus, errorThrown);
+				}
+			});
+		}
+
+		function addButtonDetailsClickListener() {
+			$(".btn-details").on("click", function(){
+				if($(this).hasClass("btn-show-obras-concluidas")){
+					$("#modalQtdObrasLabel.modal-title").text("Obras concluídas");
+					loadEmpreendimentosBySituacao("SELECT * FROM c_lista_pi WHERE cod_situacao = 39 ORDER BY nme_municipio ASC, nome_empreendimento ASC");
+				}
+				else if($(this).hasClass("btn-show-obras-em-andamento")){
+					$("#modalQtdObrasLabel.modal-title").text("Obras em Andamento");
+					loadEmpreendimentosBySituacao("SELECT * FROM c_lista_pi WHERE cod_situacao IN (40,42,43) ORDER BY nme_municipio ASC, nome_empreendimento ASC");
+				}
+				else if($(this).hasClass("btn-show-obras-em-atendimento")){
+					$("#modalQtdObrasLabel.modal-title").text("Obras em Atendimento");
+					loadEmpreendimentosBySituacao("SELECT * FROM c_lista_pi WHERE cod_situacao = 40 ORDER BY nme_municipio ASC, nome_empreendimento ASC");
+				}
+				else if($(this).hasClass("btn-show-obras-finalizada-nao-operando")){
+					$("#modalQtdObrasLabel.modal-title").text("Obras Finalizadas e Não Operando");
+					loadEmpreendimentosBySituacao("SELECT * FROM c_lista_pi WHERE cod_situacao = 42 ORDER BY nme_municipio ASC, nome_empreendimento ASC");
+				}
+				else if($(this).hasClass("btn-show-obras-paralizadas")){
+					$("#modalQtdObrasLabel.modal-title").text("Obras Paralizadas");
+					loadEmpreendimentosBySituacao("SELECT * FROM c_lista_pi WHERE cod_situacao = 43 ORDER BY nme_municipio ASC, nome_empreendimento ASC");
+				}
+				else if($(this).hasClass("btn-show-obras-atendimento-programado")){
+					$("#modalQtdObrasLabel.modal-title").text("Obras Atendimento Programado");
+					loadEmpreendimentosBySituacao("SELECT * FROM c_lista_pi WHERE cod_situacao = 44 ORDER BY nme_municipio ASC, nome_empreendimento ASC");
+				}
+				else if($(this).hasClass("btn-show-obras-nao-atendidas")){
+					$("#modalQtdObrasLabel.modal-title").text("Obras Não Atendidas");
+					loadEmpreendimentosBySituacao("SELECT * FROM c_lista_pi WHERE cod_situacao = 41 ORDER BY nme_municipio ASC, nome_empreendimento ASC");
+				}
+				else if($(this).hasClass("btn-show-obras-atendimento-potencial")){
+					$("#modalQtdObrasLabel.modal-title").text("Obras Atendimento Potencial");
+					loadEmpreendimentosBySituacao("SELECT * FROM c_lista_pi WHERE cod_situacao = 45 ORDER BY nme_municipio ASC, nome_empreendimento ASC");
+				}
+			});
+		}
+
+		function loadEmpreendimentosBySituacao(sql) {
+			$.ajax({
+				url: "query-to-json-util.asp",
+				method: "POST",
+				data: {
+					sql: sql
+				},
+				beforeSend: function() {
+					$("#modalLoading").modal("show");
+				},
+				success: function(data, textStatus, jqXHR){
+					data = JSON.parse(data);
+
+					if(data.length > 0) {
+						var items = [];
+						
+						$.each(data, function(i, item) {
+
+							var itemData = {
+								cod_empreendimento: item.PI,
+								nme_municipio: item.nme_municipio,
+								nme_empreendimento: item.nome_empreendimento,
+								cod_situacao_interna: item.cod_situacao,
+								dsc_situacao_interna: item.dsc_situacao_interna
+							};
+
+							items.push(itemData);
+						});
+
+						listEmpreendimentosTable(items);
+
+						$("#modalQtdObras").modal("show");
+					}
+
+					$("#modalLoading").modal("hide");
+				},
+				error: function(jqXHR, textStatus, errorThrown){
+					console.log(jqXHR, textStatus, errorThrown);
+				}
+			});
+		}
+
 		function createAlfaLinks() {
 			for (var i = 0; i != 26; ++i){
 				alfa = String.fromCharCode(i + 65);
@@ -579,9 +717,7 @@
 		}
 
 		function loadAllMarkers() {
-			sqlFiltroSituacao += " AND cod_situacao = 39 OR cod_situacao IN (40,42,43) OR cod_situacao = 44 OR cod_situacao = 41 OR cod_situacao = 45"
-			loadEmpreendimentos(sqlFiltroSituacao);
-			hasAndSqlQuery = true;
+			loadEmpreendimentos(sqlFiltroSituacao + " AND cod_situacao = 39 OR cod_situacao IN (40,42,43) OR cod_situacao = 44 OR cod_situacao = 41 OR cod_situacao = 45");
 
 			$.each($("input[type=checkbox]"), function(i, item){
 			   $(this).trigger("click");
@@ -598,6 +734,7 @@
 			//createAlfaLinks();
 
 			loadAllMarkers();
+			showCounterButtons();
 
 			$(window).on("resize", function(){
 				setLayersHeight();
@@ -620,19 +757,64 @@
 					$("#txt-municipio").closest(".form-group").addClass("has-error");
 			});
 
-			$("#chk-concluidas").on("click", function(){
+			$("#chk-em-atendimento").on("change", function() {
+				if((!this.checked) && (!$("#chk-finalizada-nao-operando")[0].checked) && (!$("#chk-paralizadas")[0].checked))
+					$("#chk-em-andamento")[0].checked = false;
+				else
+					$("#chk-em-andamento")[0].checked = true;
+			});
+
+			$("#chk-finalizada-nao-operando").on("change", function() {
+				if((!this.checked) && (!$("#chk-em-atendimento")[0].checked) && (!$("#chk-paralizadas")[0].checked))
+					$("#chk-em-andamento")[0].checked = false;
+				else
+					$("#chk-em-andamento")[0].checked = true;
+			});
+
+			$("#chk-paralizadas").on("change", function() {
+				if((!this.checked) && (!$("#chk-em-atendimento")[0].checked) && (!$("#chk-finalizada-nao-operando")[0].checked))
+					$("#chk-em-andamento")[0].checked = false;
+				else
+					$("#chk-em-andamento")[0].checked = true;
+			});
+
+			$("#chk-em-andamento").on("change", function() {
+				$("#chk-em-atendimento")[0].checked 			= (this.checked);
+				$("#chk-finalizada-nao-operando")[0].checked 	= (this.checked);
+				$("#chk-paralizadas")[0].checked 				= (this.checked);
+			});
+
+			$("#btn-load-situacoes").on("click", function(){
+				if(!$(".alert-situacao").hasClass("hide"))
+					$(".alert-situacao").addClass("hide");
+
+				var chk_concluidas 				= $("#chk-concluidas");
+				var chk_em_andamento 			= $("#chk-em-andamento");
+
+				var chk_em_atendimento 			= $("#chk-em-atendimento");
+				var chk_finalizada_nao_operando	= $("#chk-finalizada-nao-operando");
+				var chk_paralizadas				= $("#chk-paralizadas");
+
+				var chk_atendimento_programado 	= $("#chk-atendimento-programado");
+				var chk_nao_atendida 			= $("#chk-nao-atendida");
+				var chk_atendimento_potencial 	= $("#chk-atendimento-potencial");
+
 				var context = "";
 
-				if(!hasAndSqlQuery){
-					hasAndSqlQuery = true;
-					context = " AND cod_situacao = 39";
-				}
-				else
-					context = " OR cod_situacao = 39";
+				sqlFiltroSituacao = "SELECT tb_pi.PI, tb_pi.nome_empreendimento, tb_pi.municipio, tb_pi.qtd_populacao_urbana_2010, tb_pi.latitude_longitude, tb_pi.cod_situacao FROM tb_pi WHERE 1 = 1 ";
+				hasAndSqlQuery = false;
 
-				if(this.checked)
+				if($(chk_concluidas)[0].checked) {
+					if(!hasAndSqlQuery){
+						hasAndSqlQuery = true;
+						context = " AND cod_situacao = 39";
+					}
+					else
+						context = " OR cod_situacao = 39";
+
 					sqlFiltroSituacao += context;
-				else{
+				}
+				else {
 					if(sqlFiltroSituacao.indexOf(" AND cod_situacao = 39") != -1)
 						context = " AND cod_situacao = 39";
 					else if(sqlFiltroSituacao.indexOf(" OR cod_situacao = 39") != -1)
@@ -649,22 +831,18 @@
 					}
 				}
 
-				loadEmpreendimentos(sqlFiltroSituacao);
-			});
+				/*context = "";
+				if($(chk_em_andamento)[0].checked) {
+					if(!hasAndSqlQuery){
+						hasAndSqlQuery = true;
+						context = " AND cod_situacao IN (40,42,43)";
+					}
+					else
+						context = " OR cod_situacao IN (40,42,43)";
 
-			$("#chk-em-andamento").on("click", function(){
-				var context = "";
-
-				if(!hasAndSqlQuery){
-					hasAndSqlQuery = true;
-					context = " AND cod_situacao IN (40,42,43)";
-				}
-				else
-					context = " OR cod_situacao IN (40,42,43)";
-
-				if(this.checked)
 					sqlFiltroSituacao += context;
-				else{
+				}
+				else {
 					if(sqlFiltroSituacao.indexOf(" AND cod_situacao IN (40,42,43)") != -1)
 						context = " AND cod_situacao IN (40,42,43)";
 					else if(sqlFiltroSituacao.indexOf(" OR cod_situacao IN (40,42,43)") != -1)
@@ -679,24 +857,104 @@
 					if(sqlFiltroSituacao.indexOf("AND") == -1){
 						hasAndSqlQuery = false;
 					}
-				}
-				
-				loadEmpreendimentos(sqlFiltroSituacao);
-			});
+				}*/
 
-			$("#chk-atendimento-programado").on("click", function(){
-				var context = "";
+				context = "";
+				if($(chk_em_atendimento)[0].checked) {
+					if(!hasAndSqlQuery){
+						hasAndSqlQuery = true;
+						context = " AND cod_situacao = 40";
+					}
+					else
+						context = " OR cod_situacao = 40";
 
-				if(!hasAndSqlQuery){
-					hasAndSqlQuery = true;
-					context = " AND cod_situacao = 44";
-				}
-				else
-					context = " OR cod_situacao = 44";
-
-				if(this.checked)
 					sqlFiltroSituacao += context;
-				else{
+				}
+				else {
+					if(sqlFiltroSituacao.indexOf(" AND cod_situacao = 40") != -1)
+						context = " AND cod_situacao = 40";
+					else if(sqlFiltroSituacao.indexOf(" OR cod_situacao = 40") != -1)
+						context = " OR cod_situacao = 40";
+
+					sqlFiltroSituacao = sqlFiltroSituacao.replace(context, "");
+
+					if(sqlFiltroSituacao.indexOf("AND") == -1){
+						sqlFiltroSituacao = sqlFiltroSituacao.replace("OR", "AND");
+					}
+
+					if(sqlFiltroSituacao.indexOf("AND") == -1){
+						hasAndSqlQuery = false;
+					}
+				}
+
+				context = "";
+				if($(chk_finalizada_nao_operando)[0].checked) {
+					if(!hasAndSqlQuery){
+						hasAndSqlQuery = true;
+						context = " AND cod_situacao = 42";
+					}
+					else
+						context = " OR cod_situacao = 42";
+
+					sqlFiltroSituacao += context;
+				}
+				else {
+					if(sqlFiltroSituacao.indexOf(" AND cod_situacao = 42") != -1)
+						context = " AND cod_situacao = 42";
+					else if(sqlFiltroSituacao.indexOf(" OR cod_situacao = 42") != -1)
+						context = " OR cod_situacao = 42";
+
+					sqlFiltroSituacao = sqlFiltroSituacao.replace(context, "");
+
+					if(sqlFiltroSituacao.indexOf("AND") == -1){
+						sqlFiltroSituacao = sqlFiltroSituacao.replace("OR", "AND");
+					}
+
+					if(sqlFiltroSituacao.indexOf("AND") == -1){
+						hasAndSqlQuery = false;
+					}
+				}
+
+				context = "";
+				if($(chk_paralizadas)[0].checked) {
+					if(!hasAndSqlQuery){
+						hasAndSqlQuery = true;
+						context = " AND cod_situacao = 43";
+					}
+					else
+						context = " OR cod_situacao = 43";
+
+					sqlFiltroSituacao += context;
+				}
+				else {
+					if(sqlFiltroSituacao.indexOf(" AND cod_situacao = 43") != -1)
+						context = " AND cod_situacao = 43";
+					else if(sqlFiltroSituacao.indexOf(" OR cod_situacao = 43") != -1)
+						context = " OR cod_situacao = 43";
+
+					sqlFiltroSituacao = sqlFiltroSituacao.replace(context, "");
+
+					if(sqlFiltroSituacao.indexOf("AND") == -1){
+						sqlFiltroSituacao = sqlFiltroSituacao.replace("OR", "AND");
+					}
+
+					if(sqlFiltroSituacao.indexOf("AND") == -1){
+						hasAndSqlQuery = false;
+					}
+				}
+
+				context = "";
+				if($(chk_atendimento_programado)[0].checked) {
+					if(!hasAndSqlQuery){
+						hasAndSqlQuery = true;
+						context = " AND cod_situacao = 44";
+					}
+					else
+						context = " OR cod_situacao = 44";
+
+					sqlFiltroSituacao += context;
+				}
+				else {
 					if(sqlFiltroSituacao.indexOf(" AND cod_situacao = 44") != -1)
 						context = " AND cod_situacao = 44";
 					else if(sqlFiltroSituacao.indexOf(" OR cod_situacao = 44") != -1)
@@ -712,23 +970,19 @@
 						hasAndSqlQuery = false;
 					}
 				}
-				
-				loadEmpreendimentos(sqlFiltroSituacao);
-			});
 
-			$("#chk-nao-atendida").on("click", function(){
-				var context = "";
+				context = "";
+				if($(chk_nao_atendida)[0].checked) {
+					if(!hasAndSqlQuery){
+						hasAndSqlQuery = true;
+						context = " AND cod_situacao = 41";
+					}
+					else
+						context = " OR cod_situacao = 41";
 
-				if(!hasAndSqlQuery){
-					hasAndSqlQuery = true;
-					context = " AND cod_situacao = 41";
-				}
-				else
-					context = " OR cod_situacao = 41";
-
-				if(this.checked)
 					sqlFiltroSituacao += context;
-				else{
+				}
+				else {
 					if(sqlFiltroSituacao.indexOf(" AND cod_situacao = 41") != -1)
 						context = " AND cod_situacao = 41";
 					else if(sqlFiltroSituacao.indexOf(" OR cod_situacao = 41") != -1)
@@ -744,23 +998,19 @@
 						hasAndSqlQuery = false;
 					}
 				}
-				
-				loadEmpreendimentos(sqlFiltroSituacao);
-			});
 
-			$("#chk-atendimento-potencial").on("click", function(){
-				var context = "";
+				context = "";
+				if($(chk_atendimento_potencial)[0].checked) {
+					if(!hasAndSqlQuery){
+						hasAndSqlQuery = true;
+						context = " AND cod_situacao = 45";
+					}
+					else
+						context = " OR cod_situacao = 45";
 
-				if(!hasAndSqlQuery){
-					hasAndSqlQuery = true;
-					context = " AND cod_situacao = 45";
-				}
-				else
-					context = " OR cod_situacao = 45";
-
-				if(this.checked)
 					sqlFiltroSituacao += context;
-				else{
+				}
+				else {
 					if(sqlFiltroSituacao.indexOf(" AND cod_situacao = 45") != -1)
 						context = " AND cod_situacao = 45";
 					else if(sqlFiltroSituacao.indexOf(" OR cod_situacao = 45") != -1)
@@ -776,8 +1026,15 @@
 						hasAndSqlQuery = false;
 					}
 				}
-				
-				loadEmpreendimentos(sqlFiltroSituacao);
+
+				if(sqlFiltroSituacao.indexOf("AND") != -1)
+					loadEmpreendimentos(sqlFiltroSituacao);
+				else
+					$(".alert-situacao").removeClass("hide");
+			});
+
+			$.each($("input[type=checkbox]"), function(i,item){
+				item.checked = true;
 			});
 		});
 	</script>
@@ -824,7 +1081,7 @@
 					</div>
 				</form>
 
-				<div class="form-group result">
+				<div class="form-group result hide">
 					<label class="control-label">Resultado da Pesquisa:</label>
 					<div class="alert alert-danger hide"><i class="fa fa-warning"></i> Nenhum município encontrado</div>
 					<table class="table table-municipios">
@@ -847,39 +1104,85 @@
 					<a href="resumo-situacao.asp?rep_universo_programa=sim" class="btn btn-info btn-block btn-sm btn-text-left"><i class="fa fa-file-text-o"></i> Universo do Programa</a>
 				</div>
 
-
 				<div class="form-group">
 					<label class="control-label">Filtro por Situação:</label>
+
+					<div class="checkbox">
+						<label>
+							<input id="chk-concluidas" type="checkbox"><img src="img/point_light_green.png"> Localidades com obras concluídas
+						</label>
+						<i class="fa fa-spinner fa-spin pull-right"></i>
+						<button class="btn btn-xs btn-info pull-right hide btn-details btn-show-obras-concluidas">xxx Obra(s)</button>
+					</div>
+
+					<div class="checkbox">
+						<label>
+							<input id="chk-em-andamento" type="checkbox">
+							<span style="padding-left: 10px;">Localidades com obras em andamento:</span>
+						</label>
+						<i class="fa fa-spinner fa-spin pull-right"></i>
+						<button class="btn btn-xs btn-info pull-right hide btn-details btn-show-obras-em-andamento">xxx Obra(s)</button>
+					</div>
+
+					<!--  -->
+					<div class="checkbox">
+						<label style="padding-left: 50px;">
+							<input id="chk-em-atendimento" type="checkbox"><img src="img/point_dark_green.png"> Obras em atendimento
+						</label>
+						<i class="fa fa-spinner fa-spin pull-right"></i>
+						<button class="btn btn-xs btn-info pull-right hide btn-details btn-show-obras-em-atendimento">xxx Obra(s)</button>
+					</div>
+
+					<div class="checkbox">
+						<label style="padding-left: 50px;">
+							<input id="chk-finalizada-nao-operando" type="checkbox"><img src="img/point_orange.png"> Obras finalizadas e não operando
+						</label>
+						<i class="fa fa-spinner fa-spin pull-right"></i>
+						<button class="btn btn-xs btn-info pull-right hide btn-details btn-show-obras-finalizada-nao-operando">xxx Obra(s)</button>
+					</div>
+
+					<div class="checkbox">
+						<label style="padding-left: 50px;">
+							<input id="chk-paralizadas" type="checkbox"><img src="img/point_purple.png"> Obras paralizadas
+						</label>
+						<i class="fa fa-spinner fa-spin pull-right"></i>
+						<button class="btn btn-xs btn-info pull-right hide btn-details btn-show-obras-paralizadas">xxx Obra(s)</button>
+					</div>
+					<!--  -->
+
+					<div class="checkbox">
+						<label>
+							<input id="chk-atendimento-programado" type="checkbox"><img src="img/point_light_blue.png"> Localidades com atendimento programado
+						</label>
+						<i class="fa fa-spinner fa-spin pull-right"></i>
+						<button class="btn btn-xs btn-info pull-right hide btn-details btn-show-obras-atendimento-programado">xxx Obra(s)</button>
+					</div>
+
+					<div class="checkbox">
+						<label>
+							<input id="chk-nao-atendida" type="checkbox"><img src="img/point_red.png"> Localidades não atendidas
+						</label>
+						<i class="fa fa-spinner fa-spin pull-right"></i>
+						<button class="btn btn-xs btn-info pull-right hide btn-details btn-show-obras-nao-atendidas">xxx Obra(s)</button>
+					</div>
+
+					<div class="checkbox">
+						<label>
+							<input id="chk-atendimento-potencial" type="checkbox"><img src="img/point_dark_blue.png"> Localidades com atendimento potencial
+						</label>
+						<i class="fa fa-spinner fa-spin pull-right"></i>
+						<button class="btn btn-xs btn-info pull-right hide btn-details btn-show-obras-atendimento-potencial">xxx Obra(s)</button>
+					</div>
 				</div>
 
-				<div class="checkbox">
-					<label>
-						<input id="chk-concluidas" type="checkbox"><img src="img/point_success.png"> Localidades c/ obras concluídas
-					</label>
+				<div class="form-group">
+					<label class="control-label sr-only"></label>
+					<button id="btn-load-situacoes" class="btn btn-primary btn-block"><i class="fa fa-filter"></i> Filtrar situações selecionadas</button>
 				</div>
 
-				<div class="checkbox">
-					<label>
-						<input id="chk-em-andamento" type="checkbox"><img src="img/point_warning.png"> Localidades c/ obras em andamento
-					</label>
-				</div>
-
-				<div class="checkbox">
-					<label>
-						<input id="chk-atendimento-programado" type="checkbox"><img src="img/point_info.png"> Localidades c/ atendimento programado
-					</label>
-				</div>
-
-				<div class="checkbox">
-					<label>
-						<input id="chk-nao-atendida" type="checkbox"><img src="img/point_danger.png"> Localidades não atendidas
-					</label>
-				</div>
-
-				<div class="checkbox">
-					<label>
-						<input id="chk-atendimento-potencial" type="checkbox"><img src="img/point_primary.png"> Localidades c/ atendimento potencial
-					</label>
+				<div class="form-group">
+					<label class="control-label sr-only"></label>
+					<div class="alert alert-warning alert-situacao hide"><i class="fa fa-warning"></i> Você deve selecionar ao menos uma situação!</div>
 				</div>
 			</div>
 
@@ -982,6 +1285,38 @@
 				</div>
 				<div class="modal-footer">
 					<a id="btn-ficha-completa" class="btn btn-info">Detalhes do Município</a>
+					<button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal fade" id="modalQtdObras" tabindex="-1" role="dialog" aria-labelledby="modalQtdObrasLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title" id="modalQtdObrasLabel"></h4>
+				</div>
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-xs-12">
+							<div class="table-responsive">
+								<table class="table table-localidades table-bordered table-condensed table-striped table-hover">
+									<thead>
+										<tr class="info">
+											<th>Município</th>
+											<th>Localidade</th>
+											<th width="50"></th>
+										</tr>
+									</thead>
+									<tbody></tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
 					<button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
 				</div>
 			</div>

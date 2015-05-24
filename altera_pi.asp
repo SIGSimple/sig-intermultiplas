@@ -115,7 +115,6 @@ If (CStr(Request("MM_update")) <> "" And CStr(Request("MM_recordId")) <> "") The
   Dim frmField_nome_empreendimento
   Dim frmField_cod_tipo_empreendimento
   Dim frmField_cod_programa
-  Dim frmField_cod_convenio
   Dim frmField_dsc_situacao_anterior
   Dim frmField_dsc_situacao_atual
   Dim frmField_dsc_resultado_obtido
@@ -155,6 +154,7 @@ If (CStr(Request("MM_update")) <> "" And CStr(Request("MM_recordId")) <> "") The
   Dim frmField_dsc_observacoes
   Dim frmField_cod_parceiro
   Dim frmField_dsc_parceria_realizacao
+  Dim frmField_dsc_observacoes_gestor
 
   Function IIf(bClause, sTrue, sFalse)
     If CBool(bClause) Then
@@ -181,7 +181,6 @@ If (CStr(Request("MM_update")) <> "" And CStr(Request("MM_recordId")) <> "") The
     frmField_descricao_empreendimento       = IIf(Request.Form("descricao_empreendimento") = "", "", Request.Form("descricao_empreendimento"))
     frmField_cod_tipo_empreendimento        = IIf(Request.Form("cod_tipo_empreendimento") = "", "NULL", Request.Form("cod_tipo_empreendimento"))
     frmField_cod_programa                   = IIf(Request.Form("cod_programa") = "", "NULL", Request.Form("cod_programa"))
-    frmField_cod_convenio                   = IIf(Request.Form("cod_convenio") = "", "NULL", Request.Form("cod_convenio"))
   End If
 
   If Session("MM_UserAuthorization") = 3 Then
@@ -203,7 +202,7 @@ If (CStr(Request("MM_update")) <> "" And CStr(Request("MM_recordId")) <> "") The
     'frmField_qtd_populacao_urbana_2030      = IIf(Request.Form("qtd_populacao_urbana_2030") = "", "NULL", Request.Form("qtd_populacao_urbana_2030"))
     frmField_valor_contrato                 = IIf(Request.Form("ValorContrato") = "", "0", Replace(Request.Form("ValorContrato"), ",","."))
     frmField_dta_inicio_obras               = IIf(Request.Form("dta_inicio_obras") = "", "NULL", "'"& Request.Form("dta_inicio_obras") &"'")
-    frmField_num_percentual_executado       = IIf(Request.Form("num_percentual_executado") = "", "0", Request.Form("num_percentual_executado"))
+    frmField_num_percentual_executado       = IIf(Request.Form("num_percentual_executado") = "", "0", Replace(Request.Form("num_percentual_executado"), ",","."))
     frmField_dta_previsao_termino           = IIf(Request.Form("dta_previsao_termino") = "", "NULL", "'"& Request.Form("dta_previsao_termino") &"'")
     frmField_dta_inauguracao                = IIf(Request.Form("dta_inauguracao") = "", "NULL", "'"& Request.Form("dta_inauguracao") &"'")
     frmField_dta_previsao_inauguracao       = IIf(Request.Form("dta_previsao_inauguracao") = "", "NULL", "'"& Request.Form("dta_previsao_inauguracao") &"'")
@@ -226,7 +225,7 @@ If (CStr(Request("MM_update")) <> "" And CStr(Request("MM_recordId")) <> "") The
     frmField_cod_bacia_hidrografica                  = IIF(Request.Form("cod_bacia_hidrografica") = "", "NULL", Request.Form("cod_bacia_hidrografica"))
     frmField_cod_manancial_lancamento                = IIF(Request.Form("cod_manancial_lancamento") = "", "NULL", Request.Form("cod_manancial_lancamento"))
     frmField_qtd_metragem_coletor_tronco             = IIF(Request.Form("qtd_metragem_coletor_tronco") = "", "0", Request.Form("qtd_metragem_coletor_tronco"))
-    frmField_qtd_metragem_interceptor                = IIF(Request.Form("qtd_metragem_coletor_tronco") = "", "0", Request.Form("qtd_metragem_coletor_tronco"))
+    frmField_qtd_metragem_interceptor                = IIF(Request.Form("qtd_metragem_interceptor") = "", "0", Request.Form("qtd_metragem_interceptor"))
     frmField_qtd_metragem_emissario_fluente_bruto    = IIF(Request.Form("qtd_metragem_emissario_fluente_bruto") = "", "0", Request.Form("qtd_metragem_emissario_fluente_bruto"))
     frmField_qtd_eee                                 = IIF(Request.Form("qtd_eee") = "", "0", Request.Form("qtd_eee"))
     frmField_qtd_metragem_linha_recalque             = IIF(Request.Form("qtd_metragem_linha_recalque") = "", "0", Request.Form("qtd_metragem_linha_recalque"))
@@ -237,12 +236,13 @@ If (CStr(Request("MM_update")) <> "" And CStr(Request("MM_recordId")) <> "") The
     frmField_dsc_observacoes                         = IIF(Request.Form("dsc_observacoes") = "", "", Request.Form("dsc_observacoes"))
     frmField_cod_parceiro                            = IIF(Request.Form("cod_parceiro") = "", "NULL", Request.Form("cod_parceiro"))
     frmField_dsc_parceria_realizacao                 = IIF(Request.Form("dsc_parceria_realizacao") = "", "", Request.Form("dsc_parceria_realizacao"))
+    frmField_dsc_observacoes_gestor                  = IIF(Request.Form("dsc_observacoes_gestor") = "", "", Request.Form("dsc_observacoes_gestor"))
   End If
 
   MM_editQuery = "UPDATE " & MM_editTable & " SET "
 
   If Session("MM_UserAuthorization") = 1 Then
-    MM_editQuery = MM_editQuery & "PI='"& frmField_PI &"',cod_predio='"& frmField_cod_predio &"',id_predio="& frmField_id_predio &",municipio='"& frmField_municipio &"',nome_empreendimento='"& frmField_nome_empreendimento &"',[Descrição da Intervenção FDE]='"& frmField_descricao_empreendimento &"',cod_tipo_empreendimento="& frmField_cod_tipo_empreendimento &",cod_programa="& frmField_cod_programa &",cod_convênio="& frmField_cod_convenio
+    MM_editQuery = MM_editQuery & "PI='"& frmField_PI &"',cod_predio='"& frmField_cod_predio &"',id_predio="& frmField_id_predio &",municipio='"& frmField_municipio &"',nome_empreendimento='"& frmField_nome_empreendimento &"',[Descrição da Intervenção FDE]='"& frmField_descricao_empreendimento &"',cod_tipo_empreendimento="& frmField_cod_tipo_empreendimento &",cod_programa="& frmField_cod_programa
   End If
 
   If Session("MM_UserAuthorization") = 3 Then
@@ -273,7 +273,7 @@ If (CStr(Request("MM_update")) <> "" And CStr(Request("MM_recordId")) <> "") The
 
   If Session("MM_UserAuthorization") = 3 Then
     MM_editQuery = MM_editQuery & ",cod_situacao_externa="& frmField_cod_situacao_externa & ",dsc_observacoes_relatorio_mensal='"& frmField_dsc_observacoes_relatorio_mensal &"'"
-    MM_editQuery = MM_editQuery & ",cod_bacia_hidrografica="& frmField_cod_bacia_hidrografica &",cod_manancial_lancamento="& frmField_cod_manancial_lancamento &",qtd_metragem_coletor_tronco="& frmField_qtd_metragem_coletor_tronco &",qtd_metragem_interceptor="& frmField_qtd_metragem_interceptor &",qtd_metragem_emissario_fluente_bruto="& frmField_qtd_metragem_emissario_fluente_bruto &",qtd_eee="& frmField_qtd_eee &",qtd_metragem_linha_recalque="& frmField_qtd_metragem_linha_recalque &",cod_tipo_ete="& frmField_cod_tipo_ete &",dsc_estacao_tratamento='"& frmField_dsc_estacao_tratamento &"',qtd_metragem_emissario_efluente_tratado="& frmField_qtd_metragem_emissario_efluente_tratado &",flg_estudo_elaborado_daee="& frmField_flg_estudo_elaborado_daee &",dsc_observacoes_obra='"& frmField_dsc_observacoes &"',cod_parceiro="& frmField_cod_parceiro &"" &",dsc_parceria_realizacao='"& frmField_dsc_parceria_realizacao &"'"
+    MM_editQuery = MM_editQuery & ",cod_bacia_hidrografica="& frmField_cod_bacia_hidrografica &",cod_manancial_lancamento="& frmField_cod_manancial_lancamento &",qtd_metragem_coletor_tronco="& frmField_qtd_metragem_coletor_tronco &",qtd_metragem_interceptor="& frmField_qtd_metragem_interceptor &",qtd_metragem_emissario_fluente_bruto="& frmField_qtd_metragem_emissario_fluente_bruto &",qtd_eee="& frmField_qtd_eee &",qtd_metragem_linha_recalque="& frmField_qtd_metragem_linha_recalque &",cod_tipo_ete="& frmField_cod_tipo_ete &",dsc_estacao_tratamento='"& frmField_dsc_estacao_tratamento &"',qtd_metragem_emissario_efluente_tratado="& frmField_qtd_metragem_emissario_efluente_tratado &",flg_estudo_elaborado_daee="& frmField_flg_estudo_elaborado_daee &",dsc_observacoes_obra='"& frmField_dsc_observacoes &"',cod_parceiro="& frmField_cod_parceiro &"" &",dsc_parceria_realizacao='"& frmField_dsc_parceria_realizacao &"',dsc_observacoes_gestor='"& frmField_dsc_observacoes_gestor & "'"
   End If
 
   MM_editQuery = MM_editQuery & " where " & MM_editColumn & " = " & MM_recordId
@@ -359,21 +359,6 @@ rs_programa.LockType = 1
 rs_programa.Open()
 
 rs_programa_numRows = 0
-%>
-
-<%
-Dim rs_convenio
-Dim rs_convenio_numRows
-
-Set rs_convenio = Server.CreateObject("ADODB.Recordset")
-rs_convenio.ActiveConnection = MM_cpf_STRING
-rs_convenio.Source = "SELECT * FROM tb_convenio;  "
-rs_convenio.CursorType = 0
-rs_convenio.CursorLocation = 2
-rs_convenio.LockType = 1
-rs_convenio.Open()
-
-rs_convenio_numRows = 0
 %>
 
 <%
@@ -516,7 +501,7 @@ rs_situacao_numRows = 0
           <span class="style10">Objeto da Obra:</span>
         </td>
         <td bgcolor="#CCCCCC">
-          <textarea name="descricao_empreendimento" cols="50" rows="5" class="style9" maxlength="255" style="width: 98%;" <% If Session("MM_UserAuthorization") <> 1 Then Response.Write "disabled='disabled'" End If %>><%=(rs_pi.Fields.Item("Descrição da Intervenção FDE").Value)%></textarea>
+          <textarea name="descricao_empreendimento" cols="50" rows="5" class="style9" style="width: 98%;" <% If Session("MM_UserAuthorization") <> 1 Then Response.Write "disabled='disabled'" End If %>><%=(rs_pi.Fields.Item("Descrição da Intervenção FDE").Value)%></textarea>
         </td>
       </tr>
 
@@ -582,35 +567,6 @@ rs_situacao_numRows = 0
         </td>
       </tr>
 
-      <!-- CONVÊNIO -->
-      <tr valign="baseline">
-        <td align="right" nowrap bgcolor="#CCCCCC" class="style9">
-          <span class="style10">Convênio:</span>
-        </td>
-        <td bgcolor="#CCCCCC">
-          <select name="cod_convenio" class="style9">
-            <option value=""></option>
-            <%
-              While (NOT rs_convenio.EOF)
-                If Trim(rs_convenio.Fields.Item("num_convenio").Value) <> "" Then
-                  Response.Write "      <OPTION value='" & (rs_convenio.Fields.Item("id").Value) & "'"
-                  If Lcase(rs_convenio.Fields.Item("id").Value) = Lcase(rs_pi.Fields.Item("cod_convênio").Value) then
-                    Response.Write "selected"
-                  End If
-                  Response.Write ">Num. Autos: "& (rs_convenio.Fields.Item("num_autos").Value) &" | Num. Convênio: "& (rs_convenio.Fields.Item("num_convenio").Value) &"</OPTION>"
-                End If
-                rs_convenio.MoveNext()
-              Wend
-              If (rs_convenio.CursorType > 0) Then
-                rs_convenio.MoveFirst
-              Else
-                rs_convenio.Requery
-              End If
-            %>
-          </select>
-        </td>
-      </tr>
-
       <%
         End If
 
@@ -621,7 +577,7 @@ rs_situacao_numRows = 0
       <!-- <tr valign="baseline">
         <td align="right" valign="middle" nowrap bgcolor="#CCCCCC" class="style9"><span class="style10">Situação Anterior:</span></td>
         <td bgcolor="#CCCCCC">
-          <textarea name="dsc_situacao_anterior"cols="50" rows="5" class="style9" maxlength="255" style="width: 98%;"><%=(rs_pi.Fields.Item("dsc_situacao_anterior").Value)%></textarea>
+          <textarea name="dsc_situacao_anterior"cols="50" rows="5" class="style9" style="width: 98%;"><%=(rs_pi.Fields.Item("dsc_situacao_anterior").Value)%></textarea>
         </td>
       </tr> -->
 
@@ -629,7 +585,7 @@ rs_situacao_numRows = 0
       <!-- <tr valign="baseline">
         <td align="right" valign="middle" nowrap bgcolor="#CCCCCC" class="style9"><span class="style10">Situação Atual:</span></td>
         <td bgcolor="#CCCCCC">
-          <textarea name="dsc_situacao_atual"cols="50" rows="5" class="style9" maxlength="255" style="width: 98%;"><%=(rs_pi.Fields.Item("dsc_situacao_atual").Value)%></textarea>
+          <textarea name="dsc_situacao_atual"cols="50" rows="5" class="style9" style="width: 98%;"><%=(rs_pi.Fields.Item("dsc_situacao_atual").Value)%></textarea>
         </td>
       </tr> -->
 
@@ -637,7 +593,7 @@ rs_situacao_numRows = 0
       <tr valign="baseline">
         <td align="right" valign="middle" nowrap bgcolor="#CCCCCC" class="style9"><span class="style10">Beneficio Geral da Obra:</span></td>
         <td bgcolor="#CCCCCC">
-          <textarea name="dsc_resultado_obtido"cols="50" rows="5" class="style9" maxlength="255" style="width: 98%;"><%=(rs_pi.Fields.Item("dsc_resultado_obtido").Value)%></textarea>
+          <textarea name="dsc_resultado_obtido"cols="50" rows="5" class="style9" style="width: 98%;"><%=(rs_pi.Fields.Item("dsc_resultado_obtido").Value)%></textarea>
         </td>
       </tr>
 
@@ -1030,7 +986,7 @@ rs_situacao_numRows = 0
       <tr valign="baseline">
         <td align="right" valign="middle" nowrap bgcolor="#CCCCCC" class="style9"><span class="style10">Observações Relatório Mensal:</span></td>
         <td bgcolor="#CCCCCC">
-          <textarea name="dsc_observacoes_relatorio_mensal"cols="50" rows="5" class="style9" maxlength="255" style="width: 98%;"><%=(rs_pi.Fields.Item("dsc_observacoes_relatorio_mensal").Value)%></textarea>
+          <textarea name="dsc_observacoes_relatorio_mensal"cols="50" rows="5" class="style9" style="width: 98%;"><%=(rs_pi.Fields.Item("dsc_observacoes_relatorio_mensal").Value)%></textarea>
         </td>
       </tr>
 
@@ -1214,10 +1170,10 @@ rs_situacao_numRows = 0
         </tr>
         <tr valign="middle">
           <td align="right" nowrap bgcolor="#CCCCCC" class="style9">
-            <span class="style22">Observações:</span>
+            <span class="style22">Observações da Bacia:</span>
           </td>
           <td bgcolor="#CCCCCC">
-            <textarea name="dsc_observacoes" cols="25" style="width: 98%;"><%=(rs_pi.Fields.Item("dsc_observacoes_obra").Value)%></textarea>
+            <textarea name="dsc_observacoes" cols="50" rows="5" class="style9" style="width: 98%;"><%=(rs_pi.Fields.Item("dsc_observacoes_obra").Value)%></textarea>
           </td>
         </tr>
         <tr valign="middle">
@@ -1254,7 +1210,14 @@ rs_situacao_numRows = 0
             <textarea name="dsc_parceria_realizacao" cols="25" style="width: 98%;"><%=(rs_pi.Fields.Item("dsc_parceria_realizacao").Value)%></textarea>
           </td>
         </tr>
-
+        <tr valign="middle">
+          <td align="right" nowrap bgcolor="#CCCCCC" class="style9">
+            <span class="style22">Observações Gerais:</span>
+          </td>
+          <td bgcolor="#CCCCCC">
+            <textarea name="dsc_observacoes_gestor" cols="50" rows="5" class="style9" style="width: 98%;"><%=(rs_pi.Fields.Item("dsc_observacoes_gestor").Value)%></textarea>
+          </td>
+        </tr>
       <%
         End If
       %>

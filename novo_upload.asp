@@ -15,7 +15,7 @@
 	End If
 
 	Set objUpload = Server.CreateObject("Dundas.Upload.2")
-	objUpload.MaxFileSize = 4194304 '4MB'
+	objUpload.MaxFileSize = 4194304 '2MB'
 	objUpload.UseUniqueNames = False
 	objUpload.SaveToMemory
 

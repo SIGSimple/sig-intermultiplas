@@ -99,6 +99,7 @@
 					<div class="col-xs-12">
 						<table class="table table-bordered table-condensed table-hover table-striped">
 							<thead>
+								<th class="text-center text-middle">#</td>
 								<th class="text-center text-middle">Núm. Autos</td>
 								<th class="text-center text-middle">Tipo de Contratação</td>
 								<th class="text-center text-middle">Financiador</td>
@@ -113,6 +114,7 @@
 									While (NOT rs_lista.EOF)
 								%>
 								<tr>
+									<td><%=(rs_lista.Fields.Item("id"))%></td>
 									<td><%=(rs_lista.Fields.Item("num_autos"))%></td>
 									<td><%=(rs_lista.Fields.Item("dsc_tipo_contratacao").Value)%></td>
 									<td><%=(rs_lista.Fields.Item("dsc_financiador").Value)%></td>

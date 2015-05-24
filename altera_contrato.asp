@@ -52,8 +52,8 @@ If (CStr(Request("MM_update")) = "form1" And CStr(Request("MM_recordId")) <> "")
   MM_editColumn = "id"
   MM_recordId = "" + Request.Form("MM_recordId") + ""
   MM_editRedirectUrl = "cad_contrato.asp"
-  MM_fieldsStr  = "cod_projetista|value|cod_empresa_contratada|value|cod_engenheiro_empresa_contratada|value|num_autos|value|num_contrato|value|dta_assinatura|value|dta_publicacao_doe|value|dta_pedido_empenho|value|dta_os|value|prz_original_contrato_meses|value|prz_original_execucao_meses|value|dta_vigencia|value|dta_base|value|dta_inauguracao|value|dta_termo_recebimento_provisorio|value|dta_termo_recebimento_definitivo|value|dta_encerramento_contrato|value|dta_recisao_contratual|value|cod_contratante|value|cod_situacao|value"
-  MM_columnsStr = "cod_projetista|none,none,NULL|cod_empresa_contratada|none,none,NULL|cod_engenheiro_empresa_contratada|none,none,NULL|num_autos|',none,''|num_contrato|',none,''|dta_assinatura|',none,NULL|dta_publicacao_doe|',none,NULL|dta_pedido_empenho|',none,NULL|dta_os|',none,NULL|prz_original_contrato_meses|',none,''|prz_original_execucao_meses|',none,''|dta_vigencia|',none,NULL|dta_base|',none,NULL|dta_inauguracao|',none,NULL|dta_termo_recebimento_provisorio|',none,NULL|dta_termo_recebimento_definitivo|',none,NULL|dta_encerramento_contrato|',none,NULL|dta_recisao_contratual|',none,NULL|cod_contratante|none,none,NULL|cod_situacao|none,none,NULL"
+MM_fieldsStr  = "cod_empresa_contratada|value|cod_engenheiro_empresa_contratada|value|num_autos|value|num_contrato|value|dta_assinatura|value|dta_publicacao_doe|value|dta_pedido_empenho|value|dta_os|value|prz_original_contrato_meses|value|vlr_original_contrato|value|prz_aditivos_contrato_meses|value|vlr_aditivos_contrato|value|prz_original_execucao_meses|value|dta_vigencia|value|dta_base|value|dta_inauguracao|value|dta_termo_recebimento_provisorio|value|dta_termo_recebimento_definitivo|value|dta_encerramento_contrato|value|dta_recisao_contratual|value|cod_situacao|value"
+  MM_columnsStr = "cod_empresa_contratada|none,none,NULL|cod_engenheiro_empresa_contratada|none,none,NULL|num_autos|',none,''|num_contrato|',none,''|dta_assinatura|',none,NULL|dta_publicacao_doe|',none,NULL|dta_pedido_empenho|',none,NULL|dta_os|',none,NULL|prz_original_contrato_meses|none,none,NULL|vlr_original_contrato|',none,NULL|prz_aditivos_contrato_meses|none,none,NULL|vlr_aditivos_contrato|',none,NULL|prz_original_execucao_meses|none,none,NULL|dta_vigencia|',none,NULL|dta_base|',none,NULL|dta_inauguracao|',none,NULL|dta_termo_recebimento_provisorio|',none,NULL|dta_termo_recebimento_definitivo|',none,NULL|dta_encerramento_contrato|',none,NULL|dta_recisao_contratual|',none,NULL|cod_situacao|none,none,NULL"
 
   ' create the MM_fields and MM_columns arrays
   MM_fields = Split(MM_fieldsStr, "|")
@@ -110,6 +110,7 @@ If (CStr(Request("MM_update")) <> "" And CStr(Request("MM_recordId")) <> "") The
   MM_editQuery = MM_editQuery & " where " & MM_editColumn & " = " & MM_recordId
 
   If (Not MM_abortEdit) Then
+    'Response.Write MM_editQuery'
     ' execute the update
     Set MM_editCmd = Server.CreateObject("ADODB.Command")
     MM_editCmd.ActiveConnection = MM_editConnection
@@ -137,7 +138,7 @@ Dim rs_numRows
 
 Set rs = Server.CreateObject("ADODB.Recordset")
 rs.ActiveConnection = MM_cpf_STRING
-rs.Source = "SELECT * FROM tb_contrato WHERE id = " + Replace(rs__MMColParam, "'", "''")
+rs.Source = "SELECT c_lista_dados_obras.municipio, c_lista_dados_obras.nome_empreendimento, tb_contrato.* FROM (tb_contrato INNER JOIN tb_pi_contrato ON tb_contrato.id = tb_pi_contrato.cod_contrato) INNER JOIN c_lista_dados_obras ON tb_pi_contrato.cod_empreendimento = c_lista_dados_obras.Código WHERE tb_contrato.id = " + Replace(rs__MMColParam, "'", "''")
 rs.CursorType = 0
 rs.CursorLocation = 2
 rs.LockType = 1
@@ -185,6 +186,23 @@ rs_numRows = 0
       <input type="hidden" name="MM_update" value="form1">
       <input type="hidden" name="MM_recordId" value="<%= rs.Fields.Item("id").Value %>">
       <table align="center">
+        <tr valign="baseline">
+          <td align="right" nowrap bgcolor="#CCCCCC" class="style7">
+            <span class="style22">Município:</span>
+          </td>
+          <td bgcolor="#CCCCCC">
+            <input type="text" disabled="disabled" value="<%=(rs.Fields.Item("municipio").Value)%>" size="32">
+          </td>
+        </tr>
+        <tr valign="baseline">
+          <td align="right" nowrap bgcolor="#CCCCCC" class="style7">
+            <span class="style22">Localidade:</span>
+          </td>
+          <td bgcolor="#CCCCCC">
+            <input type="text" disabled="disabled" value="<%=(rs.Fields.Item("nome_empreendimento").Value)%>" size="32">
+          </td>
+        </tr>
+
         <tr valign="baseline">
           <td align="right" nowrap bgcolor="#CCCCCC" class="style7">
             <span class="style22">Empresa Contratada:</span>
@@ -243,37 +261,6 @@ rs_numRows = 0
                        End If
                        Response.Write ">" & (rs_combo.Fields.Item("nme_interessado").Value) & "</OPTION>"
                     End If
-                    rs_combo.MoveNext
-                  Wend
-                End If
-              %>
-            </select>
-          </td>
-        </tr>
-
-        <tr valign="baseline">
-          <td align="right" nowrap bgcolor="#CCCCCC" class="style7">
-            <span class="style22">Licitação:</span>
-          </td>
-          <td bgcolor="#CCCCCC">
-            <select name="cod_licitacao">
-              <option value=""></option>
-              <%
-                strQ = "SELECT * FROM tb_licitacao ORDER BY num_autos ASC"
-
-                Set rs_combo = Server.CreateObject("ADODB.Recordset")
-                  rs_combo.CursorLocation = 3
-                  rs_combo.CursorType = 3
-                  rs_combo.LockType = 1
-                  rs_combo.Open strQ, objCon, , , &H0001
-
-                If Not rs_combo.EOF Then
-                  While Not rs_combo.EOF
-                       Response.Write "      <OPTION value='" & (rs_combo.Fields.Item("id").Value) & "'"
-                       If Lcase(rs_combo.Fields.Item("id").Value) = Lcase(rs.Fields.Item("cod_licitacao").Value) then
-                         Response.Write "selected"
-                       End If
-                       Response.Write ">Nº Autos: " & (rs_combo.Fields.Item("num_autos").Value) & " - Nº Edital: " & (rs_combo.Fields.Item("num_autos").Value) & "</OPTION>"
                     rs_combo.MoveNext
                   Wend
                 End If
@@ -347,6 +334,33 @@ rs_numRows = 0
 
         <tr valign="baseline">
           <td align="right" nowrap bgcolor="#CCCCCC" class="style7">
+            <span class="style22">Valor Original</span>
+          </td>
+          <td bgcolor="#CCCCCC">
+            <input type="text" name="vlr_original_contrato" value="<%=(rs.Fields.Item("vlr_original_contrato").Value)%>" size="32">
+          </td>
+        </tr>
+
+        <tr valign="baseline">
+          <td align="right" nowrap bgcolor="#CCCCCC" class="style7">
+            <span class="style22">Prazo Aditivos (Meses):</span>
+          </td>
+          <td bgcolor="#CCCCCC">
+            <input type="text" name="prz_aditivos_contrato_meses" value="<%=(rs.Fields.Item("prz_aditivos_contrato_meses").Value)%>" size="32">
+          </td>
+        </tr>
+
+        <tr valign="baseline">
+          <td align="right" nowrap bgcolor="#CCCCCC" class="style7">
+            <span class="style22">Valor Total dos Aditivos:</span>
+          </td>
+          <td bgcolor="#CCCCCC">
+            <input type="text" name="vlr_aditivos_contrato" value="<%=(rs.Fields.Item("vlr_aditivos_contrato").Value)%>" size="32">
+          </td>
+        </tr>
+
+        <tr valign="baseline">
+          <td align="right" nowrap bgcolor="#CCCCCC" class="style7">
             <span class="style22">Prazo de Execução (Meses):</span>
           </td>
           <td bgcolor="#CCCCCC">
@@ -414,39 +428,6 @@ rs_numRows = 0
           </td>
           <td bgcolor="#CCCCCC">
             <input type="text" class="datepicker" name="dta_recisao_contratual" value="<%=(rs.Fields.Item("dta_recisao_contratual").Value)%>" size="32">
-          </td>
-        </tr>
-
-        <tr valign="baseline">
-          <td align="right" nowrap bgcolor="#CCCCCC" class="style7">
-            <span class="style22">Contratante:</span>
-          </td>
-          <td bgcolor="#CCCCCC">
-            <select name="cod_contratante">
-              <option value=""></option>
-              <%
-                strQ = "SELECT * FROM tb_Construtora ORDER BY Construtora ASC "
-
-                Set rs_combo = Server.CreateObject("ADODB.Recordset")
-                  rs_combo.CursorLocation = 3
-                  rs_combo.CursorType = 3
-                  rs_combo.LockType = 1
-                  rs_combo.Open strQ, objCon, , , &H0001
-
-                If Not rs_combo.EOF Then
-                  While Not rs_combo.EOF
-                    If Trim(rs_combo.Fields.Item("Construtora").Value) <> "" Then
-                       Response.Write "      <OPTION value='" & (rs_combo.Fields.Item("cod_construtora").Value) & "'"
-                       If Lcase(rs_combo.Fields.Item("cod_construtora").Value) = Lcase(rs.Fields.Item("cod_contratante").Value) then
-                         Response.Write "selected"
-                       End If
-                       Response.Write ">" & (rs_combo.Fields.Item("Construtora").Value) & "</OPTION>"
-                    End If
-                    rs_combo.MoveNext
-                  Wend
-                End If
-              %>
-            </select>
           </td>
         </tr>
 

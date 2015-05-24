@@ -253,6 +253,7 @@
 				<tr bgcolor="#999999">
 					<td>&nbsp;</td>
 					<td>&nbsp;</td>
+					<td>&nbsp;</td>
 					<td>
 						<span class="style7">Núm. Autos</span>
 					</td>
@@ -281,7 +282,7 @@
 				</tr>
 				<%
 					cod_empreendimento = Request.QueryString("cod_empreendimento")
-					strQ = "SELECT * from c_lista_licitacoes"
+					strQ = "SELECT * from c_lista_licitacoes ORDER BY id ASC"
 
 					Set rs_lista = Server.CreateObject("ADODB.Recordset")
 						rs_lista.CursorLocation = 3
@@ -302,6 +303,9 @@
 						<a href="delete_licitacao.asp?id=<%=(rs_lista.Fields.Item("id").Value)%>">
 							<img src="const/imagens/delete.gif" width="16" height="15" border="0" />
 						</a>
+					</td>
+					<td>
+						<span class="style5"><%=(rs_lista.Fields.Item("id"))%></span>
 					</td>
 					<td>
 						<span class="style5"><%=(rs_lista.Fields.Item("num_autos"))%></span>

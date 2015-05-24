@@ -16,13 +16,17 @@
 	Set cod_municipio = Request.QueryString("cod_municipio")
 	Set cod_empreendimento = Request.QueryString("cod_empreendimento")
 
-	strQ = "SELECT * FROM c_lista_pi WHERE PI = '"& cod_empreendimento &"'"
+	strQ = "SELECT * FROM c_lista_dados_obras WHERE PI = '"& cod_empreendimento &"'"
 
 	Set rs_dados_obra = Server.CreateObject("ADODB.Recordset")
 		rs_dados_obra.CursorLocation = 3
 		rs_dados_obra.CursorType = 3
 		rs_dados_obra.LockType = 1
 		rs_dados_obra.Open strQ, objCon, , , &H0001
+
+	If cod_municipio = "" Then
+		cod_municipio = rs_dados_obra.Fields.Item("cod_mun").Value
+	End If
 %>
 <!DOCTYPE html>
 <html>
@@ -36,33 +40,27 @@
 	<script type="text/javascript" src="js/jquery.number.min.js"></script>
 	<script type="text/javascript" src="js/underscore-min.js"></script>
 	<script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?libraries=places&sensor=false"></script>
 	<script type="text/javascript" src="http://code.highcharts.com/highcharts.js"></script>
 	<script type="text/javascript" src="http://code.highcharts.com/modules/exporting.js"></script>
 	<script type="text/javascript" src="js/moment.min.js"></script>
 	<script type="text/javascript" src="js/fullscreen.js"></script>
+	<script type="text/javascript" src="js/loadMapaObra.js"></script>
+	<script type="text/javascript" src="js/common.js"></script>
 	<script type="text/javascript">
-		function adjustNumLayout() {
-			$.each($(".num"), function(i, item){
-				//$(item).val($.number($(item).val(), 0, ",", "."));
-				$(item).text($.number($(item).text(), 0, ",", "."));
-			});
-		}
-
-		function adjustVlrLayout() {
-			$.each($(".vlr"), function(i, item){
-				// $(item).val($.number($(item).val(), 0, ",", "."));
-				if($(item).text() != "")
-					$(item).text("R$ " + $.number($(item).text(), 2, ",", "."));
-			});
-		}
-
-		function adjustPrcLayout() {
-			$.each($(".prc"), function(i,item){
-				$(item).text($.number(( parseFloat($(item).text()) * 100 ), 2, ",", ".") + "%");
-			});
+		function getLatitudeLongitude() {
+			return "<%=(rs_dados_obra.Fields.Item("latitude_longitude").Value)%>";
 		}
 
 		$(function(){
+			$('#modalMapa').on('show.bs.modal', function() {
+				resizeMap();
+			});
+
+			$("li a.map").on("click", function(){
+				$("#modalMapa").modal("show");
+			});
+
 			$("li a.print").on("click", function(){
 				window.print();
 			});
@@ -99,9 +97,9 @@
 						$("#txt-nome-prefeitura").text(dadosObra['prefeitura']);
 						$("#txt-nome-prefeito").text(dadosObra['prefeito']);
 						$("#txt-nome-bacia-daee").text(dadosObra['bacia_daee']);
-						$("#txt-situacao").text(dadosObra['desc_situacao_externa']);
 						$("#txt-pop-2010").text(dadosObra['qtd_populacao_urbana_2010']);
 						$("#txt-pop-2030").text(pop2030);
+						$("#txt-observacoes-gerais").text((dadosObra['observacoes_gestor']) ? dadosObra['observacoes_gestor'] : "");
 
 						adjustNumLayout();
 						adjustVlrLayout();
@@ -134,7 +132,24 @@
 			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 				<ul class="nav navbar-nav navbar-right">
 					<li><a href="javascript:window.history.back();"><i class="fa fa-chevron-left"></i> Voltar</a></li>
+					<li><a href="informacao-municipio-resumida.asp?cod_municipio=<%=(cod_municipio)%>"><i class="fa fa-list-alt"></i> Inf. Município</a></li>
+					<%
+						If rs_dados_obra.Fields.Item("latitude_longitude").Value <> "" Then
+					%>
+					
+					<li><a href="#" class="map"><i class="fa fa-map-marker"></i> Mapa</a></li>
+					
+					<%
+						End If
+					
+						If (CInt(Session("MM_UserAuthorization")) <> 8 And CInt(Session("MM_UserAuthorization")) <> 9) Then	
+					%>
+					
 					<li><a href="#" class="print"><i class="fa fa-print"></i> Imprimir</a></li>
+
+					<%
+						End If
+					%>
 					<li><a href="#" class="expand"><i class="fa fa-expand"></i>&nbsp;&nbsp;Tela Cheia</a></li>
 					<li><a href="<%= MM_Logout %>" class="sign-out"><i class="fa fa-sign-out"></i> Sair do Sistema</a></li>
 				</ul>
@@ -151,7 +166,7 @@
 					</div>
 					
 					<div class="col-xs-7 text-center">
-						<small><strong>Governo do Estado de São Paulo</strong></small>
+						<strong>Governo do Estado de São Paulo</strong>
 						<br/>
 						<small>Secretaria de Saneamento e Recursos Hídricos</small>
 						<br/>
@@ -167,8 +182,21 @@
 					<div class="col-xs-12">
 						<table class="table table-condensed">
 							<tbody>
-								<tr class="warning">
-									<td class="text-bold text-title" id="txt-municipio-localidade"></td>
+								<tr class="info">
+									<td class="text-bold text-title text-center">
+										<%=(rs_dados_obra.Fields.Item("municipio").Value)%> - <%=(rs_dados_obra.Fields.Item("nome_empreendimento").Value)%>
+									</td>
+								</tr>
+								<tr>
+									<td class="text-bold text-center">
+										<%
+											If Session("MM_UserAuthorization") = 8 Or Session("MM_UserAuthorization") = 9 Then
+												Response.Write rs_dados_obra.Fields.Item("desc_situacao_externa").Value
+											Else
+												Response.Write rs_dados_obra.Fields.Item("desc_situacao_interna").Value
+											End If
+										%>
+									</td>
 								</tr>
 							</tbody>
 						</table>
@@ -203,17 +231,6 @@
 							<tbody>
 								<tr>
 									<td class="text-middle text-bold">
-										Situação
-									</td>
-									<td class="text-right" id="txt-situacao"></td>
-								</tr>
-							</tbody>
-						</table>
-
-						<table class="table table-bordered table-condensed">
-							<tbody>
-								<tr>
-									<td class="text-middle text-bold">
 										População Beneficiada em 2010
 									</td>
 									<td class="text-middle text-right num" id="txt-pop-2010"></td>
@@ -226,25 +243,49 @@
 								</tr>
 							</tbody>
 						</table>
-					</div>
-				</div>
-			</div>
-		</div>
 
-		<div class="modal fade" id="modalLoading" tabindex="-1" role="dialog" aria-labelledby="modalLoadingLabel" aria-hidden="true">
-			<div class="modal-dialog modal-sm">
-				<div class="modal-content">
-					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-						<h4 class="modal-title" id="modalLoadingLabel">Aguarde!</h4>
-					</div>
-					<div class="modal-body">
-						<i class="fa fa-spinner fa-spin"></i> Buscando informações...
+						<table class="table table-bordered table-condensed">
+							<tbody>
+								<tr>
+									<td class="text-middle text-bold" width="150">
+										Observações Gerais:
+									</td>
+									<td id="txt-observacoes-gerais"></td>
+								</tr>
+							</tbody>
+						</table>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
 
+	<div class="modal fade" id="modalLoading" tabindex="-1" role="dialog" aria-labelledby="modalLoadingLabel" aria-hidden="true">
+		<div class="modal-dialog modal-sm">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title" id="modalLoadingLabel">Aguarde!</h4>
+				</div>
+				<div class="modal-body">
+					<i class="fa fa-spinner fa-spin"></i> Buscando informações...
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal fade" id="modalMapa" tabindex="-1" role="dialog" aria-labelledby="modalMapaLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title" id="modalMapaLabel"><i class="fa fa-map-marker"></i> Mapa de Localização</h4>
+				</div>
+				<div class="modal-body">
+					<div id="map-canvas" style="width: 100%; height: 400px;"></div>
+				</div>
+			</div>
+		</div>
+	</div>
 </body>
 </html>

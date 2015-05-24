@@ -17,17 +17,45 @@
 			rs_update.Open strQ, objCon, , , &H0001
 			rs_update.Addnew()
 			
+			flg_vazio = True
+
 			' INÍCIO CAMPOS
-			rs_update("cod_convenio")		 		= Trim(Request.Form("cod_convenio"))
-			rs_update("num_termo_aditamento")		= Trim(Request.Form("num_termo_aditamento"))
-			rs_update("cod_tipo_aditamento") 		= Trim(Request.Form("cod_tipo_aditamento"))
-			rs_update("dta_assinatura") 			= Trim(Request.Form("dta_assinatura"))
-			rs_update("vlr_aditamento") 			= Replace(Trim(Request.Form("vlr_aditamento")), ",", ".")
-			rs_update("prz_meses") 					= Trim(Request.Form("prz_meses"))
-			rs_update("dta_vigencia") 				= Trim(Request.Form("dta_vigencia"))
+			If Request.Form("cod_convenio") <> "" Then
+				flg_vazio = False
+				rs_update("cod_convenio")		 		= Trim(Request.Form("cod_convenio"))
+			End If
+			If Request.Form("num_termo_aditamento") <> "" Then
+				flg_vazio = False
+				rs_update("num_termo_aditamento")		= Trim(Request.Form("num_termo_aditamento"))
+			End If
+			If Request.Form("cod_tipo_aditamento") <> "" Then
+				flg_vazio = False
+				rs_update("cod_tipo_aditamento") 		= Trim(Request.Form("cod_tipo_aditamento"))
+			End If
+			If Request.Form("dta_assinatura") <> "" Then
+				flg_vazio = False
+				rs_update("dta_assinatura") 			= Trim(Request.Form("dta_assinatura"))
+			End If
+			If Request.Form("vlr_aditamento") <> "" Then
+				flg_vazio = False
+				rs_update("vlr_aditamento") 			= Replace(Trim(Request.Form("vlr_aditamento")), ",", ".")
+			End If
+			If Request.Form("prz_meses") <> "" Then
+				flg_vazio = False
+				rs_update("prz_meses") 					= Trim(Request.Form("prz_meses"))
+			End If
+			If Request.Form("dta_vigencia") <> "" Then
+				flg_vazio = False
+				rs_update("dta_vigencia") 				= Trim(Request.Form("dta_vigencia"))
+			End If
 			' FIM CAMPOS
 			
-			rs_update.Update
+			Response.Write flg_vazio
+
+			If Not flg_vazio Then
+				Response.Write "Entrou"
+				rs_update.Update
+			End If
 	End If
 
 	Dim rs
@@ -191,8 +219,8 @@
 		<div align="center">
 			<table border="0">
 				<tr bgcolor="#999999">
-					<!-- <td>&nbsp;</td>
-					<td>&nbsp;</td> -->
+					<!-- <td>&nbsp;</td> -->
+					<td>&nbsp;</td>
 					<td>&nbsp;</td>
 					<td>
 						<span class="style7">Núm. Termo</span>
@@ -213,12 +241,12 @@
 						<span class="style7">Vigência até</span>
 					</td>
 					<td align="center">
-						<span class="style7">Upload de Arquivos (Máx. 4MB)</span>
+						<span class="style7">Upload de Arquivos (Máx. 2MB)</span>
 					</td>
 				</tr>
 				<%
 					cod_convenio = Request.QueryString("cod_convenio")
-					strQ = "SELECT tb_convenio_aditamento.*, tb_tipo_aditamento.dsc_tipo_aditamento FROM tb_tipo_aditamento INNER JOIN tb_convenio_aditamento ON tb_tipo_aditamento.id = tb_convenio_aditamento.cod_tipo_aditamento WHERE tb_convenio_aditamento.cod_convenio = " & cod_convenio
+					strQ = "SELECT tb_convenio_aditamento.*, tb_tipo_aditamento.dsc_tipo_aditamento FROM tb_tipo_aditamento RIGHT JOIN tb_convenio_aditamento ON tb_tipo_aditamento.id = tb_convenio_aditamento.cod_tipo_aditamento WHERE tb_convenio_aditamento.cod_convenio = " & cod_convenio
 
 					Set rs_lista = Server.CreateObject("ADODB.Recordset")
 						rs_lista.CursorLocation = 3
@@ -234,12 +262,12 @@
 						<a href="altera_convenio.asp?cod_convenio=cod_convenio">
 							<img src="const/imagens/edit.gif" width="16" height="15" border="0" />
 						</a>
-					</td>
+					</td>-->
 					<td>
-						<a href="del_convenio.asp?cod_convenio=cod_convenio">
+						<a href="delete_convenio_aditamento.asp?id=<%=(rs_lista.Fields.Item("id").Value)%>&cod_convenio=<%=(cod_convenio)%>">
 							<img src="const/imagens/delete.gif" width="16" height="15" border="0" />
 						</a>
-					</td> -->
+					</td>
 					<td>
 						<a href="cad_convenio_aditamento_nota.asp?cod_convenio_aditamento=<%=(rs_lista.Fields.Item("id").Value)%>&num_termo_aditamento=<%=(rs_lista.Fields.Item("num_termo_aditamento").Value)%>">
 							<span class="style5">
@@ -257,7 +285,13 @@
 						<span class="style5"><%=(rs_lista.Fields.Item("dta_assinatura").Value)%></span>
 					</td>
 					<td>
-						<span class="vlr style5"><%=(Replace(rs_lista.Fields.Item("vlr_aditamento").Value, ",", "."))%></span>
+						<span class="vlr style5">
+							<%
+								If rs_lista.Fields.Item("vlr_aditamento").Value Then
+									Response.Write Replace(rs_lista.Fields.Item("vlr_aditamento").Value, ",", ".")
+								End If
+							%>
+						</span>
 					</td>
 					<td>
 						<span class="style5"><%=(rs_lista.Fields.Item("prz_meses").Value)%></span>

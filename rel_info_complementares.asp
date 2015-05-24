@@ -8,7 +8,7 @@
 	Set objCon = Server.CreateObject("ADODB.Connection")
   		objCon.Open MM_cpf_STRING
 
-	sql = "SELECT * FROM c_lista_rel_info_complementares"
+	sql = "SELECT * FROM c_lista_rel_info_complementares ORDER BY nme_municipio ASC, nome_empreendimento ASC"
 
 	Dim rs_lista
 
@@ -95,6 +95,7 @@
 							<thead>
 								<th class="text-center text-middle">Município</th>
 								<th class="text-center text-middle">Localidade</th>
+								<th class="text-center text-middle">Situação</th>
 								<th class="text-center text-middle">Nº Autos</th>
 								<th class="text-center text-middle">Objeto da Obra</th>
 								<th class="text-center text-middle">Bacia Hidrográfica</th>
@@ -120,6 +121,7 @@
 								<tr>
 									<td><%=(rs_lista.Fields.Item("nme_municipio").Value)%></td>
 									<td><%=(rs_lista.Fields.Item("nome_empreendimento").Value)%></td>
+									<td><%=(rs_lista.Fields.Item("desc_situacao_externa").Value)%></td>
 									<td><%=(rs_lista.Fields.Item("PI").Value)%></td>
 									<td><%=(rs_lista.Fields.Item("dsc_objeto_obra").Value)%></td>
 									<td><%=(rs_lista.Fields.Item("nme_bacia_hidrografica").Value)%></td>

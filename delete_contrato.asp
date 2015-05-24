@@ -200,9 +200,6 @@ rs_delete_us_numRows = rs_delete_us_numRows + Repeat1__numRows
         <span class="style7">Data Recisão Contratual</span>
       </td>
       <td style="min-width: 200px; text-align: center;">
-        <span class="style7">Contratante</span>
-      </td>
-      <td style="min-width: 200px; text-align: center;">
         <span class="style7">Situação</span>
       </td>
     </tr>
@@ -261,9 +258,6 @@ rs_delete_us_numRows = rs_delete_us_numRows + Repeat1__numRows
         </td>
         <td style="text-align: center;">
           <span class="style5"><%=(rs_delete_us.Fields.Item("dta_recisao_contratual").Value)%></span>
-        </td>
-        <td>
-          <span class="style5"><%=(rs_delete_us.Fields.Item("contratante").Value)%></span>
         </td>
         <td>
           <span class="style5"><%=(rs_delete_us.Fields.Item("situacao").Value)%></span>

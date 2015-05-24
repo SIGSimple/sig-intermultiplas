@@ -95,7 +95,7 @@
 						<span class="style7">Data de Registro</span>
 					</td>
 					<td align="center">
-						<span class="style7">Upload de Arquivos (Máx. 4MB)</span>
+						<span class="style7">Upload de Arquivos (Máx. 2MB)</span>
 					</td>
 				</tr>
 				<%

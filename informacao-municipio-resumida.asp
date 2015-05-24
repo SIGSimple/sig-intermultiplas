@@ -103,7 +103,6 @@
 						$("#txt-pop-2010").val(dadosMunicipio['qtd_populacao_urbana_2010']);
 						$("#txt-pop-2030").val(pop2030);
 						$("#txt-nme-prefeito").val(dadosMunicipio['nme_prefeito']);
-						$("#txt-nme-partido").val(dadosMunicipio['nme_partido']);
 						$("#txt-atendido-sabesp").val(dadosMunicipio['dsc_concessao']);
 
 						adjustNumLayout();
@@ -125,7 +124,7 @@
 				url: "query-to-json-util.asp",
 				method: "POST",
 				data: {
-					sql: "SELECT * FROM c_lista_pi WHERE id_predio = <%=(cod_municipio)%>"
+					sql: "SELECT * FROM c_lista_pi WHERE id_predio = <%=(cod_municipio)%> AND cod_situacao_externa is not null"
 				},
 				beforeSend: function() {
 					
@@ -219,14 +218,9 @@
 				</div>
 
 				<div class="row">
-					<div class="col-xs-9">
+					<div class="col-xs-12">
 						<label class="control-label">Nome do Prefeito</label>
 						<input class="form-control input-sm" readonly="readonly" id="txt-nme-prefeito">
-					</div>
-
-					<div class="col-xs-3">
-						<label class="control-label">Partido</label>
-						<input class="form-control input-sm" readonly="readonly" id="txt-nme-partido">
 					</div>
 				</div>
 

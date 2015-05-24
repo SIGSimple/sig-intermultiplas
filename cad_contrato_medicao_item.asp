@@ -23,7 +23,7 @@
 			rs_update("cod_medicao") 		= Trim(Request.Form("cod_medicao"))
 			rs_update("cod_item") 			= Trim(Request.Form("cod_item"))
 			rs_update("dta_medicao") 		= Trim(Request.Form("dta_medicao"))
-			rs_update("vlr_medido") 		= Trim(Request.Form("vlr_medido"))
+			rs_update("vlr_medido") 		= Replace(Trim(Request.Form("vlr_medido")), ",", ".")
 			' FIM CAMPOS
 			
 			rs_update.Update

@@ -131,7 +131,6 @@ If (CStr(Request("MM_insert")) <> "") Then
   Dim frmField_nome_empreendimento
   Dim frmField_cod_tipo_empreendimento
   Dim frmField_cod_programa
-  Dim frmField_cod_convenio
   Dim frmField_dsc_situacao_anterior
   Dim frmField_dsc_situacao_atual
   Dim frmField_dsc_resultado_obtido
@@ -157,7 +156,6 @@ If (CStr(Request("MM_insert")) <> "") Then
   Set frmField_descricao_empreendimento = Request.Form("descricao_empreendimento")
   Set frmField_cod_tipo_empreendimento = Request.Form("cod_tipo_empreendimento")
   Set frmField_cod_programa = Request.Form("cod_programa")
-  Set frmField_cod_convenio = Request.Form("cod_convenio")
   Set frmField_dsc_resultado_obtido = Request.Form("dsc_resultado_obtido")
 
   If Session("MM_UserAuthorization") = 3 Then
@@ -189,7 +187,7 @@ If (CStr(Request("MM_insert")) <> "") Then
   End If
 
   MM_editQuery = "insert into "& MM_editTable &" ("
-  MM_editQuery = MM_editQuery & "PI,cod_predio,id_predio,municipio,nome_empreendimento,[Descrição da Intervenção FDE],cod_tipo_empreendimento,cod_programa,cod_convênio"
+  MM_editQuery = MM_editQuery & "PI,cod_predio,id_predio,municipio,nome_empreendimento,[Descrição da Intervenção FDE],cod_tipo_empreendimento,cod_programa"
 
   If Session("MM_UserAuthorization") = 3 Then
     'MM_editQuery = MM_editQuery & ",dsc_situacao_anterior,dsc_situacao_atual,dsc_resultado_obtido,endereco,cep"
@@ -216,8 +214,7 @@ If (CStr(Request("MM_insert")) <> "") Then
   MM_editQuery = MM_editQuery & "'" & frmField_nome_empreendimento             & "'," 'nome_empreendimento'
   MM_editQuery = MM_editQuery & "'" & frmField_descricao_empreendimento        & "'," '[Descrição da Intervenção FDE]'
   MM_editQuery = MM_editQuery & ""  & frmField_cod_tipo_empreendimento         & ","  'cod_tipo_empreendimento'
-  MM_editQuery = MM_editQuery & ""  & frmField_cod_programa                    & ","  'cod_programa'
-  MM_editQuery = MM_editQuery & ""  & frmField_cod_convenio                    & ""   'cod_convenio'
+  MM_editQuery = MM_editQuery & ""  & frmField_cod_programa                    & ""  'cod_programa'
 
   If Session("MM_UserAuthorization") = 3 Then
     'MM_editQuery = MM_editQuery & ",'" & frmField_dsc_situacao_anterior         & "'" 'dsc_situacao_anterior'
@@ -296,21 +293,6 @@ rs_programa_numRows = 0
 %>
 
 <%
-Dim rs_convenio
-Dim rs_convenio_numRows
-
-Set rs_convenio = Server.CreateObject("ADODB.Recordset")
-rs_convenio.ActiveConnection = MM_cpf_STRING
-rs_convenio.Source = "SELECT * FROM tb_convenio;  "
-rs_convenio.CursorType = 0
-rs_convenio.CursorLocation = 2
-rs_convenio.LockType = 1
-rs_convenio.Open()
-
-rs_convenio_numRows = 0
-%>
-
-<%
 Dim rs_predio
 Dim rs_predio_numRows
 
@@ -372,7 +354,7 @@ Dim rs_lista_pi_numRows
 
 Set rs_lista_pi = Server.CreateObject("ADODB.Recordset")
 rs_lista_pi.ActiveConnection = MM_cpf_STRING
-rs_lista_pi.Source = "SELECT tb_PI.*, tb_tipo_empreendimento.desc_tipo AS tipo_empreendimento, [tb_depto].[sigla]+' - '+[tb_depto].[desc_depto] AS programa, tb_predio.Município, tb_responsavel.Responsável AS eng_obras_consorcio, tb_responsavel_1.Responsável AS eng_daee, tb_responsavel_2.Responsável AS eng_plan_consorcio, tb_responsavel_3.Responsável AS fiscal_consorcio, tb_responsavel_5.Responsável AS eng_medicao, tb_responsavel_4.Responsável AS eng_obras_construtora, [num_autos]+' - '+[num_convenio] AS convenio, tb_situacao_pi.desc_situacao AS desc_situacao_interna, tb_situacao_pi_1.desc_situacao AS desc_situacao_externa, tb_predio.[Diretoria de Ensino] AS bacia_daee FROM (((tb_convenio RIGHT JOIN (tb_responsavel AS tb_responsavel_4 RIGHT JOIN (tb_responsavel AS tb_responsavel_3 RIGHT JOIN (tb_responsavel AS tb_responsavel_2 RIGHT JOIN (tb_responsavel AS tb_responsavel_1 RIGHT JOIN (tb_depto RIGHT JOIN (tb_tipo_empreendimento RIGHT JOIN (tb_responsavel RIGHT JOIN (tb_predio RIGHT JOIN tb_PI ON tb_predio.cod_predio = tb_PI.cod_predio) ON tb_responsavel.cod_fiscal = tb_PI.cod_fiscal) ON tb_tipo_empreendimento.id = tb_PI.cod_tipo_empreendimento) ON tb_depto.cod_depto = tb_PI.cod_programa) ON tb_responsavel_1.cod_fiscal = tb_PI.cod_engenheiro_daee) ON tb_responsavel_2.cod_fiscal = tb_PI.cod_engenheiro_plan_consorcio) ON tb_responsavel_3.cod_fiscal = tb_PI.cod_fiscal_consorcio) ON tb_responsavel_4.cod_fiscal = tb_PI.cod_engenheiro_construtora) ON tb_convenio.id = tb_PI.cod_convênio) LEFT JOIN tb_situacao_pi ON tb_PI.cod_situacao = tb_situacao_pi.cod_situacao) LEFT JOIN tb_situacao_pi AS tb_situacao_pi_1 ON tb_PI.cod_situacao_externa = tb_situacao_pi_1.cod_situacao) LEFT JOIN tb_responsavel AS tb_responsavel_5 ON tb_PI.cod_engenheiro_medicao = tb_responsavel_5.cod_fiscal ORDER BY tb_predio.Município, tb_PI.nome_empreendimento"
+rs_lista_pi.Source = "SELECT * FROM c_lista_dados_obras ORDER BY Município, nome_empreendimento"
 rs_lista_pi.CursorType = 0
 rs_lista_pi.CursorLocation = 2
 rs_lista_pi.LockType = 1
@@ -740,6 +722,13 @@ function MM_validateForm() { //v4.0
 }
 //-->
 </script>
+<script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
+<script type="text/javascript" src="js/jquery.floatThead.min.js"></script>
+<script type="text/javascript">
+  $(function(){
+    $("table#data").floatThead();
+  });
+</script>
 </head>
 
 <body>
@@ -811,7 +800,7 @@ function MM_validateForm() { //v4.0
           <span class="style10">Objeto da Obra:</span>
         </td>
         <td bgcolor="#CCCCCC">
-          <textarea name="descricao_empreendimento" cols="50" rows="5" class="style9" maxlength="255" style="width: 98%;"></textarea>
+          <textarea name="descricao_empreendimento" cols="50" rows="5" class="style9" style="width: 98%;"></textarea>
         </td>
       </tr>
 
@@ -865,31 +854,6 @@ function MM_validateForm() { //v4.0
         </td>
       </tr>
 
-      <!-- CONVÊNIO -->
-      <tr valign="baseline">
-        <td align="right" nowrap bgcolor="#CCCCCC" class="style9">
-          <span class="style10">Convênio:</span>
-        </td>
-        <td bgcolor="#CCCCCC">
-          <select name="cod_convenio" class="style9">
-            <option value=""></option>
-            <%
-              While (NOT rs_convenio.EOF)
-            %>
-            <option value="<%=(rs_convenio.Fields.Item("id").Value)%>">Num. Autos: <%=(rs_convenio.Fields.Item("num_autos").Value)%> | Num. Convênio: <%=(rs_convenio.Fields.Item("num_convenio").Value)%></option>
-            <%
-                rs_convenio.MoveNext()
-              Wend
-              If (rs_convenio.CursorType > 0) Then
-                rs_convenio.MoveFirst
-              Else
-                rs_convenio.Requery
-              End If
-            %>
-          </select>
-        </td>
-      </tr>
-
       <%
         End If
 
@@ -900,7 +864,7 @@ function MM_validateForm() { //v4.0
       <tr valign="baseline">
         <td align="right" valign="middle" nowrap bgcolor="#CCCCCC" class="style9"><span class="style10">Benefício Geral da Obra:</span></td>
         <td bgcolor="#CCCCCC">
-          <textarea name="dsc_resultado_obtido"cols="50" rows="5" class="style9" maxlength="255" style="width: 98%;"></textarea>
+          <textarea name="dsc_resultado_obtido"cols="50" rows="5" class="style9" style="width: 98%;"></textarea>
         </td>
       </tr>
 
@@ -908,7 +872,7 @@ function MM_validateForm() { //v4.0
       <!-- <tr valign="baseline">
         <td align="right" valign="middle" nowrap bgcolor="#CCCCCC" class="style9"><span class="style10">Situação Anterior:</span></td>
         <td bgcolor="#CCCCCC">
-          <textarea name="dsc_situacao_anterior"cols="50" rows="5" class="style9" maxlength="255" style="width: 98%;"></textarea>
+          <textarea name="dsc_situacao_anterior"cols="50" rows="5" class="style9" style="width: 98%;"></textarea>
         </td>
       </tr> -->
 
@@ -916,7 +880,7 @@ function MM_validateForm() { //v4.0
       <!-- <tr valign="baseline">
         <td align="right" valign="middle" nowrap bgcolor="#CCCCCC" class="style9"><span class="style10">Situação Atual:</span></td>
         <td bgcolor="#CCCCCC">
-          <textarea name="dsc_situacao_atual"cols="50" rows="5" class="style9" maxlength="255" style="width: 98%;"></textarea>
+          <textarea name="dsc_situacao_atual"cols="50" rows="5" class="style9" style="width: 98%;"></textarea>
         </td>
       </tr> -->
 
@@ -1223,87 +1187,90 @@ function MM_validateForm() { //v4.0
   %>
 
   <div align="center">
-    <table border="0">
-      <tr bgcolor="#333333" class="style9 table-title">
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-        <td><span class="style7">Munic&iacute;pio</span></td>
-        <td style="min-width: 150px;"><span class="style7">Localidade</span></td>
-        <td style="min-width: 80px;"><span class="style7">Autos</span></td>
-        <td style="min-width: 80px;"><span class="style7">Bacia DAEE</span></td>
-        <td style="min-width: 150px;"><span class="style7">Objeto da Obra</span></td>
-        
-        <%
-          If Session("MM_UserAuthorization") = 1 Then
-        %>
+    <table id="data" border="0">
+      <thead>
+        <tr bgcolor="#333333" class="style9 table-title">
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td><span class="style7">Munic&iacute;pio</span></td>
+          <td style="min-width: 150px;"><span class="style7">Localidade</span></td>
+          <td style="min-width: 80px;"><span class="style7">Autos</span></td>
+          <td style="min-width: 80px;"><span class="style7">Bacia DAEE</span></td>
+          <td style="min-width: 150px;"><span class="style7">Objeto da Obra</span></td>
+          
+          <%
+            If Session("MM_UserAuthorization") = 1 Then
+          %>
 
-        <td style="min-width: 100px;"><span class="style7">Tipo</span></td>
-        <td style="min-width: 150px;"><span class="style7">Programa</span></td>
-        <td style="min-width: 150px;"><span class="style7">Convênio</span></td>
-        <td style="min-width: 150px;"><span class="style7">Localização Geográfica (Lat,Long)</span></td>
+          <td style="min-width: 100px;"><span class="style7">Tipo</span></td>
+          <td style="min-width: 150px;"><span class="style7">Programa</span></td>
+          <td style="min-width: 150px;"><span class="style7">Localização Geográfica (Lat,Long)</span></td>
 
-        <%
-          End If
+          <%
+            End If
 
-          If Session("MM_UserAuthorization") = 3 Then
-        %>
+            If Session("MM_UserAuthorization") = 3 Then
+          %>
 
-        <!-- <td style="min-width: 150px;"><span class="style7">Situação Anterior</span></td>
-        <td style="min-width: 150px;"><span class="style7">Situação Atual</span></td> -->
-        <td style="min-width: 150px;"><span class="style7">Beneficio Geral da Obra</span></td>
-        <td style="min-width: 150px;"><span class="style7">Endereço</span></td>
-        <td style="min-width: 80px;"><span class="style7">CEP</span></td>
-        <td style="min-width: 100px;"><span class="style7">E-Mail</span></td>
-        <td style="min-width: 100px;"><span class="style7">Telefone</span></td>
-        <td style="min-width: 150px;"><span class="style7">População Urbana - IBGE (2010) (hab)</span></td>
-        <td style="min-width: 150px;"><span class="style7">Projeção de População (2030)</span></td>
-        <td style="min-width: 150px;"><span class="style7">Investimento Governo SP</span></td>
-        <td style="min-width: 150px;"><span class="style7">Início das Obras</span></td>
-        <td style="min-width: 150px;"><span class="style7">% Executado</span></td>
-        <td style="min-width: 150px;"><span class="style7">Previsão de Término</span></td>
-        <td style="min-width: 150px;"><span class="style7">Concluída/Inaugurada em</span></td>
-        <td style="min-width: 150px;"><span class="style7">Previsão de Inauguração</span></td>
-        <td style="min-width: 150px;"><span class="style7">Carga Orgânica Retirada (ton./mês)</span></td>
+          <!-- <td style="min-width: 150px;"><span class="style7">Situação Anterior</span></td>
+          <td style="min-width: 150px;"><span class="style7">Situação Atual</span></td> -->
+          <td style="min-width: 150px;"><span class="style7">Beneficio Geral da Obra</span></td>
+          <td style="min-width: 150px;"><span class="style7">Endereço</span></td>
+          <td style="min-width: 80px;"><span class="style7">CEP</span></td>
+          <td style="min-width: 100px;"><span class="style7">E-Mail</span></td>
+          <td style="min-width: 100px;"><span class="style7">Telefone</span></td>
+          <td style="min-width: 150px;"><span class="style7">População Urbana - IBGE (2010) (hab)</span></td>
+          <td style="min-width: 150px;"><span class="style7">Projeção de População (2030)</span></td>
+          <td style="min-width: 150px;"><span class="style7">Investimento Governo SP</span></td>
+          <td style="min-width: 150px;"><span class="style7">Início das Obras</span></td>
+          <td style="min-width: 150px;"><span class="style7">% Executado</span></td>
+          <td style="min-width: 150px;"><span class="style7">Previsão de Término</span></td>
+          <td style="min-width: 150px;"><span class="style7">Concluída/Inaugurada em</span></td>
+          <td style="min-width: 150px;"><span class="style7">Previsão de Inauguração</span></td>
+          <td style="min-width: 150px;"><span class="style7">Carga Orgânica Retirada (ton./mês)</span></td>
 
-        <%
-          End If
+          <%
+            End If
 
-          If Session("MM_UserAuthorization") = 1 Then
-        %>
+            If Session("MM_UserAuthorization") = 1 Then
+          %>
 
-        <td style="min-width: 150px;"><span class="style7">Eng. Obras Consórcio</span></td>
-        <td style="min-width: 150px;"><span class="style7">Eng. DAEE</span></td>
-        <td style="min-width: 150px;"><span class="style7">Eng. Plan. Obras Consórcio</span></td>
-        <td style="min-width: 150px;"><span class="style7">Fiscal do Consórcio</span></td>
-        <td style="min-width: 150px;"><span class="style7">Eng. Resp. Medições</span></td>
-        <td style="min-width: 150px;"><span class="style7">Eng. Obras Construtora</span></td>
+          <td style="min-width: 150px;"><span class="style7">Eng. Obras Consórcio</span></td>
+          <td style="min-width: 150px;"><span class="style7">Eng. DAEE</span></td>
+          <td style="min-width: 150px;"><span class="style7">Eng. Plan. Obras Consórcio</span></td>
+          <td style="min-width: 150px;"><span class="style7">Fiscal do Consórcio</span></td>
+          <td style="min-width: 150px;"><span class="style7">Eng. Resp. Medições</span></td>
+          <td style="min-width: 150px;"><span class="style7">Eng. Obras Construtora</span></td>
 
-        <%
-          End If
+          <%
+            End If
 
-          If Session("MM_UserAuthorization") = 1 Or Session("MM_UserAuthorization") = 4 Then
-        %>
+            If Session("MM_UserAuthorization") = 1 Or Session("MM_UserAuthorization") = 4 Then
+          %>
 
-        <td style="min-width: 150px;"><span class="style7">Situação Interna</span></td>
-        <%
-          End If
+          <td style="min-width: 150px;"><span class="style7">Situação Interna</span></td>
+          <%
+            End If
 
-          If Session("MM_UserAuthorization") = 3 Then
-        %>
+            If Session("MM_UserAuthorization") = 3 Then
+          %>
 
-        <td style="min-width: 150px;"><span class="style7">Situação Atual do Empreendimento</span></td>
-        <td style="min-width: 150px;"><span class="style7">Observações Rel. Mensal</span></td>
+          <td style="min-width: 150px;"><span class="style7">Situação Atual do Empreendimento</span></td>
+          <td style="min-width: 150px;"><span class="style7">Observações Rel. Mensal</span></td>
 
-        <%
-          End If
-        %>
-      </tr>
+          <%
+            End If
+          %>
+        </tr>
+      </thead>
       <%
         While ((Repeat1__numRows <> 0) AND (NOT rs_lista_pi.EOF))
       %>
       <tr bgcolor="#CCCCCC" class="style9">
         <td><a href="altera_pi.asp?pi=<%=(rs_lista_pi.Fields.Item("PI").Value)%>"><img src="depto/imagens/edit.gif" width="16" height="15" border="0" /></a></td>
         <td><a href="delete_pi.asp?pi=<%=(rs_lista_pi.Fields.Item("PI").Value)%>"><img src="const/imagens/delete.gif" width="16" height="15" border="0" /></a></td>
+        <td><a href="image_tool.asp?cod_empreendimento=<%=(rs_lista_pi.Fields.Item("PI").Value)%>&pg=1">Fotos</a></td>
         <td><div align="left"><%=(rs_lista_pi.Fields.Item("Município").Value)%></div></td>
         <td><span class="style9"><%=(rs_lista_pi.Fields.Item("nome_empreendimento").Value)%></span></td>
         <td><span class="style9"><%=(rs_lista_pi.Fields.Item("PI").Value)%></span></td>
@@ -1316,7 +1283,6 @@ function MM_validateForm() { //v4.0
 
         <td><span class="style9"><%=(rs_lista_pi.Fields.Item("tipo_empreendimento").Value)%></span></td>
         <td><span class="style9"><%=(rs_lista_pi.Fields.Item("programa").Value)%></span></td>
-        <td><span class="style9"><%=(rs_lista_pi.Fields.Item("convenio").Value)%></span></td>
         <td><span class="style9"><%=(rs_lista_pi.Fields.Item("latitude_longitude").Value)%></span></td>
 
         <%

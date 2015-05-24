@@ -30,6 +30,7 @@
 			End If
 
 			rs_update("dsc_observacoes") 	= Trim(Request.Form("dsc_observacoes"))
+			rs_update("flg_receber_notificacoes") 	= Request.Form("flg_receber_notificacoes")
 			' FIM CAMPOS
 			
 			rs_update.Update
@@ -131,6 +132,14 @@
 					</td>
 				</tr>
 				<tr valign="baseline">
+					<td align="right" nowrap bgcolor="#CCCCCC" class="style7">
+						<span class="style22">Receber Notificações?</span>
+					</td>
+					<td bgcolor="#CCCCCC">
+						<input name="flg_receber_notificacoes" type="checkbox" value="1" />
+					</td>
+				</tr>
+				<tr valign="baseline">
 					<td align="right" nowrap bgcolor="#CCCCCC" class="style7">&nbsp;</td>
 					<td bgcolor="#CCCCCC">
 						<input type="submit" value="Salvar">
@@ -155,6 +164,9 @@
 					</td>
 					<td>
 						<span class="style7">Observações</span>
+					</td>
+					<td>
+						<span class="style7">Receber Notificações?</span>
 					</td>
 					<td>&nbsp;</td>
 				</tr>
@@ -193,6 +205,17 @@
 					</td>
 					<td>
 						<span class="style5"><%=(rs_lista.Fields.Item("dsc_observacoes").Value)%></span>
+					</td>
+					<td align="center">
+						<span class="style5">
+							<%
+								If rs_lista.Fields.Item("flg_receber_notificacoes").Value Then
+									Response.Write "Sim"
+								Else
+									Response.Write "Não"
+								End If
+							%>
+						</span>
 					</td>
 					<td>
 						<form id="form-upload" method="post" enctype="multipart/form-data"

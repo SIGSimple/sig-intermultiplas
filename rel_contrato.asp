@@ -101,9 +101,14 @@
 							<thead>
 								<th class="text-center text-middle">Município</th>
 								<th class="text-center text-middle">Localidade</th>
+								<th class="text-center text-middle">Situação Atual</th>
+								<th class="text-center text-middle">Nº Autos Licitação</th>
+								<th class="text-center text-middle">Nº Edital</th>
+								<th class="text-center text-middle">Nº Autos Convênio</th>
+								<th class="text-center text-middle">Nº Convênio</th>
 								<th class="text-center text-middle">Empresa Contratada</th>
 								<th class="text-center text-middle">Eng. Empresa Contr.</th>
-								<th class="text-center text-middle">Nº Autos</th>
+								<th class="text-center text-middle">Nº Autos Contrato</th>
 								<th class="text-center text-middle">Nº Contrato</th>
 								<th class="text-center text-middle">Dt. Assinatura</th>
 								<th class="text-center text-middle">Dt. Publ. D.O.E.</th>
@@ -115,21 +120,37 @@
 								<th class="text-center text-middle">Dt. Enc. Contrato</th>
 								<th class="text-center text-middle">Dt. Rec. Contratual</th>
 								<th class="text-center text-middle">Dt. O.S.</th>
-								<th class="text-center text-middle">Vigência Até</th>
-								<th class="text-center text-middle">Prazo Original</th>
+								<th class="text-center text-middle">Vigência Até (Digitado)</th>
+								<th class="text-center text-middle">Vigência Até (Calculado)</th>
+								
+								<th class="text-center text-middle">Prazo Original Execução Serviço</th>
 								<th class="text-center text-middle">Aditivos (Prazo)</th>
-								<th class="text-center text-middle">Prazo Total</th>
-								<th class="text-center text-middle">Valor Original</th>
-								<th class="text-center text-middle">Aditivos (Valor)</th>
-								<th class="text-center text-middle">Valor Total</th>
+								<th class="text-center text-middle">Prazo Total Serviço</th>
+
+								<th class="text-center text-middle">Prazo Original Contrato</th>
+								<th class="text-center text-middle">Aditivos (Prazo)</th>
+								<th class="text-center text-middle">Prazo Total Contrato</th>
+								
+								<th class="text-center text-middle" style="min-width: 150px;">Valor Original</th>
+								<th class="text-center text-middle" style="min-width: 150px;">Aditivos (Valor)</th>
+								<th class="text-center text-middle" style="min-width: 150px;">Valor Total</th>
 							</thead>
 							<tbody>
 								<%
 									While (NOT rs_lista.EOF)
+										prz_total_execucao 	= rs_lista.Fields.Item("prz_original_execucao_meses").Value + rs_lista.Fields.Item("prz_aditivo").Value
+										prz_total_contrato 	= rs_lista.Fields.Item("prz_original_contrato_meses").Value + rs_lista.Fields.Item("prz_aditivo").Value
+										vlr_total 			= rs_lista.Fields.Item("vlr_original").Value + rs_lista.Fields.Item("vlr_aditivo").Value
+										dta_os 				= rs_lista.Fields.Item("dta_os").Value
 								%>
 								<tr>
 									<td><%=(rs_lista.Fields.Item("nme_municipio").Value)%></td>
 									<td><%=(rs_lista.Fields.Item("nome_empreendimento").Value)%></td>
+									<td><%=(rs_lista.Fields.Item("dsc_situacao_externa").Value)%></td>
+									<td><%=(rs_lista.Fields.Item("num_autos_licitacao").Value)%></td>
+									<td><%=(rs_lista.Fields.Item("num_edital").Value)%></td>
+									<td><%=(rs_lista.Fields.Item("num_autos_convenio").Value)%></td>
+									<td><%=(rs_lista.Fields.Item("num_convenio").Value)%></td>
 									<td><%=(rs_lista.Fields.Item("empresa_contratada").Value)%></td>
 									<td><%=(rs_lista.Fields.Item("engenheiro_empresa_contratada").Value)%></td>
 									<td><%=(rs_lista.Fields.Item("num_autos").Value)%></td>
@@ -143,14 +164,33 @@
 									<td><%=(rs_lista.Fields.Item("dta_termo_recebimento_definitivo").Value)%></td>
 									<td><%=(rs_lista.Fields.Item("dta_encerramento_contrato").Value)%></td>
 									<td><%=(rs_lista.Fields.Item("dta_recisao_contratual").Value)%></td>
-									<td><%=(rs_lista.Fields.Item("dta_os").Value)%></td>
-									<td><%=(rs_lista.Fields.Item("dta_vigencia").Value)%></td>
-									<td><%=(rs_lista.Fields.Item("prz_original").Value)%></td>
+									<td><%=(dta_os)%></td>
+									<td></td>
+									<td>
+										<%
+											If IsNull(rs_lista.Fields.Item("dta_vigencia").Value) Or IsEmpty(rs_lista.Fields.Item("dta_vigencia").Value) Then
+												If dta_os <> "" Then
+													If prz_total_contrato > 0 Then
+														dta_vigencia_contrato = DateAdd("m", prz_total_contrato, dta_os)
+														Response.Write dta_vigencia_contrato
+													End If
+												End If
+											Else
+												Response.Write rs_lista.Fields.Item("dta_vigencia").Value
+											End If
+										%>
+									</td>
+									
+									<td><%=(rs_lista.Fields.Item("prz_original_execucao_meses").Value)%></td>
 									<td><%=(rs_lista.Fields.Item("prz_aditivo").Value)%></td>
-									<td><%=(rs_lista.Fields.Item("prz_total").Value)%></td>
-									<td class="vlr"><%=(rs_lista.Fields.Item("vlr_original").Value)%></td>
-									<td class="vlr"><%=(rs_lista.Fields.Item("vlr_aditivo").Value)%></td>
-									<td class="vlr"><%=(rs_lista.Fields.Item("vlr_total").Value)%></td>
+									<td><%=(prz_total_execucao)%></td>
+
+									<td><%=(rs_lista.Fields.Item("prz_original_contrato_meses").Value)%></td>
+									<td><%=(rs_lista.Fields.Item("prz_aditivo").Value)%></td>
+									<td><%=(prz_total_contrato)%></td>
+									<td class="text-center vlr"><%=(rs_lista.Fields.Item("vlr_original").Value)%></td>
+									<td class="text-center vlr"><%=(rs_lista.Fields.Item("vlr_aditivo").Value)%></td>
+									<td class="text-center vlr"><%=(vlr_total)%></td>
 								</tr>
 								<%
 										rs_lista.MoveNext()

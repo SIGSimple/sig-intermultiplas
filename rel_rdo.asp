@@ -498,11 +498,17 @@
 
 						If Not rs_imagens.EOF Then
 							While Not rs_imagens.EOF
-								pth_url = rs_imagens.Fields.Item("pth_arquivo").Value
+								pth_url = LCase(rs_imagens.Fields.Item("pth_arquivo").Value)
 								pth_url = Replace(pth_url, "\\10.0.75.125\intermultiplas.net\public\", "")
 								pth_url = Replace(pth_url, "e:\home\programaagualimpa\web\", "")
 								pth_url = Replace(pth_url, "\", "/")
-								img_url = pth_url & rs_imagens.Fields.Item("id_arquivo").Value &"_"& rs_imagens.Fields.Item("nme_arquivo").Value
+								img_url = pth_url
+
+								If Not rs_imagens.Fields.Item("flg_pmweb_file").Value Then
+									img_url = img_url & rs_imagens.Fields.Item("cod_referencia").Value & "_"
+								End If
+
+								img_url = img_url & rs_imagens.Fields.Item("nme_arquivo").Value
 					%>
 					<div class="col-xs-4 col-sm-4 col-md-4">
 						<div class="thumbnail">

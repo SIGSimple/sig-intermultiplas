@@ -52,8 +52,8 @@ If (CStr(Request("MM_update")) = "form1" And CStr(Request("MM_recordId")) <> "")
   MM_editColumn = "id"
   MM_recordId = "" + Request.Form("MM_recordId") + ""
   MM_editRedirectUrl = "cad_tcra.asp"
-  MM_fieldsStr  = "cod_tcra|value|dta_concessao|value|dta_vencimento|value|dsc_observacoes|value"
-  MM_columnsStr = "cod_tcra|',none,''|dta_concessao|',none,NULL|dta_vencimento|',none,NULL|dsc_observacoes|',none,''"
+  MM_fieldsStr  = "cod_tcra|value|dta_concessao|value|dta_vencimento|value|dsc_observacoes|value|flg_receber_notificacoes|value"
+  MM_columnsStr = "cod_tcra|',none,''|dta_concessao|',none,NULL|dta_vencimento|',none,NULL|dsc_observacoes|',none,''|flg_receber_notificacoes|none,1,0"
 
   ' create the MM_fields and MM_columns arrays
   MM_fields = Split(MM_fieldsStr, "|")
@@ -225,6 +225,26 @@ rs_numRows = 0
           </td>
           <td bgcolor="#CCCCCC">
             <textarea name="dsc_observacoes" cols="25" style="width: 98%;"><%=(rs.Fields.Item("dsc_observacoes").Value)%></textarea>
+          </td>
+        </tr>
+        <tr valign="baseline">
+          <td align="right" nowrap bgcolor="#CCCCCC" class="style7">
+            <span class="style22">Receber Notificações?</span>
+          </td>
+          <td bgcolor="#CCCCCC">
+            <%
+                value = rs.Fields.Item("flg_receber_notificacoes").Value
+                checked = ""
+
+                If value = True Then
+                  value = 1
+                  checked = "checked=""checked"""
+                Else
+                  value = 0
+                End If
+
+                Response.Write "<input type=""checkbox"" id=""flg_receber_notificacoes"" name=""flg_receber_notificacoes"" "& checked &"/>"
+              %>
           </td>
         </tr>
         <tr valign="baseline">

@@ -16,13 +16,17 @@
 	Set cod_municipio = Request.QueryString("cod_municipio")
 	Set cod_empreendimento = Request.QueryString("cod_empreendimento")
 
-	strQ = "SELECT * FROM c_lista_pi WHERE PI = '"& cod_empreendimento &"'"
+	strQ = "SELECT * FROM c_lista_dados_obras WHERE PI = '"& cod_empreendimento &"'"
 
 	Set rs_dados_obra = Server.CreateObject("ADODB.Recordset")
 		rs_dados_obra.CursorLocation = 3
 		rs_dados_obra.CursorType = 3
 		rs_dados_obra.LockType = 1
 		rs_dados_obra.Open strQ, objCon, , , &H0001
+
+	If cod_municipio = "" Then
+		cod_municipio = rs_dados_obra.Fields.Item("cod_mun").Value
+	End If
 %>
 <!DOCTYPE html>
 <html>
@@ -36,33 +40,27 @@
 	<script type="text/javascript" src="js/jquery.number.min.js"></script>
 	<script type="text/javascript" src="js/underscore-min.js"></script>
 	<script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?libraries=places&sensor=false"></script>
 	<script type="text/javascript" src="http://code.highcharts.com/highcharts.js"></script>
 	<script type="text/javascript" src="http://code.highcharts.com/modules/exporting.js"></script>
 	<script type="text/javascript" src="js/moment.min.js"></script>
 	<script type="text/javascript" src="js/fullscreen.js"></script>
+	<script type="text/javascript" src="js/loadMapaObra.js"></script>
+	<script type="text/javascript" src="js/common.js"></script>
 	<script type="text/javascript">
-		function adjustNumLayout() {
-			$.each($(".num"), function(i, item){
-				//$(item).val($.number($(item).val(), 0, ",", "."));
-				$(item).text($.number($(item).text(), 0, ",", "."));
-			});
-		}
-
-		function adjustVlrLayout() {
-			$.each($(".vlr"), function(i, item){
-				// $(item).val($.number($(item).val(), 0, ",", "."));
-				if($(item).text() != "")
-					$(item).text("R$ " + $.number($(item).text(), 2, ",", "."));
-			});
-		}
-
-		function adjustPrcLayout() {
-			$.each($(".prc"), function(i,item){
-				$(item).text($.number(( parseFloat($(item).text()) * 100 ), 2, ",", ".") + "%");
-			});
+		function getLatitudeLongitude() {
+			return "<%=(rs_dados_obra.Fields.Item("latitude_longitude").Value)%>";
 		}
 
 		$(function(){
+			$('#modalMapa').on('show.bs.modal', function() {
+				resizeMap();
+			});
+
+			$("li a.map").on("click", function(){
+				$("#modalMapa").modal("show");
+			});
+
 			$("li a.print").on("click", function(){
 				window.print();
 			});
@@ -73,7 +71,7 @@
 				url: "query-to-json-util.asp",
 				method: "POST",
 				data: {
-					sql: "SELECT * FROM c_lista_dados_obras WHERE PI = '" + cod_empreendimento + "'"
+					sql: "SELECT * FROM (tb_pi_contrato INNER JOIN c_lista_dados_obras ON tb_pi_contrato.cod_empreendimento = c_lista_dados_obras.Código) INNER JOIN c_lista_contrato ON tb_pi_contrato.cod_contrato = c_lista_contrato.id WHERE PI = '" + cod_empreendimento + "'"
 				},
 				beforeSend: function() {
 					$("#modalLoading").modal("show");
@@ -99,11 +97,24 @@
 						$("#txt-nome-prefeitura").text(dadosObra['prefeitura']);
 						$("#txt-nome-prefeito").text(dadosObra['prefeito']);
 						$("#txt-nome-bacia-daee").text(dadosObra['bacia_daee']);
-						$("#txt-objeto-obra").text((dadosObra['Descrição da Intervenção FDE']) ? dadosObra['Descrição da Intervenção FDE'] : "");
-						$("#txt-situacao").text(dadosObra['desc_situacao_externa']);
-						$("#txt-pop-2010").text(dadosObra['qtd_populacao_urbana_2010']);
-						$("#txt-pop-2030").text(pop2030);
+						
+						if(dadosObra['Descrição da Intervenção FDE'])
+							$("#txt-objeto-obra").text((dadosObra['Descrição da Intervenção FDE']) ? dadosObra['Descrição da Intervenção FDE'] : "");
+						else
+							$(".tr-objeto-obra").hide();
+						
+						if(dadosObra['qtd_populacao_urbana_2010'])
+							$("#txt-pop-2010").text(dadosObra['qtd_populacao_urbana_2010']);
+						else
+							$(".tr-pop-2010").hide();
+
+						if(pop2030)
+							$("#txt-pop-2030").text(pop2030);
+						else
+							$(".tr-pop-2030").hide();
+						
 						$("#txt-nota-obra").text((dadosObra['dsc_observacoes_relatorio_mensal']) ? dadosObra['dsc_observacoes_relatorio_mensal'] : "");
+						$("#txt-observacoes-gerais").text((dadosObra['observacoes_gestor']) ? dadosObra['observacoes_gestor'] : "");
 
 						adjustNumLayout();
 						adjustVlrLayout();
@@ -136,7 +147,24 @@
 			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 				<ul class="nav navbar-nav navbar-right">
 					<li><a href="javascript:window.history.back();"><i class="fa fa-chevron-left"></i> Voltar</a></li>
+					<li><a href="informacao-municipio-resumida.asp?cod_municipio=<%=(cod_municipio)%>"><i class="fa fa-list-alt"></i> Inf. Município</a></li>
+					<%
+						If rs_dados_obra.Fields.Item("latitude_longitude").Value <> "" Then
+					%>
+					
+					<li><a href="#" class="map"><i class="fa fa-map-marker"></i> Mapa</a></li>
+					
+					<%
+						End If
+					
+						If (CInt(Session("MM_UserAuthorization")) <> 8 And CInt(Session("MM_UserAuthorization")) <> 9) Then	
+					%>
+					
 					<li><a href="#" class="print"><i class="fa fa-print"></i> Imprimir</a></li>
+
+					<%
+						End If
+					%>
 					<li><a href="#" class="expand"><i class="fa fa-expand"></i>&nbsp;&nbsp;Tela Cheia</a></li>
 					<li><a href="<%= MM_Logout %>" class="sign-out"><i class="fa fa-sign-out"></i> Sair do Sistema</a></li>
 				</ul>
@@ -153,7 +181,7 @@
 					</div>
 					
 					<div class="col-xs-7 text-center">
-						<small><strong>Governo do Estado de São Paulo</strong></small>
+						<strong>Governo do Estado de São Paulo</strong>
 						<br/>
 						<small>Secretaria de Saneamento e Recursos Hídricos</small>
 						<br/>
@@ -169,8 +197,21 @@
 					<div class="col-xs-12">
 						<table class="table table-condensed">
 							<tbody>
-								<tr class="warning">
-									<td class="text-bold text-title" id="txt-municipio-localidade"></td>
+								<tr class="info">
+									<td class="text-bold text-title text-center">
+										<%=(rs_dados_obra.Fields.Item("municipio").Value)%> - <%=(rs_dados_obra.Fields.Item("nome_empreendimento").Value)%>
+									</td>
+								</tr>
+								<tr>
+									<td class="text-bold text-center">
+										<%
+											If Session("MM_UserAuthorization") = 8 Or Session("MM_UserAuthorization") = 9 Then
+												Response.Write rs_dados_obra.Fields.Item("desc_situacao_externa").Value
+											Else
+												Response.Write rs_dados_obra.Fields.Item("desc_situacao_interna").Value
+											End If
+										%>
+									</td>
 								</tr>
 							</tbody>
 						</table>
@@ -203,9 +244,9 @@
 
 						<table class="table table-bordered table-condensed">
 							<tbody>
-								<tr>
-									<td class="text-middle text-center text-bold" width="100">
-										Ação:
+								<tr class="tr-objeto-obra">
+									<td class="text-middle text-bold" width="200">
+										Objeto da Obra
 									</td>
 									<td id="txt-objeto-obra"></td>
 								</tr>
@@ -214,24 +255,13 @@
 
 						<table class="table table-bordered table-condensed">
 							<tbody>
-								<tr>
-									<td class="text-middle text-bold">
-										Situação
-									</td>
-									<td class="text-right" id="txt-situacao"></td>
-								</tr>
-							</tbody>
-						</table>
-
-						<table class="table table-bordered table-condensed">
-							<tbody>
-								<tr>
+								<tr class="tr-pop-2010">
 									<td class="text-middle text-bold">
 										População Beneficiada em 2010
 									</td>
 									<td class="text-middle text-right num" id="txt-pop-2010"></td>
 								</tr>
-								<tr>
+								<tr class="tr-pop-2030">
 									<td class="text-middle text-bold">
 										População Beneficiada em Demanda Futura - 2030
 									</td>
@@ -244,9 +274,15 @@
 							<tbody>
 								<tr>
 									<td class="text-middle text-bold" width="150">
-										Última Informação:
+										Última Informação
 									</td>
 									<td id="txt-nota-obra"></td>
+								</tr>
+								<tr>
+									<td class="text-middle text-bold" width="150">
+										Observações Gerais
+									</td>
+									<td id="txt-observacoes-gerais"></td>
 								</tr>
 							</tbody>
 						</table>
@@ -306,8 +342,9 @@
 										<thead>
 											<th>Nº Licença</th>
 											<th class="text-center">Tipo de Licença</th>
-											<th class="text-center">Data de Concessão</th>
-											<th class="text-center">Data de Vencimento</th>
+											<th class="text-center" width="150">Data de Concessão</th>
+											<th class="text-center" width="150">Data de Validade</th>
+											<th class="text-center" width="50"></th>
 										</thead>
 										<tbody>
 											<%
@@ -318,6 +355,23 @@
 												<td><%=(rs_licencas.Fields.Item("dsc_tipo_licenca").Value)%></td>
 												<td class="text-center"><%=(rs_licencas.Fields.Item("dta_concessao").Value)%></td>
 												<td class="text-center"><%=(rs_licencas.Fields.Item("dta_vencimento").Value)%></td>
+												<td class="text-center text-middle">
+													<%
+														qtd_dias_vencimento = DateDiff("d", Now(), rs_licencas.Fields.Item("dta_vencimento").Value)
+
+														If qtd_dias_vencimento > 0 And qtd_dias_vencimento <= 120 Then
+													%>
+													<span class="label label-warning"><i class="fa fa-warning"></i> <%=(qtd_dias_vencimento)%> dia(s) p/ Expirar</span>		
+													<%
+														Else
+															If qtd_dias_vencimento < 0 Then
+													%>
+													<span class="label label-danger"><i class="fa fa-warning"></i> Documento Expirado</span>	
+													<%
+															End If
+														End If
+													%>
+												</td>
 											</tr>
 											<%
 													rs_licencas.MoveNext
@@ -336,8 +390,9 @@
 									<table class="table table-history table-bordered table-hover table-striped table-condensed">
 										<thead>
 											<th>Nº Outorga</th>
-											<th class="text-center">Data de Concessão</th>
-											<th class="text-center">Data de Vencimento</th>
+											<th class="text-center" width="150">Data de Concessão</th>
+											<th class="text-center" width="150">Data de Validade</th>
+											<th class="text-center" width="50"></th>
 										</thead>
 										<tbody>
 											<%
@@ -347,6 +402,23 @@
 												<td><%=(rs_outorgas.Fields.Item("num_outorga").Value)%></td>
 												<td class="text-center"><%=(rs_outorgas.Fields.Item("dta_concessao").Value)%></td>
 												<td class="text-center"><%=(rs_outorgas.Fields.Item("dta_vencimento").Value)%></td>
+												<td class="text-center text-middle">
+													<%
+														qtd_dias_vencimento = DateDiff("d", Now(), rs_outorgas.Fields.Item("dta_vencimento").Value)
+
+														If qtd_dias_vencimento > 0 And qtd_dias_vencimento <= 120 Then
+													%>
+													<span class="label label-warning"><i class="fa fa-warning"></i> <%=(qtd_dias_vencimento)%> dia(s) p/ Expirar</span>		
+													<%
+														Else
+															If qtd_dias_vencimento < 0 Then
+													%>
+													<span class="label label-danger"><i class="fa fa-warning"></i> Documento Expirado</span>	
+													<%
+															End If
+														End If
+													%>
+												</td>
 											</tr>
 											<%
 													rs_outorgas.MoveNext
@@ -365,8 +437,9 @@
 									<table class="table table-history table-bordered table-hover table-striped table-condensed">
 										<thead>
 											<th>Nº App</th>
-											<th class="text-center">Data de Concessão</th>
-											<th class="text-center">Data de Vencimento</th>
+											<th class="text-center" width="150">Data de Concessão</th>
+											<th class="text-center" width="150">Data de Validade</th>
+											<th class="text-center" width="50"></th>
 										</thead>
 										<tbody>
 											<%
@@ -376,6 +449,23 @@
 												<td><%=(rs_apps.Fields.Item("num_app").Value)%></td>
 												<td class="text-center"><%=(rs_apps.Fields.Item("dta_concessao").Value)%></td>
 												<td class="text-center"><%=(rs_apps.Fields.Item("dta_vencimento").Value)%></td>
+												<td class="text-center text-middle">
+													<%
+														qtd_dias_vencimento = DateDiff("d", Now(), rs_apps.Fields.Item("dta_vencimento").Value)
+
+														If qtd_dias_vencimento > 0 And qtd_dias_vencimento <= 120 Then
+													%>
+													<span class="label label-warning"><i class="fa fa-warning"></i> <%=(qtd_dias_vencimento)%> dia(s) p/ Expirar</span>		
+													<%
+														Else
+															If qtd_dias_vencimento < 0 Then
+													%>
+													<span class="label label-danger"><i class="fa fa-warning"></i> Documento Expirado</span>	
+													<%
+															End If
+														End If
+													%>
+												</td>
 											</tr>
 											<%
 													rs_apps.MoveNext
@@ -394,8 +484,9 @@
 									<table class="table table-history table-bordered table-hover table-striped table-condensed">
 										<thead>
 											<th>Cod. TCRA</th>
-											<th class="text-center">Data de Concessão</th>
-											<th class="text-center">Data de Vencimento</th>
+											<th class="text-center" width="150">Data de Concessão</th>
+											<th class="text-center" width="150">Data de Validade</th>
+											<th class="text-center" width="50"></th>
 										</thead>
 										<tbody>
 											<%
@@ -405,6 +496,23 @@
 												<td><%=(rs_tcras.Fields.Item("cod_tcra").Value)%></td>
 												<td class="text-center"><%=(rs_tcras.Fields.Item("dta_concessao").Value)%></td>
 												<td class="text-center"><%=(rs_tcras.Fields.Item("dta_vencimento").Value)%></td>
+												<td class="text-center text-middle">
+													<%
+														qtd_dias_vencimento = DateDiff("d", Now(), rs_tcras.Fields.Item("dta_vencimento").Value)
+
+														If qtd_dias_vencimento > 0 And qtd_dias_vencimento <= 120 Then
+													%>
+													<span class="label label-warning"><i class="fa fa-warning"></i> <%=(qtd_dias_vencimento)%> dia(s) p/ Expirar</span>	
+													<%
+														Else
+															If qtd_dias_vencimento < 0 Then
+													%>
+													<span class="label label-danger"><i class="fa fa-warning"></i> Documento Expirado</span>	
+													<%
+															End If
+														End If
+													%>
+												</td>
 											</tr>
 											<%
 													rs_tcras.MoveNext
@@ -420,20 +528,44 @@
 						</div>
 					</div>
 				</div>
+				
 				<%
 						End If
 					End If
 
-					strQueryPendencias = "SELECT * FROM c_lista_rel_pendencias WHERE cod_tipo_pendencia IN (1,6,7,8) AND PI = '"& cod_empreendimento &"'"
+					strQueryPendLicenciamento = "SELECT * FROM c_lista_rel_pendencias WHERE flg_pendencia_valida = ""Sim"" AND flg_pendencia_concluida = ""Não"" AND cod_tipo_pendencia = 6 AND PI = '"& cod_empreendimento &"'"
 
-					Set rs_pendencias = Server.CreateObject("ADODB.Recordset")
-						rs_pendencias.CursorLocation = 3
-						rs_pendencias.CursorType = 3
-						rs_pendencias.LockType = 1
-						rs_pendencias.Open strQueryPendencias, objCon, , , &H0001
+					Set rs_pend_lic = Server.CreateObject("ADODB.Recordset")
+						rs_pend_lic.CursorLocation = 3
+						rs_pend_lic.CursorType = 3
+						rs_pend_lic.LockType = 1
+						rs_pend_lic.Open strQueryPendLicenciamento, objCon, , , &H0001
 
-					If Not rs_pendencias.EOF Then
+					strQueryPendDocFundiaria = "SELECT * FROM c_lista_rel_pendencias WHERE flg_pendencia_valida = ""Sim"" AND flg_pendencia_concluida = ""Não"" AND cod_tipo_pendencia = 7 AND PI = '"& cod_empreendimento &"'"
+
+					Set rs_pend_doc_fund = Server.CreateObject("ADODB.Recordset")
+						rs_pend_doc_fund.CursorLocation = 3
+						rs_pend_doc_fund.CursorType = 3
+						rs_pend_doc_fund.LockType = 1
+						rs_pend_doc_fund.Open strQueryPendDocFundiaria, objCon, , , &H0001
+
+					strQueryPendProjExecutivo = "SELECT * FROM c_lista_rel_pendencias WHERE flg_pendencia_valida = ""Sim"" AND flg_pendencia_concluida = ""Não"" AND cod_tipo_pendencia = 1 AND PI = '"& cod_empreendimento &"'"
+
+					Set rs_pend_proj_exec = Server.CreateObject("ADODB.Recordset")
+						rs_pend_proj_exec.CursorLocation = 3
+						rs_pend_proj_exec.CursorType = 3
+						rs_pend_proj_exec.LockType = 1
+						rs_pend_proj_exec.Open strQueryPendProjExecutivo, objCon, , , &H0001
+
+					strQueryPendProgRecFinanceiros = "SELECT * FROM c_lista_rel_pendencias WHERE flg_pendencia_valida = ""Sim"" AND flg_pendencia_concluida = ""Não"" AND cod_tipo_pendencia = 8 AND PI = '"& cod_empreendimento &"'"
+
+					Set rs_pend_prog_rec_fin = Server.CreateObject("ADODB.Recordset")
+						rs_pend_prog_rec_fin.CursorLocation = 3
+						rs_pend_prog_rec_fin.CursorType = 3
+						rs_pend_prog_rec_fin.LockType = 1
+						rs_pend_prog_rec_fin.Open strQueryPendProgRecFinanceiros, objCon, , , &H0001
 				%>
+
 				<div class="row">
 					<div class="col-xs-12">
 						<div class="panel panel-default">
@@ -444,26 +576,74 @@
 							</div>
 
 							<div class="panel-body">
+								<label class="control-label">Pendências de Licenciamento</label>
 								<table class="table table-history table-bordered table-hover table-striped table-condensed">
-									<thead>
-										<th class="text-center">Data Criação</th>
-										<th class="text-center">Tipo de Pendência</th>
-										<th class="text-center">Data Limíte</th>
-										<th class="text-center">Descrição</th>
-									</thead>
 									<tbody>
 										<%
-											While Not rs_pendencias.EOF
+											If Not rs_pend_lic.EOF Then
+												While Not rs_pend_lic.EOF
 										%>
 										<tr>
-											<td><%=(rs_pendencias.Fields.Item("Data do Registro").Value)%></td>
-											<td class="text-center"><%=(rs_pendencias.Fields.Item("dsc_tipo_pendencia").Value)%></td>
-											<td class="text-center"><%=(rs_pendencias.Fields.Item("dta_limite_pendencia").Value)%></td>
-											<td class="text-center"><%=(rs_pendencias.Fields.Item("dsc_pendencia").Value)%></td>
+											<td><%=(rs_pend_lic.Fields.Item("dsc_pendencia").Value)%></td>
 										</tr>
 										<%
-												rs_pendencias.MoveNext
-											Wend
+													rs_pend_lic.MoveNext
+												Wend
+											End If
+										%>
+									</tbody>
+								</table>
+
+								<label class="control-label">Pendências de Documentação Fundiária</label>
+								<table class="table table-history table-bordered table-hover table-striped table-condensed">
+									<tbody>
+										<%
+											If Not rs_pend_doc_fund.EOF Then
+												While Not rs_pend_doc_fund.EOF
+										%>
+										<tr>
+											<td><%=(rs_pend_doc_fund.Fields.Item("dsc_pendencia").Value)%></td>
+										</tr>
+										<%
+													rs_pend_doc_fund.MoveNext
+												Wend
+											End If
+										%>
+									</tbody>
+								</table>
+
+								<label class="control-label">Pendências de Projetos Executivos</label>
+								<table class="table table-history table-bordered table-hover table-striped table-condensed">
+									<tbody>
+										<%
+											If Not rs_pend_proj_exec.EOF Then
+												While Not rs_pend_proj_exec.EOF
+										%>
+										<tr>
+											<td><%=(rs_pend_proj_exec.Fields.Item("dsc_pendencia").Value)%></td>
+										</tr>
+										<%
+													rs_pend_proj_exec.MoveNext
+												Wend
+											End If
+										%>
+									</tbody>
+								</table>
+
+								<label class="control-label">Pendências de Programação de Recursos Financeiros</label>
+								<table class="table table-history table-bordered table-hover table-striped table-condensed">
+									<tbody>
+										<%
+											If Not rs_pend_prog_rec_fin.EOF Then
+												While Not rs_pend_prog_rec_fin.EOF
+										%>
+										<tr>
+											<td><%=(rs_pend_prog_rec_fin.Fields.Item("dsc_pendencia").Value)%></td>
+										</tr>
+										<%
+													rs_pend_prog_rec_fin.MoveNext
+												Wend
+											End If
 										%>
 									</tbody>
 								</table>
@@ -471,9 +651,6 @@
 						</div>
 					</div>
 				</div>
-				<%
-					End If
-				%>
 			</div>
 		</div>
 
@@ -492,5 +669,32 @@
 		</div>
 	</div>
 
+	<div class="modal fade" id="modalLoading" tabindex="-1" role="dialog" aria-labelledby="modalLoadingLabel" aria-hidden="true">
+		<div class="modal-dialog modal-sm">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title" id="modalLoadingLabel">Aguarde!</h4>
+				</div>
+				<div class="modal-body">
+					<i class="fa fa-spinner fa-spin"></i> Buscando informações...
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal fade" id="modalMapa" tabindex="-1" role="dialog" aria-labelledby="modalMapaLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title" id="modalMapaLabel"><i class="fa fa-map-marker"></i> Mapa de Localização</h4>
+				</div>
+				<div class="modal-body">
+					<div id="map-canvas" style="width: 100%; height: 400px;"></div>
+				</div>
+			</div>
+		</div>
+	</div>
 </body>
 </html>

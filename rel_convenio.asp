@@ -113,6 +113,7 @@
 								<th class="text-center text-middle">Prazo Original</th>
 								<th class="text-center text-middle">Aditivos (Prazo)</th>
 								<th class="text-center text-middle">Prazo Total</th>
+								<th class="text-center text-middle">Valor Destinado ao Contrato</th>
 								<th class="text-center text-middle">Valor Original</th>
 								<th class="text-center text-middle">Aditivos (Valor)</th>
 								<th class="text-center text-middle">Valor Total</th>
@@ -136,6 +137,7 @@
 									<td><%=(rs_lista.Fields.Item("prz_meses").Value)%></td>
 									<td><%=(rs_lista.Fields.Item("prz_aditivo").Value)%></td>
 									<td><%=(rs_lista.Fields.Item("prz_total_aditamento").Value)%></td>
+									<td class="vlr"><%=(rs_lista.Fields.Item("vlr_destinado_contrato").Value)%></td>
 									<td class="vlr"><%=(rs_lista.Fields.Item("vlr_original").Value)%></td>
 									<td class="vlr"><%=(rs_lista.Fields.Item("vlr_aditivo").Value)%></td>
 									<td class="vlr"><%=(rs_lista.Fields.Item("vlr_total_aditamento").Value)%></td>

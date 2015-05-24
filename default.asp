@@ -15,10 +15,10 @@ If MM_valUsername <> "" Then
 	Set MM_rsUser = Server.CreateObject(MM_flag)
 	
 	MM_rsUser.ActiveConnection = MM_cpf_STRING
-	MM_rsUser.Source = "SELECT idusuario, nome, senha"
+	MM_rsUser.Source = "SELECT login.idusuario, login.nome, login.senha, tb_responsavel.cod_fiscal, " & MM_fldUserAuthorization & " FROM login LEFT JOIN tb_responsavel ON login.idusuario = tb_responsavel.cod_usuario WHERE nome='" & Replace(MM_valUsername,"'","''") &"' AND senha='" & Replace(Request.Form("senha"),"'","''") & "'"
 	
-	If MM_fldUserAuthorization <> "" Then MM_rsUser.Source = MM_rsUser.Source & "," & MM_fldUserAuthorization
-		MM_rsUser.Source = MM_rsUser.Source & " FROM login WHERE nome='" & Replace(MM_valUsername,"'","''") &"' AND senha='" & Replace(Request.Form("senha"),"'","''") & "'"
+	If MM_fldUserAuthorization <> "" Then
+		MM_rsUser.Source = MM_rsUser.Source
 		MM_rsUser.CursorType = 0
 		MM_rsUser.CursorLocation = 2
 		MM_rsUser.LockType = 3
@@ -30,6 +30,10 @@ If MM_valUsername <> "" Then
 			Session("MM_Userid") = CStr(MM_rsUser.Fields.Item("idusuario").Value)
 
 			If (MM_fldUserAuthorization <> "") Then
+				If MM_rsUser.Fields.Item("cod_fiscal").Value <> "" Then
+					Session("MM_UserCodFiscal") = CStr()
+				End If
+
 				Session("MM_UserAuthorization") = CStr(MM_rsUser.Fields.Item(MM_fldUserAuthorization).Value)
 				If Session("MM_UserAuthorization") = 1 Then
 					Session("MM_UserAuthorization_Admin") = True
@@ -46,6 +50,7 @@ If MM_valUsername <> "" Then
 				End If
 			Else
 				Session("MM_UserAuthorization") = ""
+			End If
 		End If
 
 		If CStr(Request.QueryString("accessdenied")) <> "" And true Then

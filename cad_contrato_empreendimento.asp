@@ -147,7 +147,7 @@
 					</td>
 				</tr>
 				<%
-					strQ = "SELECT * FROM c_lista_contrato_empreendimento"
+					strQ = "SELECT * FROM c_lista_contrato_empreendimento order by municipio, nome_empreendimento"
 
 					Set rs_lista = Server.CreateObject("ADODB.Recordset")
 						rs_lista.CursorLocation = 3

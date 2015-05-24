@@ -50,13 +50,13 @@ If (CStr(Request("MM_insert")) = "form1") Then
   '                     CAMPOS TELA                     '
   '''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
-  MM_fieldsStr = "PI|value|Data_do_Registro|value|Registro|value|Responsvel|value"
+  MM_fieldsStr = "cod_usuario_lancamento|value|PI|value|Data_do_Registro|value|Registro|value|Responsvel|value"
   
-  If Session("MM_UserAuthorization") = 1 or Session("MM_UserAuthorization") = 4 or Session("MM_UserAuthorization") = 5 Then
+  If Session("MM_UserAuthorization") = 1 Or Session("MM_UserAuthorization") = 5 Then
     MM_fieldsStr = MM_fieldsStr & "|cod_situacao_sso|value|dsc_nota_sso|value|cod_situacao_clima_manha|value|cod_situacao_clima_tarde|value|cod_situacao_clima_noite|value|cod_situacao_limpeza_obra|value|cod_situacao_organizacao_obra|value|dsc_nota_clima_manha|value|dsc_nota_clima_tarde|value|dsc_nota_clima_noite|value|dsc_nota_limpeza_obra|value|dsc_nota_organizacao_obra|value|dsc_nota_dia_perdido|value|dsc_nota_dia_trabalhado|value"
   End If
 
-  If Session("MM_UserAuthorization") <> 6 Then
+  If Session("MM_UserAuthorization") <> 6 And Session("MM_UserAuthorization") <> 3 Then
     MM_fieldsStr = MM_fieldsStr & "|vistoria|value|dt_vistoria|value"
   End If
   
@@ -66,50 +66,17 @@ If (CStr(Request("MM_insert")) = "form1") Then
   '                     COLUNAS BD                      '
   '''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
-  MM_columnsStr = "PI|',none,''|[Data do Registro]|',none,NULL|Registro|',none,''|cod_fiscal|none,none,NULL"
+  MM_columnsStr = "cod_usuario_lancamento|none,none,NULL|PI|',none,''|[Data do Registro]|',none,NULL|Registro|',none,''|cod_fiscal|none,none,NULL"
 
-  If Session("MM_UserAuthorization") = 1 or Session("MM_UserAuthorization") = 5 Then
+  If Session("MM_UserAuthorization") = 1 Or Session("MM_UserAuthorization") = 5 Then
     MM_columnsStr = MM_columnsStr & "|cod_situacao_sso|none,none,NULL|dsc_nota_sso|',none,''|cod_situacao_clima_manha|none,none,NULL|cod_situacao_clima_tarde|none,none,NULL|cod_situacao_clima_noite|none,none,NULL|cod_situacao_limpeza_obra|none,none,NULL|cod_situacao_organizacao_obra|none,none,NULL|dsc_nota_clima_manha|',none,''|dsc_nota_clima_tarde|',none,''|dsc_nota_clima_noite|',none,''|dsc_nota_limpeza_obra|',none,''|dsc_nota_organizacao_obra|',none,''|dsc_nota_dia_perdido|',none,''|dsc_nota_dia_trabalhado|',none,''"
   End If
 
-  If Session("MM_UserAuthorization") <> 6 Then
+  If Session("MM_UserAuthorization") <> 6 And Session("MM_UserAuthorization") <> 3 Then
     MM_columnsStr = MM_columnsStr & "|vistoria|none,1,0|dt_vistoria|',none,NULL"
   End If
 
   MM_columnsStr = MM_columnsStr & "|flg_pendencia|none,1,0|cod_tipo_pendencia|none,none,NULL|dsc_pendencia|',none,''|dta_limite_pendencia|',none,NULL|cod_tipo_registro|none,none,NULL"
-
-  ' create the MM_fields and MM_columns arrays
-  MM_fields = Split(MM_fieldsStr, "|")
-  MM_columns = Split(MM_columnsStr, "|")
-  
-  ' set the form values
-  For MM_i = LBound(MM_fields) To UBound(MM_fields) Step 2
-    MM_fields(MM_i+1) = CStr(Request.Form(MM_fields(MM_i)))
-  Next
-
-  ' append the query string to the redirect URL
-  If (MM_editRedirectUrl <> "" And Request.QueryString <> "") Then
-    If (InStr(1, MM_editRedirectUrl, "?", vbTextCompare) = 0 And Request.QueryString <> "") Then
-      MM_editRedirectUrl = MM_editRedirectUrl & "?" & Request.QueryString
-    Else
-      MM_editRedirectUrl = MM_editRedirectUrl & "&" & Request.QueryString
-    End If
-  End If
-
-End If
-%>
-<%
-' *** Update Record: set variables
-
-If (CStr(Request("MM_update")) = "form2" And CStr(Request("MM_recordId")) <> "") Then
-
-  MM_editConnection = MM_cpf_STRING
-  MM_editTable = "tb_pi"
-  MM_editColumn = "PI"
-  MM_recordId = "'" + Request.Form("MM_recordId") + "'"
-  MM_editRedirectUrl = "acompanhamento_inclui_admin.asp"
-  MM_fieldsStr  = "Descrio_da_Interveno_FDE|value|cod_programa|value|cod_eng_obras_consorcio|value|cod_engenheiro_daee|value|cod_engenheiro_plan_consorcio|value|cod_fiscal_consorcio|value|cod_engenheiro_construtora|value|cod_situacao|value|cod_situacao_externa|value"
-  MM_columnsStr = "[Descrição da Intervenção FDE]|',none,''|cod_programa|none,none,NULL|cod_fiscal|none,none,NULL|cod_engenheiro_daee|none,none,NULL|cod_engenheiro_plan_consorcio|none,none,NULL|cod_fiscal_consorcio|none,none,NULL|cod_engenheiro_construtora|none,none,NULL|cod_situacao|none,none,NULL|cod_situacao_externa|none,none,NULL"
 
   ' create the MM_fields and MM_columns arrays
   MM_fields = Split(MM_fieldsStr, "|")
@@ -679,6 +646,20 @@ rs_situacao_numRows = 0
           <td><strong>Descrição:</strong></td>
           <td colspan="5"><span><%=(rs_pi.Fields.Item("dsc_objeto_obra").Value)%></span></td>
         </tr>
+        
+        <%
+          If Session("MM_UserAuthorization") = 1 Or Session("MM_UserAuthorization") = 3 Then
+        %>
+        
+        <tr>
+          <td><strong>Última Informação:</strong></td>
+          <td colspan="5"><span><%=(rs_pi.Fields.Item("dsc_observacoes_relatorio_mensal").Value)%></span></td>
+        </tr>
+        
+        <%
+          End If
+        %>
+
       </table>
 
       <table width="800" border="0" class="dados-empreendimento">
@@ -703,10 +684,24 @@ rs_situacao_numRows = 0
     <br/>
 
     <%
-      If Session("MM_UserAuthorization") <> 3 Then
+      flg_can_insert = False
+
+      If Session("MM_UserAuthorization") = 5 Then
+        cod_eng_obras_consorcio = rs_pi.Fields.Item("cod_fiscal").Value
+        cod_fiscal_consorcio    = rs_pi.Fields.Item("cod_fiscal_consorcio").Value
+        If cod_fiscal = Session("MM_UserCodFiscal") Or cod_eng_obras_consorcio = Session("MM_UserCodFiscal") Then
+          flg_can_insert = True
+        End If
+      Else
+          flg_can_insert = True
+      End If
+
+      If flg_can_insert Then
     %>
+
     <form method="POST" action="<%=MM_editAction%>" name="form1">
       <table align="center">
+        <!-- data -->
         <tr valign="baseline">
           <td align="right" nowrap bordercolor="#CCCCCC" bgcolor="#CCCCCC">
             <strong class="style5">Data do Registro:</strong>
@@ -716,6 +711,7 @@ rs_situacao_numRows = 0
           </td>
         </tr>
         
+        <!-- responsável -->
         <tr valign="baseline">
           <td align="right" nowrap bordercolor="#CCCCCC" bgcolor="#CCCCCC">
             <strong class="style5">Responsável:</strong>
@@ -740,6 +736,11 @@ rs_situacao_numRows = 0
           </td>
         </tr>
         
+        <%
+          If Session("MM_UserAuthorization") <> 3 Then
+        %>
+        
+        <!-- registro -->
         <tr valign="middle">
           <td align="right" nowrap bordercolor="#CCCCCC" bgcolor="#CCCCCC">
             <strong class="style5">Registro:</strong>
@@ -750,9 +751,12 @@ rs_situacao_numRows = 0
         </tr>
 
         <%
-          If Session("MM_UserAuthorization") = 1 or Session("MM_UserAuthorization") = 5 Then
+          End If
+
+          If Session("MM_UserAuthorization") = 1 Or Session("MM_UserAuthorization") = 5 Then
         %>
 
+        <!-- msst -->
         <tr valign="middle">
           <td align="right" nowrap bordercolor="#CCCCCC" bgcolor="#CCCCCC">
             <strong class="style5">MSST:</strong>
@@ -781,6 +785,7 @@ rs_situacao_numRows = 0
           </td>
         </tr>
 
+        <!-- condições da obra -->
         <tr valign="middle">
           <td align="right" nowrap bordercolor="#CCCCCC" bgcolor="#CCCCCC">
             <strong class="style5">Condições da Obra:</strong>
@@ -924,9 +929,10 @@ rs_situacao_numRows = 0
         <%
           End If
 
-          If Session("MM_UserAuthorization") <> 6 Then
+          If Session("MM_UserAuthorization") <> 6 And Session("MM_UserAuthorization") <> 3 Then
         %>
 
+        <!-- vistoria -->
         <tr valign="baseline">
           <td align="right" nowrap bordercolor="#CCCCCC" bgcolor="#CCCCCC">
             <strong class="style5">Foi Realizada a Vistoria?</strong>
@@ -947,6 +953,7 @@ rs_situacao_numRows = 0
           End If
         %>
 
+        <!-- pendencia -->
         <tr valign="baseline">
           <td align="right" nowrap bordercolor="#CCCCCC" bgcolor="#CCCCCC">
             <strong class="style5">É Pendência?</strong>
@@ -997,6 +1004,7 @@ rs_situacao_numRows = 0
             </div>
           </td>
         </tr>
+
         <tr valign="baseline">
           <td colspan="2">
             <input type="submit" value="Salvar" style="float: right;">
@@ -1004,23 +1012,32 @@ rs_situacao_numRows = 0
         </tr>
       </table>
       
+      <input type="hidden" name="cod_usuario_lancamento" value="<%=(Session("MM_Userid"))%>">
       <input type="hidden" name="cod_tipo_registro" value="<%=(cod_tipo_registro)%>">
       <input type="hidden" name="PI" value="<%=(rs_pi.Fields.Item("PI").Value)%>">
       <input type="hidden" name="MM_insert" value="form1">
     </form>
 
-    <br/>
-
     <%
       End If
     %>
 
+    <br/>
+
     <table border="0" class="lista-acompanhamento">
       <tr bgcolor="#999999" class="title">
         <%
-          If Session("MM_UserAuthorization") = 1 Or Session("MM_UserAuthorization") = 4 Or Session("MM_UserAuthorization") = 5 Then
+          If Session("MM_UserAuthorization") = 1 Or Session("MM_UserAuthorization") = 3 Or Session("MM_UserAuthorization") = 4 Or Session("MM_UserAuthorization") = 5 Then
         %>
         <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <%
+          End If
+        %>
+        <td>Upload de Arquivos (Máx. 2MB)</td>
+        <%
+          If Session("MM_UserAuthorization") = 1 or Session("MM_UserAuthorization") = 4 or Session("MM_UserAuthorization") = 5 Then
+        %>
         <td>&nbsp;</td>
         <%
           End If
@@ -1046,7 +1063,7 @@ rs_situacao_numRows = 0
         <%
           End If
 
-          If Session("MM_UserAuthorization") <> 6 Then
+          If Session("MM_UserAuthorization") <> 6 And Session("MM_UserAuthorization") <> 3 Then
         %>
         <td style="min-width: 80px;">Vistoria Realizada?</td>
         <td style="min-width: 100px;">Data Vistoria </td>
@@ -1057,23 +1074,13 @@ rs_situacao_numRows = 0
         <td style="min-width: 200px;">Tipo de Pendência</td>
         <td style="min-width: 300px;">Descrição Pendência</td>
         <td style="min-width: 100px;">Data Limíte Pendência</td>
-        
-        <%
-          If Session("MM_UserAuthorization") = 1 or Session("MM_UserAuthorization") = 4 or Session("MM_UserAuthorization") = 5 Then
-        %>
-        <td>&nbsp;</td>
-        <%
-          End If
-        %>
-        
-        <td>Upload de Arquivos (Máx. 4MB)</td>
       </tr>
       <%
         While (NOT rs_lista_acomp.EOF)
       %>
       <tr bgcolor="#CCCCCC">
         <%
-          If Session("MM_UserAuthorization") = 1 Or Session("MM_UserAuthorization") = 4 Or Session("MM_UserAuthorization") = 5 Then
+          If Session("MM_UserAuthorization") = 1 Or Session("MM_UserAuthorization") = 3 Or Session("MM_UserAuthorization") = 4 Or Session("MM_UserAuthorization") = 5 Then
         %>
         <td>
           <a href="altera_acomp.asp?cod_acompanhamento=<%=(rs_lista_acomp.Fields.Item("cod_acompanhamento").Value)%>">
@@ -1083,6 +1090,66 @@ rs_situacao_numRows = 0
         <td>
           <a href="delete_acomp.asp?pi=<%=(Request.QueryString("pi"))%>&cod_acompanhamento=<%=(rs_lista_acomp.Fields.Item("cod_acompanhamento").Value)%>">
             <img src="depto/imagens/delete.gif" width="16" height="15" border="0" />
+          </a>
+        </td>
+        <%
+          End If
+        %>
+        <td>
+            <form id="form-upload" method="post" enctype="multipart/form-data" accept-charset="ISO-8859-1"
+              action="novo_upload.asp?id=<%=(rs_lista_acomp.Fields.Item("cod_acompanhamento").Value)%>&folder=ACOMPANHAMENTO&retUrl=<%=(Request.ServerVariables("URL"))%>?<%=(Request.QueryString)%>">
+              <input type="file" name="blob">
+              <br/>
+              <input type="text" name="dsc_observacoes" placeholder="Observações do arquivo">
+              <input type="submit" id="btnSubmit" value="Upload">
+            </form>
+
+            <%
+              cod_acompanhamento = rs_lista_acomp.Fields.Item("cod_acompanhamento").Value
+
+              Set objCon = Server.CreateObject("ADODB.Connection")
+                  objCon.Open MM_cpf_STRING
+
+              strF = "SELECT * FROM tb_acompanhamento_arquivo WHERE cod_referencia = " & cod_acompanhamento
+
+              Set rs_files = Server.CreateObject("ADODB.Recordset")
+                rs_files.CursorLocation = 3
+                rs_files.CursorType = 3
+                rs_files.LockType = 1
+                rs_files.Open strF, objCon, , , &H0001
+
+              If Not rs_files.EOF Then
+                While Not rs_files.EOF
+                  fileid = rs_files.Fields.Item("id_arquivo").Value
+
+                  If rs_files.Fields.Item("flg_pmweb_file").Value Then
+                    filename = rs_files.Fields.Item("nme_arquivo").Value
+                  Else
+                    filename = rs_lista_acomp.Fields.Item("cod_acompanhamento").Value &"_"& rs_files.Fields.Item("nme_arquivo").Value
+                  End If
+            %>
+              <ul>
+                <li>
+                  <a href="delete_file.asp?fileid=<%=(fileid)%>&foldername=ACOMPANHAMENTO&filename=<%=(filename)%>&returnurl=<%=(Request.ServerVariables("URL"))%>?<%=(Request.QueryString)%>">
+                    <img src="depto/imagens/delete.gif" width="16" height="15" border="0" />
+                  </a>
+                  <a href="download.asp?path=/ARQUIVOS/ACOMPANHAMENTO&filename=<%=(filename)%>">
+                    <%=(rs_files.Fields.Item("nme_arquivo").Value)%>
+                  </a>
+                </li>
+              </ul>
+            <%
+                  rs_files.MoveNext
+                Wend
+              End If
+            %>
+        </td>
+        <%
+          If Session("MM_UserAuthorization") = 1 or Session("MM_UserAuthorization") = 4 or Session("MM_UserAuthorization") = 5 Then
+        %>
+        <td>
+          <a href="cad_histograma.asp?cod_acompanhamento=<%=(rs_lista_acomp.Fields.Item("cod_acompanhamento").Value)%>&nome_municipio=<%=(rs_pi.Fields.Item("nme_municipio").Value)%>">
+            Histograma
           </a>
         </td>
         <%
@@ -1115,7 +1182,7 @@ rs_situacao_numRows = 0
         <%
           End If
 
-          If Session("MM_UserAuthorization") <> 6 Then
+          If Session("MM_UserAuthorization") <> 6 And Session("MM_UserAuthorization") <> 3 Then
         %>
         <td class="text-center"><%=(rs_lista_acomp.Fields.Item("vistoria").Value)%></td>
         <td class="text-center"><%=(rs_lista_acomp.Fields.Item("dt_vistoria").Value)%></td>
@@ -1127,59 +1194,6 @@ rs_situacao_numRows = 0
         <td class="text-center"><%=(rs_lista_acomp.Fields.Item("dsc_tipo_pendencia").Value)%></td>
         <td><%=(rs_lista_acomp.Fields.Item("dsc_pendencia").Value)%></td>
         <td class="text-center"><%=(rs_lista_acomp.Fields.Item("dta_limite_pendencia").Value)%></td>
-        
-        <%
-          If Session("MM_UserAuthorization") = 1 or Session("MM_UserAuthorization") = 4 or Session("MM_UserAuthorization") = 5 Then
-        %>
-        <td>
-          <a href="cad_histograma.asp?cod_acompanhamento=<%=(rs_lista_acomp.Fields.Item("cod_acompanhamento").Value)%>&nome_municipio=<%=(rs_pi.Fields.Item("nme_municipio").Value)%>">
-            Histograma
-          </a>
-        </td>
-        <%
-          End If
-        %>
-        <td>
-            <form id="form-upload" method="post" enctype="multipart/form-data" accept-charset="ISO-8859-1"
-              action="novo_upload.asp?id=<%=(rs_lista_acomp.Fields.Item("cod_acompanhamento").Value)%>&folder=ACOMPANHAMENTO&retUrl=<%=(Request.ServerVariables("URL"))%>?<%=(Request.QueryString)%>">
-              <input type="file" name="blob">
-              <br/>
-              <input type="text" name="dsc_observacoes" placeholder="Observações do arquivo">
-              <input type="submit" id="btnSubmit" value="Upload">
-            </form>
-
-            <%
-              cod_acompanhamento = rs_lista_acomp.Fields.Item("cod_acompanhamento").Value
-
-              strF = "SELECT * FROM tb_acompanhamento_arquivo WHERE cod_referencia = " & cod_acompanhamento
-
-              Set rs_files = Server.CreateObject("ADODB.Recordset")
-                rs_files.CursorLocation = 3
-                rs_files.CursorType = 3
-                rs_files.LockType = 1
-                rs_files.Open strF, objCon, , , &H0001
-
-              If Not rs_files.EOF Then
-                While Not rs_files.EOF
-                  If rs_files.Fields.Item("flg_pmweb_file").Value Then
-                    filename = rs_files.Fields.Item("nme_arquivo").Value
-                  Else
-                    filename = rs_lista_acomp.Fields.Item("cod_acompanhamento").Value &"_"& rs_files.Fields.Item("nme_arquivo").Value
-                  End If
-            %>
-              <ul>
-                <li>
-                  <a href="download.asp?path=/ARQUIVOS/ACOMPANHAMENTO&filename=<%=(filename)%>">
-                    <%=(rs_files.Fields.Item("nme_arquivo").Value)%>
-                  </a>
-                </li>
-              </ul>
-            <%
-                  rs_files.MoveNext
-                Wend
-              End If
-            %>
-        </td>
       </tr>
       <% 
           rs_lista_acomp.MoveNext()

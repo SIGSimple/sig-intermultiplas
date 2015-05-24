@@ -148,7 +148,7 @@ Dim rs_resp_numRows
 
 Set rs_resp = Server.CreateObject("ADODB.Recordset")
 rs_resp.ActiveConnection = MM_cpf_STRING
-rs_resp.Source = "SELECT tb_responsavel.*, tb_Construtora.* FROM tb_responsavel INNER JOIN tb_Construtora ON tb_responsavel.cod_empresa = tb_Construtora.cod_construtora ORDER BY [tb_responsavel].[Responsável] ASC"
+rs_resp.Source = "SELECT tb_responsavel.*, tb_Construtora.*, login.nome FROM login RIGHT JOIN (tb_responsavel INNER JOIN tb_Construtora ON tb_responsavel.cod_empresa = tb_Construtora.cod_construtora) ON login.idusuario = tb_responsavel.cod_usuario ORDER BY tb_responsavel.Responsável"
 rs_resp.CursorType = 0
 rs_resp.CursorLocation = 2
 rs_resp.LockType = 1
@@ -177,6 +177,20 @@ rs_construtora.LockType = 1
 rs_construtora.Open()
 
 rs_construtora_numRows = 0
+%>
+<%
+Dim rs_usuario
+Dim rs_usuario_numRows
+
+Set rs_usuario = Server.CreateObject("ADODB.Recordset")
+rs_usuario.ActiveConnection = MM_cpf_STRING
+rs_usuario.Source = "SELECT idusuario, nome FROM login ORDER BY nome ASC"
+rs_usuario.CursorType = 0
+rs_usuario.CursorLocation = 2
+rs_usuario.LockType = 1
+rs_usuario.Open()
+
+rs_usuario_numRows = 0
 %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -243,6 +257,26 @@ End If
       </select>      </td>
     </tr>
     <tr valign="baseline">
+      <td align="right" nowrap bgcolor="#CCCCCC" class="style7"><span class="style10">Login no Sistema:</span></td>
+      <td bgcolor="#CCCCCC">
+  <select name="cod_empresa" class="style5">
+  <option value=""></value>
+        <%
+While (NOT rs_usuario.EOF)
+%>
+        <option value="<%=(rs_usuario.Fields.Item("idusuario").Value)%>"><%=(rs_usuario.Fields.Item("nome").Value)%></option>
+        <%
+  rs_usuario.MoveNext()
+Wend
+If (rs_usuario.CursorType > 0) Then
+  rs_usuario.MoveFirst
+Else
+  rs_usuario.Requery
+End If
+%>
+      </select>      </td>
+    </tr>
+    <tr valign="baseline">
       <td align="right" nowrap bgcolor="#CCCCCC" class="style7"><span class="style23"></span></td>
       <td bgcolor="#CCCCCC"><input type="submit" value="Salvar">      </td>
     </tr>
@@ -262,6 +296,7 @@ End If
       <td><span class="style7">Telefone</span></td>
       <td><span class="style7">Núm. CREA</span></td>
       <td><span class="style7">Empresa</span></td>
+      <td><span class="style7">Login no Sistema</span></td>
     </tr>
     <% While (NOT rs_resp.EOF) %>
       <tr bgcolor="#CCCCCC">
@@ -273,6 +308,7 @@ End If
         <td><span class="style5"><%=(rs_resp.Fields.Item("telefone").Value)%></span></td>
         <td><span class="style5"><%=(rs_resp.Fields.Item("numero_crea").Value)%></span></td>
         <td><span class="style5"><%=(rs_resp.Fields.Item("Construtora").Value)%></span></td>
+        <td><span class="style5"><%=(rs_resp.Fields.Item("nome").Value)%></span></td>
       </tr>
       <% 
   rs_resp.MoveNext()

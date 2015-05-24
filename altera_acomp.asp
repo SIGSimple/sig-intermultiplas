@@ -46,8 +46,17 @@ If (CStr(Request("MM_update")) = "form1" And CStr(Request("MM_recordId")) <> "")
   MM_editColumn = "cod_acompanhamento"
   MM_recordId = "" + Request.Form("MM_recordId") + ""
   MM_editRedirectUrl = "altera_acomp.asp"
-  MM_fieldsStr  = "Data_do_Registro|value|Registro|value|Responsvel|value|vistoria|value|dt_vistoria|value|flg_pendencia|value|cod_tipo_pendencia|value|dsc_pendencia|value|dta_limite_pendencia|value|cod_situacao_sso|value|dsc_nota_sso|value|cod_situacao_clima_manha|value|cod_situacao_clima_tarde|value|cod_situacao_clima_noite|value|cod_situacao_limpeza_obra|value|cod_situacao_organizacao_obra|value|dsc_nota_clima_manha|value|dsc_nota_clima_tarde|value|dsc_nota_clima_noite|value|dsc_nota_limpeza_obra|value|dsc_nota_organizacao_obra|value|dsc_nota_dia_perdido|value|dsc_nota_dia_trabalhado|value"
-  MM_columnsStr = "[Data do Registro]|',none,NULL|Registro|',none,''|cod_fiscal|none,none,NULL|vistoria|none,1,0|dt_vistoria|',none,NULL|flg_pendencia|none,1,0|cod_tipo_pendencia|none,none,NULL|dsc_pendencia|',none,''|dta_limite_pendencia|',none,NULL|cod_situacao_sso|none,none,NULL|dsc_nota_sso|',none,''|cod_situacao_clima_manha|none,none,NULL|cod_situacao_clima_tarde|none,none,NULL|cod_situacao_clima_noite|none,none,NULL|cod_situacao_limpeza_obra|none,none,NULL|cod_situacao_organizacao_obra|none,none,NULL|dsc_nota_clima_manha|',none,''|dsc_nota_clima_tarde|',none,''|dsc_nota_clima_noite|',none,''|dsc_nota_limpeza_obra|',none,''|dsc_nota_organizacao_obra|',none,''|dsc_nota_dia_perdido|',none,''|dsc_nota_dia_trabalhado|',none,''"
+  MM_fieldsStr  = "cod_usuario_lancamento|value|Data_do_Registro|value|Registro|value|Responsvel|value|vistoria|value|dt_vistoria|value|flg_pendencia|value|cod_tipo_pendencia|value|dsc_pendencia|value|dta_limite_pendencia|value|flg_pendencia_concluida|value|dta_resolucao_pendencia|value|dsc_acao_resolucao_pendencia|value|cod_situacao_sso|value|dsc_nota_sso|value|cod_situacao_clima_manha|value|cod_situacao_clima_tarde|value|cod_situacao_clima_noite|value|cod_situacao_limpeza_obra|value|cod_situacao_organizacao_obra|value|dsc_nota_clima_manha|value|dsc_nota_clima_tarde|value|dsc_nota_clima_noite|value|dsc_nota_limpeza_obra|value|dsc_nota_organizacao_obra|value|dsc_nota_dia_perdido|value|dsc_nota_dia_trabalhado|value"
+
+  If Session("MM_UserAuthorization") = 3 Then
+    MM_fieldsStr = MM_fieldsStr & "|flg_pendencia_valida|value"
+  End If
+
+  MM_columnsStr = "cod_usuario_lancamento|none,none,NULL|[Data do Registro]|',none,NULL|Registro|',none,''|cod_fiscal|none,none,NULL|vistoria|none,1,0|dt_vistoria|',none,NULL|flg_pendencia|none,1,0|cod_tipo_pendencia|none,none,NULL|dsc_pendencia|',none,''|dta_limite_pendencia|',none,NULL|flg_pendencia_concluida|none,1,0|dta_resolucao_pendencia|',none,NULL|dsc_acao_resolucao_pendencia|',none,''|cod_situacao_sso|none,none,NULL|dsc_nota_sso|',none,''|cod_situacao_clima_manha|none,none,NULL|cod_situacao_clima_tarde|none,none,NULL|cod_situacao_clima_noite|none,none,NULL|cod_situacao_limpeza_obra|none,none,NULL|cod_situacao_organizacao_obra|none,none,NULL|dsc_nota_clima_manha|',none,''|dsc_nota_clima_tarde|',none,''|dsc_nota_clima_noite|',none,''|dsc_nota_limpeza_obra|',none,''|dsc_nota_organizacao_obra|',none,''|dsc_nota_dia_perdido|',none,''|dsc_nota_dia_trabalhado|',none,''"
+
+  If Session("MM_UserAuthorization") = 3 Then
+    MM_columnsStr = MM_columnsStr & "|flg_pendencia_valida|none,1,0"
+  End If
 
   ' create the MM_fields and MM_columns arrays
   MM_fields = Split(MM_fieldsStr, "|")
@@ -508,7 +517,7 @@ function mostraEsconde(empresa,LO)
     
     <tr valign="middle">
       <td align="right" nowrap bordercolor="#CCCCCC" bgcolor="#CCCCCC"><strong class="style5">Registro:</strong></td>
-      <td bordercolor="#CCCCCC" bgcolor="#CCCCCC"><textarea name="Registro" cols="32" rows="5" maxlength="255" style="width: 97%;"><%=(rs_altera_acomp.Fields.Item("Registro").Value)%></textarea></td>
+      <td bordercolor="#CCCCCC" bgcolor="#CCCCCC"><textarea name="Registro" cols="32" rows="5" style="width: 97%;"><%=(rs_altera_acomp.Fields.Item("Registro").Value)%></textarea></td>
     </tr>
 
     <tr valign="middle">
@@ -749,6 +758,7 @@ function mostraEsconde(empresa,LO)
             Response.Write "<input type=""checkbox"" onclick=""mostraEsconde('campo_pendencia','tipo_pendencia'); mostraEsconde('campo_pendencia','desc_pendencia'); mostraEsconde('campo_pendencia','dt_limite_pendencia');"" id=""campo_pendencia"" name=""flg_pendencia"" "& checked &"/>"
           %>
         </label>
+        
         <div id="tipo_pendencia" style="<% If Not rs_altera_acomp.Fields.Item("flg_pendencia").Value Then Response.Write "display:none;" End If %>">
           Tipo de Pendência:
           <br/>
@@ -784,16 +794,73 @@ function mostraEsconde(empresa,LO)
             %>
           </select>
         </div>
+
         <div id="desc_pendencia" style="<% If Not rs_altera_acomp.Fields.Item("flg_pendencia").Value Then Response.Write "display:none;" End If %>">
           Descrição:
           <br/>
-          <textarea name="dsc_pendencia" cols="32" maxlength="255"><%=(rs_altera_acomp.Fields.Item("dsc_pendencia").Value)%></textarea>
+          <textarea name="dsc_pendencia" cols="32"><%=(rs_altera_acomp.Fields.Item("dsc_pendencia").Value)%></textarea>
         </div>
+        
         <div id="dt_limite_pendencia" style="<% If Not rs_altera_acomp.Fields.Item("flg_pendencia").Value Then Response.Write "display:none;" End If %>">
           Data Limíte da Pendência:
           <br/>
           <input name="dta_limite_pendencia" type="text" id="dta_limite_pendencia" value="<%=(rs_altera_acomp.Fields.Item("dta_limite_pendencia").Value)%>" class="datepicker" onblur="verifica_data(this)" onkeypress="desabilita_cor(this)" onkeyup="this.value=mascara_data(this.value)" size="15" />
         </div>
+
+        <hr/>
+
+        <label>
+          <%
+            value = rs_altera_acomp.Fields.Item("flg_pendencia_concluida").Value
+            checked = ""
+
+            If value = True Then
+              value = 1
+              checked = "checked=""checked"""
+            Else
+              value = 0
+            End If
+
+            Response.Write "<input type=""checkbox"" onclick=""mostraEsconde('campo_pendencia_concluida','dt_resolucao_pendencia'); mostraEsconde('campo_pendencia_concluida','dsc_acao_resolucao');"" id=""campo_pendencia_concluida"" name=""flg_pendencia_concluida"" "& checked &"/>"
+          %> Pendência concluída
+        </label>
+
+        <div id="dt_resolucao_pendencia" style="<% If Not rs_altera_acomp.Fields.Item("flg_pendencia_concluida").Value Then Response.Write "display:none;" End If %>">
+          Data Resolução da Pendência:
+          <br/>
+          <input name="dta_resolucao_pendencia" type="text" id="dta_resolucao_pendencia" value="<%=(rs_altera_acomp.Fields.Item("dta_resolucao_pendencia").Value)%>" class="datepicker" onblur="verifica_data(this)" onkeypress="desabilita_cor(this)" onkeyup="this.value=mascara_data(this.value)" size="15" />
+        </div>
+
+        <div id="dsc_acao_resolucao" style="<% If Not rs_altera_acomp.Fields.Item("flg_pendencia_concluida").Value Then Response.Write "display:none;" End If %>">
+          Ação Realizada:
+          <br/>
+          <textarea name="dsc_acao_resolucao_pendencia" cols="32"><%=(rs_altera_acomp.Fields.Item("dsc_acao_resolucao_pendencia").Value)%></textarea>
+        </div>
+        
+        <br/>
+
+        <%
+           If Session("MM_UserAuthorization") = 3 Then
+        %>
+        <label>
+          <%
+            value = rs_altera_acomp.Fields.Item("flg_pendencia_valida").Value
+            checked = ""
+
+            If value = True Then
+              value = 1
+              checked = "checked=""checked"""
+            Else
+              value = 0
+            End If
+
+            Response.Write "<input type=""checkbox"" id=""flg_pendencia_valida"" name=""flg_pendencia_valida"" "& checked &"/>"
+          %> Pendência Válida
+        </label>
+
+        <%
+          End If
+        %>
       </td>
     </tr>
     
@@ -805,5 +872,6 @@ function mostraEsconde(empresa,LO)
   </table>
 
   <input type="hidden" name="MM_update" value="form1">
+  <input type="hidden" name="cod_usuario_lancamento" value="<%=(Session("MM_Userid"))%>">
   <input type="hidden" name="MM_recordId" value="<%= rs_altera_acomp.Fields.Item("cod_acompanhamento").Value %>">
 </form>
