@@ -65,7 +65,7 @@
 		<table align="center">
 			<%
 				cod_acompanhamento = Request.QueryString("cod_acompanhamento")
-				strQ = "SELECT tb_Acompanhamento.*, tb_responsavel.Responsável, tb_pi.nome_empreendimento FROM tb_pi RIGHT JOIN (tb_Acompanhamento LEFT JOIN tb_responsavel ON tb_Acompanhamento.cod_fiscal = tb_responsavel.cod_fiscal) ON tb_pi.PI = tb_Acompanhamento.PI WHERE (((tb_Acompanhamento.[cod_acompanhamento])="& cod_acompanhamento &"));"
+				strQ = "SELECT tb_Acompanhamento.*, tb_responsavel.Responsável, tb_pi.PI, tb_pi.nome_empreendimento FROM tb_pi RIGHT JOIN (tb_Acompanhamento LEFT JOIN tb_responsavel ON tb_Acompanhamento.cod_fiscal = tb_responsavel.cod_fiscal) ON tb_pi.PI = tb_Acompanhamento.PI WHERE (((tb_Acompanhamento.[cod_acompanhamento])="& cod_acompanhamento &"));"
 
 				Set rs_data = Server.CreateObject("ADODB.Recordset")
 					rs_data.CursorLocation = 3
@@ -75,6 +75,7 @@
 
 				If Not rs_data.EOF Then
 					While Not rs_data.EOF
+						cod_empreendimento = rs_data.Fields.Item("tb_pi.PI").Value
 			%>
 			<tr valign="baseline">
 				<td align="right" nowrap bgcolor="#CCCCCC" class="style7">
@@ -170,6 +171,10 @@
 					<td align="right" nowrap bgcolor="#CCCCCC" class="style7">&nbsp;</td>
 					<td bgcolor="#CCCCCC">
 						<input type="submit" value="Salvar">
+						 ou 
+						<a href="rep_histograma.asp?cod_empreendimento=<%=(cod_empreendimento)%>&nome_municipio=<%=(Request.QueryString("nome_municipio"))%>&cod_acompanhamento=<%=(Request.QueryString("cod_acompanhamento"))%>">
+							Replicar Último Histograma
+						</a>
 					</td>
 				</tr>
 			</table>
