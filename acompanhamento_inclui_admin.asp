@@ -689,7 +689,8 @@ rs_situacao_numRows = 0
       If Session("MM_UserAuthorization") = 5 Then
         cod_eng_obras_consorcio = rs_pi.Fields.Item("cod_fiscal").Value
         cod_fiscal_consorcio    = rs_pi.Fields.Item("cod_fiscal_consorcio").Value
-        If cod_fiscal = Session("MM_UserCodFiscal") Or cod_eng_obras_consorcio = Session("MM_UserCodFiscal") Then
+
+        If cod_fiscal = CInt(Session("MM_UserCodFiscal")) Or cod_eng_obras_consorcio = CInt(Session("MM_UserCodFiscal")) Then
           flg_can_insert = True
         End If
       Else

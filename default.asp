@@ -31,7 +31,7 @@ If MM_valUsername <> "" Then
 
 			If (MM_fldUserAuthorization <> "") Then
 				If MM_rsUser.Fields.Item("cod_fiscal").Value <> "" Then
-					Session("MM_UserCodFiscal") = CStr()
+					Session("MM_UserCodFiscal") = CStr(MM_rsUser.Fields.Item("cod_fiscal").Value)
 				End If
 
 				Session("MM_UserAuthorization") = CStr(MM_rsUser.Fields.Item(MM_fldUserAuthorization).Value)

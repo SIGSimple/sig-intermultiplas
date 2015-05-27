@@ -719,7 +719,7 @@ rs_situacao_numRows = 0
       <tr valign="baseline">
         <td align="right" nowrap bgcolor="#CCCCCC" class="style9"><span class="style10">Previsão de Inauguração:</span></td>
         <td bgcolor="#CCCCCC">
-          <input name="dta_previsao_inauguracao" type="text" class="datepicker" class="style9" value="<%=(rs_pi.Fields.Item("dta_previsao_inauguracao").Value)%>">
+          <input name="dta_previsao_inauguracao" type="text" class="style9" value="<%=(rs_pi.Fields.Item("dta_previsao_inauguracao").Value)%>">
         </td>
       </tr>
 

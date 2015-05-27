@@ -291,7 +291,7 @@
 
 				<%
 					If (Session("MM_UserAuthorization") <> 8 AND Session("MM_UserAuthorization") <> 9) Then
-						strQueryLicencas = "SELECT * FROM tb_licenca_ambiental INNER JOIN tb_tipo_licenca ON tb_tipo_licenca.id = tb_licenca_ambiental.cod_tipo_licenca WHERE cod_empreendimento = " & cod_empreendimento & ""
+						strQueryLicencas = "SELECT * FROM tb_licenca_ambiental INNER JOIN tb_tipo_licenca ON tb_tipo_licenca.id = tb_licenca_ambiental.cod_tipo_licenca WHERE cod_empreendimento = '" & cod_empreendimento & "'"
 
 						Set rs_licencas = Server.CreateObject("ADODB.Recordset")
 							rs_licencas.CursorLocation = 3
@@ -299,7 +299,7 @@
 							rs_licencas.LockType = 1
 							rs_licencas.Open strQueryLicencas, objCon, , , &H0001
 
-						strQueryOutorgas = "SELECT * FROM tb_outorga WHERE cod_empreendimento = " & cod_empreendimento & ""
+						strQueryOutorgas = "SELECT * FROM tb_outorga WHERE cod_empreendimento = '" & cod_empreendimento & "'"
 
 						Set rs_outorgas = Server.CreateObject("ADODB.Recordset")
 							rs_outorgas.CursorLocation = 3
@@ -307,7 +307,7 @@
 							rs_outorgas.LockType = 1
 							rs_outorgas.Open strQueryOutorgas, objCon, , , &H0001
 
-						strQueryApps = "SELECT * FROM tb_app WHERE cod_empreendimento = " & cod_empreendimento & ""
+						strQueryApps = "SELECT * FROM tb_app WHERE cod_empreendimento = '" & cod_empreendimento & "'"
 
 						Set rs_apps = Server.CreateObject("ADODB.Recordset")
 							rs_apps.CursorLocation = 3
@@ -315,7 +315,7 @@
 							rs_apps.LockType = 1
 							rs_apps.Open strQueryApps, objCon, , , &H0001
 
-						strQueryTCRAs = "SELECT * FROM tb_tcra WHERE cod_empreendimento = " & cod_empreendimento & ""
+						strQueryTCRAs = "SELECT * FROM tb_tcra WHERE cod_empreendimento = '" & cod_empreendimento & "'"
 
 						Set rs_tcras = Server.CreateObject("ADODB.Recordset")
 							rs_tcras.CursorLocation = 3

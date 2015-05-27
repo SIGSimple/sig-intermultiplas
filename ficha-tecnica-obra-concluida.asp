@@ -121,7 +121,20 @@
 						else
 							$(".tr-objeto-obra").hide();
 
-						$("#txt-investimento-governo").text(dadosObra['Valor do Contrato']);
+						if(dadosObra['cod_status_situacao_interna'] == 41 || dadosObra['cod_status_situacao_interna'] == 44) {
+							$("#txt-investimento-governo").text(dadosObra['vlr_total_aditamento']);
+						}
+						else {
+							if(dadosObra['cod_tipo_contratacao']) {
+								if( dadosObra['cod_tipo_contratacao'] == 1 || dadosObra['cod_tipo_contratacao'] == 2 )
+									$("#txt-investimento-governo").text(dadosObra['vlr_total_aditamento']);
+								else
+									$("#txt-investimento-governo").text(dadosObra['c_lista_dados_obras.vlr_original'] + dadosObra['c_lista_dados_obras.vlr_aditivo']);
+							}
+							else
+								$("#txt-investimento-governo").text(dadosObra['c_lista_dados_obras.vlr_original'] + dadosObra['c_lista_dados_obras.vlr_aditivo']);
+						}
+
 						$("#txt-pop-2010").text(dadosObra['qtd_populacao_urbana_2010']);
 						$("#txt-pop-2030").text(pop2030);
 						
@@ -441,7 +454,7 @@
 					End If
 
 					If ((Session("MM_UserAuthorization") <> 8 AND Session("MM_UserAuthorization") <> 9)) Then
-						strQueryLicencas = "SELECT * FROM tb_licenca_ambiental INNER JOIN tb_tipo_licenca ON tb_tipo_licenca.id = tb_licenca_ambiental.cod_tipo_licenca WHERE cod_empreendimento = " & cod_empreendimento & ""
+						strQueryLicencas = "SELECT * FROM tb_licenca_ambiental INNER JOIN tb_tipo_licenca ON tb_tipo_licenca.id = tb_licenca_ambiental.cod_tipo_licenca WHERE cod_empreendimento = '" & cod_empreendimento & "'"
 
 						Set rs_licencas = Server.CreateObject("ADODB.Recordset")
 							rs_licencas.CursorLocation = 3
@@ -449,7 +462,7 @@
 							rs_licencas.LockType = 1
 							rs_licencas.Open strQueryLicencas, objCon, , , &H0001
 
-						strQueryOutorgas = "SELECT * FROM tb_outorga WHERE cod_empreendimento = " & cod_empreendimento & ""
+						strQueryOutorgas = "SELECT * FROM tb_outorga WHERE cod_empreendimento = '" & cod_empreendimento & "'"
 
 						Set rs_outorgas = Server.CreateObject("ADODB.Recordset")
 							rs_outorgas.CursorLocation = 3
@@ -457,7 +470,7 @@
 							rs_outorgas.LockType = 1
 							rs_outorgas.Open strQueryOutorgas, objCon, , , &H0001
 
-						strQueryApps = "SELECT * FROM tb_app WHERE cod_empreendimento = " & cod_empreendimento & ""
+						strQueryApps = "SELECT * FROM tb_app WHERE cod_empreendimento = '" & cod_empreendimento & "'"
 
 						Set rs_apps = Server.CreateObject("ADODB.Recordset")
 							rs_apps.CursorLocation = 3
@@ -465,7 +478,7 @@
 							rs_apps.LockType = 1
 							rs_apps.Open strQueryApps, objCon, , , &H0001
 
-						strQueryTCRAs = "SELECT * FROM tb_tcra WHERE cod_empreendimento = " & cod_empreendimento & ""
+						strQueryTCRAs = "SELECT * FROM tb_tcra WHERE cod_empreendimento = '" & cod_empreendimento & "'"
 
 						Set rs_tcras = Server.CreateObject("ADODB.Recordset")
 							rs_tcras.CursorLocation = 3
