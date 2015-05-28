@@ -172,7 +172,7 @@
 				</tr>
 				<%
 					cod_empreendimento = Request.QueryString("cod_empreendimento")
-					strQ = "SELECT * from tb_tcra WHERE cod_empreendimento = " & cod_empreendimento
+					strQ = "SELECT * from tb_tcra WHERE cod_empreendimento = '" & cod_empreendimento & "'"
 
 					Set rs_lista = Server.CreateObject("ADODB.Recordset")
 						rs_lista.CursorLocation = 3

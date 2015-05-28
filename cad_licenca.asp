@@ -40,6 +40,10 @@
 
 			rs_update("dsc_observacoes") 			= Trim(Request.Form("dsc_observacoes"))
 			rs_update("flg_receber_notificacoes") 	= Request.Form("flg_receber_notificacoes")
+
+			If Request.Form("cod_situacao_documento") <> "" Then
+				rs_update("cod_situacao_documento") 	= Trim(Request.Form("cod_situacao_documento"))
+			End If
 			' FIM CAMPOS
 			
 			rs_update.Update
@@ -209,6 +213,36 @@
 					</td>
 				</tr>
 				<tr valign="baseline">
+					<td align="right" nowrap bgcolor="#CCCCCC" class="style7">
+						<span class="style22">Situação do Documento:</span>
+					</td>
+					<td bgcolor="#CCCCCC">
+						<select name="cod_situacao_documento">
+							<option value=""></option>
+							<%
+								strQ = "SELECT * FROM tb_situacao_documento ORDER BY dsc_situacao_documento ASC"
+
+								Set rs_combo = Server.CreateObject("ADODB.Recordset")
+									rs_combo.CursorLocation = 3
+									rs_combo.CursorType = 3
+									rs_combo.LockType = 1
+									rs_combo.Open strQ, objCon, , , &H0001
+
+								If Not rs_combo.EOF Then
+									While Not rs_combo.EOF
+										If Trim(rs_combo.Fields.Item("dsc_situacao_documento").Value) <> "" Then
+							%>
+							<option value="<%=(rs_combo.Fields.Item("id").Value)%>"><%=(rs_combo.Fields.Item("dsc_situacao_documento").Value)%></option>
+							<%
+										End If
+										rs_combo.MoveNext
+									Wend
+								End If
+							%>
+						</select>
+					</td>
+				</tr>
+				<tr valign="baseline">
 					<td align="right" nowrap bgcolor="#CCCCCC" class="style7">&nbsp;</td>
 					<td bgcolor="#CCCCCC">
 						<input type="submit" value="Salvar">
@@ -242,6 +276,9 @@
 					</td>
 					<td>
 						<span class="style7">Receber Notificações?</span>
+					</td>
+					<td>
+						<span class="style7">Situação Doc.</span>
 					</td>
 					<td>&nbsp;</td>
 				</tr>
@@ -298,6 +335,9 @@
 								End If
 							%>
 						</span>
+					</td>
+					<td align="center">
+						<span class="style5"><%=(rs_lista.Fields.Item("dsc_situacao_documento").Value)%></span>
 					</td>
 					<td>
 						<form id="form-upload" method="post" enctype="multipart/form-data"

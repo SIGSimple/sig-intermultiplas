@@ -158,6 +158,9 @@ rs_delete_us_numRows = rs_delete_us_numRows + Repeat1__numRows
         <span class="style5">Agência Liberação (CETESB)</span>
       </td>
       <td>
+        <span class="style5">Situação Doc.</span>
+      </td>
+      <td>
         <span class="style5">Observações</span>
       </td>
     </tr>
@@ -177,6 +180,9 @@ rs_delete_us_numRows = rs_delete_us_numRows + Repeat1__numRows
         </td>
         <td>
           <span class="style3"><%=(rs_delete_us.Fields.Item("nme_agencia").Value)%></span>
+        </td>
+        <td>
+          <span class="style3"><%=(rs_delete_us.Fields.Item("dsc_situacao_documento").Value)%></span>
         </td>
         <td>
           <span class="style3"><%=(rs_delete_us.Fields.Item("dsc_observacoes").Value)%></span>

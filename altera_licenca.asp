@@ -52,8 +52,8 @@ If (CStr(Request("MM_update")) = "form1" And CStr(Request("MM_recordId")) <> "")
   MM_editColumn = "id"
   MM_recordId = "" + Request.Form("MM_recordId") + ""
   MM_editRedirectUrl = "cad_licenca.asp"
-  MM_fieldsStr  = "num_licenca|value|cod_tipo_licenca|value|dta_concessao|value|dta_vencimento|value|cod_agencia_liberacao|value|dsc_observacoes|value|flg_receber_notificacoes|value"
-  MM_columnsStr = "num_licenca|',none,''|cod_tipo_licenca|none,none,NULL|dta_concessao|',none,NULL|dta_vencimento|',none,NULL|cod_agencia_liberacao|none,none,NULL|dsc_observacoes|',none,''|flg_receber_notificacoes|none,1,0"
+  MM_fieldsStr  = "num_licenca|value|cod_tipo_licenca|value|dta_concessao|value|dta_vencimento|value|cod_agencia_liberacao|value|dsc_observacoes|value|flg_receber_notificacoes|value|cod_situacao_documento|value"
+  MM_columnsStr = "num_licenca|',none,''|cod_tipo_licenca|none,none,NULL|dta_concessao|',none,NULL|dta_vencimento|',none,NULL|cod_agencia_liberacao|none,none,NULL|dsc_observacoes|',none,''|flg_receber_notificacoes|none,1,0|cod_situacao_documento|none,none,NULL"
 
   ' create the MM_fields and MM_columns arrays
   MM_fields = Split(MM_fieldsStr, "|")
@@ -309,6 +309,38 @@ rs_numRows = 0
 
                 Response.Write "<input type=""checkbox"" id=""flg_receber_notificacoes"" name=""flg_receber_notificacoes"" "& checked &"/>"
               %>
+          </td>
+        </tr>
+        <tr valign="baseline">
+          <td align="right" nowrap bgcolor="#CCCCCC" class="style7">
+            <span class="style22">Situação do Documento:</span>
+          </td>
+          <td bgcolor="#CCCCCC">
+            <select name="cod_situacao_documento">
+              <option value=""></option>
+              <%
+                strQ = "SELECT * FROM tb_situacao_documento ORDER BY dsc_situacao_documento ASC"
+
+                Set rs_combo = Server.CreateObject("ADODB.Recordset")
+                  rs_combo.CursorLocation = 3
+                  rs_combo.CursorType = 3
+                  rs_combo.LockType = 1
+                  rs_combo.Open strQ, objCon, , , &H0001
+
+                If Not rs_combo.EOF Then
+                  While Not rs_combo.EOF
+                    If Trim(rs_combo.Fields.Item("dsc_situacao_documento").Value) <> "" Then
+                      Response.Write "      <OPTION value='" & (rs_combo.Fields.Item("id").Value) & "'"
+                      If Lcase(rs_combo.Fields.Item("id").Value) = Lcase(rs.Fields.Item("cod_situacao_documento").Value) then
+                        Response.Write "selected"
+                      End If
+                      Response.Write ">" & (rs_combo.Fields.Item("dsc_situacao_documento").Value) & "</OPTION>"
+                    End If
+                    rs_combo.MoveNext
+                  Wend
+                End If
+              %>
+            </select>
           </td>
         </tr>
         <tr valign="baseline">
