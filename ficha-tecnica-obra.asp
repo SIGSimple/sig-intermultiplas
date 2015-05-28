@@ -54,7 +54,19 @@
 		End If
 	End If
 
-	strQ = "SELECT c_lista_contrato.* FROM c_lista_pi INNER JOIN (tb_pi_contrato INNER JOIN c_lista_contrato ON tb_pi_contrato.cod_contrato = c_lista_contrato.id) ON c_lista_pi.Código = tb_pi_contrato.cod_empreendimento WHERE c_lista_pi.PI = '"& cod_empreendimento &"'"
+	Dim cod_contrato
+
+	strQ = "SELECT tpi.cod_contrato FROM c_lista_dados_obras AS ldo INNER JOIN tb_pi_contrato AS tpi ON tpi.cod_empreendimento = ldo.Código WHERE ldo.PI = '"& cod_empreendimento &"'"
+
+	Set rs_cod_contrato = Server.CreateObject("ADODB.Recordset")
+		rs_cod_contrato.CursorLocation = 3
+		rs_cod_contrato.CursorType = 3
+		rs_cod_contrato.LockType = 1
+		rs_cod_contrato.Open strQ, objCon, , , &H0001
+
+	cod_contrato = rs_cod_contrato.Fields.Item("cod_contrato").Value
+
+	strQ = "SELECT * FROM c_lista_contrato WHERE id = "& cod_contrato
 
 	Set rs_dados_contrato = Server.CreateObject("ADODB.Recordset")
 		rs_dados_contrato.CursorLocation = 3
@@ -66,14 +78,13 @@
 	Dim dta_os
 	Dim dta_vigencia
 	Dim prz_original_execucao_meses
-	Dim cod_contrato
 
 	If Not rs_dados_contrato.EOF Then 
 		dta_assinatura = rs_dados_contrato.Fields.Item("dta_assinatura").Value
 		dta_os = rs_dados_contrato.Fields.Item("dta_os").Value
 
-		prz_total_execucao 	= rs_dados_contrato.Fields.Item("prz_original_execucao_meses").Value + rs_dados_contrato.Fields.Item("prz_aditivo").Value
-		prz_total_contrato 	= rs_dados_contrato.Fields.Item("prz_original_contrato_meses").Value + rs_dados_contrato.Fields.Item("prz_aditivo").Value
+		prz_total_execucao 	= CInt(rs_dados_contrato.Fields.Item("prz_original_execucao_meses").Value) + CInt(rs_dados_contrato.Fields.Item("prz_aditivo").Value)
+		prz_total_contrato 	= CInt(rs_dados_contrato.Fields.Item("prz_original_contrato_meses").Value) + CInt(rs_dados_contrato.Fields.Item("prz_aditivo").Value)
 		vlr_total 			= rs_dados_contrato.Fields.Item("vlr_original").Value + rs_dados_contrato.Fields.Item("vlr_aditivo").Value
 		
 		If rs_dados_contrato.Fields.Item("vlr_total_reajuste").Value > 0 Then
@@ -718,7 +729,7 @@
 									<div class="form-group">
 										<label class="col-xs-3 col-sm-3 col-md-3 col-lg-3 control-label">Objeto da Obra:</label>
 										<div class="col-xs-9 col-sm-9 col-md-9 col-lg-9">
-											<textarea readonly="readonly" class="form-control" rows="5"><%=(rs_dados_obra.Fields.Item("Descrição da Intervenção FDE").Value)%></textarea>
+											<textarea readonly="readonly" class="form-control" rows="5"><%=(rs_dados_obra.Fields.Item("dsc_objeto_obra").Value)%></textarea>
 										</div>
 									</div>
 
@@ -924,7 +935,7 @@
 											pth_url = Replace(pth_url, "\", "/")
 											img_url = pth_url
 
-											If Not rs_fotos.Fields.Item("flg_pmweb_file").Value Then
+											If Not CInt(rs_fotos.Fields.Item("flg_pmweb_file").Value) = 1 Then
 												img_url = img_url & rs_fotos.Fields.Item("cod_referencia").Value & "_"
 											End If
 

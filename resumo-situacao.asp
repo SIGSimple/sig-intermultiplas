@@ -248,7 +248,7 @@
 			<td class="text-middle text-center" style="max-width: 150px;"><%=(rs_lista.Fields.Item("desc_situacao_externa").Value)%></td>
 			<td class="text-middle text-center vlr" style="max-width: 150px;">
 				<%
-					If rs_lista.Fields.Item("cod_status_situacao_interna").Value = 41 Or rs_lista.Fields.Item("cod_status_situacao_interna").Value = 44 Then
+					If rs_lista.Fields.Item("cod_situacao_externa").Value = 41 Or rs_lista.Fields.Item("cod_situacao_externa").Value = 44 Then
 						Response.Write rs_lista.Fields.Item("vlr_total_aditamento").Value
 					Else
 						If rs_lista.Fields.Item("cod_tipo_contratacao").Value <> "" Then
@@ -427,7 +427,23 @@
 						%>
 					</td>
 					<td class="text-middle text-center" style="max-width: 150px;"><%=(rs_lista.Fields.Item("desc_situacao_externa").Value)%></td>
-					<td class="text-middle text-center vlr <% If Request.QueryString("rep_universo_programa") <> "" Then Response.Write "hide" End If %>" style="max-width: 150px;"><%=(rs_lista.Fields.Item("Valor do Aditamento").Value)%></td>
+					<td class="text-middle text-center vlr <% If Request.QueryString("rep_universo_programa") <> "" Then Response.Write "hide" End If %>" style="max-width: 150px;">
+						<%
+							If rs_lista.Fields.Item("cod_situacao_externa").Value = 41 Or rs_lista.Fields.Item("cod_situacao_externa").Value = 44 Then
+								Response.Write rs_lista.Fields.Item("vlr_total_aditamento").Value
+							Else
+								If rs_lista.Fields.Item("cod_tipo_contratacao").Value <> "" Then
+									If CInt(rs_lista.Fields.Item("cod_tipo_contratacao").Value) = 1 Or CInt(rs_lista.Fields.Item("cod_tipo_contratacao").Value) = 2 Then
+										Response.Write rs_lista.Fields.Item("vlr_total_aditamento").Value
+									Else
+										Response.Write rs_lista.Fields.Item("vlr_original").Value + rs_lista.Fields.Item("vlr_aditivo").Value
+									End If
+								Else
+									Response.Write rs_lista.Fields.Item("vlr_original").Value + rs_lista.Fields.Item("vlr_aditivo").Value
+								End If
+							End If
+						%>
+					</td>
 					<td class="text-middle text-center <% If Request.QueryString("rep_universo_programa") <> "" Then Response.Write "hide" End If %>" style="max-width: 120px;">
 						<%
 							If Not IsNull(rs_lista.Fields.Item("mes_inicio_obras").Value) And Not IsEmpty(rs_lista.Fields.Item("mes_inicio_obras").Value) And rs_lista.Fields.Item("mes_inicio_obras").Value <> "" Then
