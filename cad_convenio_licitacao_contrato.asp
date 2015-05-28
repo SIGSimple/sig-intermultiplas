@@ -245,22 +245,34 @@
 						<span class="style5"><%=(rs_lista.Fields.Item("nome_empreendimento").Value)%></span>
 					</td>
 					<td>
-						<span class="style5"><%=(rs_lista.Fields.Item("num_autos_convenio").Value)%></span>
+						<a href="altera_convenio.asp?id=<%=(rs_lista.Fields.Item("cod_convenio").Value)%>">
+							<span class="style5"><%=(rs_lista.Fields.Item("num_autos_convenio").Value)%></span>
+						</a>
 					</td>
 					<td>
-						<span class="style5"><%=(rs_lista.Fields.Item("num_convenio").Value)%></span>
+						<a href="altera_convenio.asp?id=<%=(rs_lista.Fields.Item("cod_convenio").Value)%>">
+							<span class="style5"><%=(rs_lista.Fields.Item("num_convenio").Value)%></span>
+						</a>
 					</td>
 					<td>
-						<span class="style5"><%=(rs_lista.Fields.Item("num_autos_licitacao").Value)%></span>
+						<a href="altera_licitacao.asp?id=<%=(rs_lista.Fields.Item("cod_licitacao").Value)%>">
+							<span class="style5"><%=(rs_lista.Fields.Item("num_autos_licitacao").Value)%></span>
+						</a>
 					</td>
 					<td>
-						<span class="style5"><%=(rs_lista.Fields.Item("num_edital").Value)%></span>
+						<a href="altera_licitacao.asp?id=<%=(rs_lista.Fields.Item("cod_licitacao").Value)%>">
+							<span class="style5"><%=(rs_lista.Fields.Item("num_edital").Value)%></span>
+						</a>
 					</td>
 					<td>
-						<span class="style5"><%=(rs_lista.Fields.Item("num_autos_contrato").Value)%></span>
+						<a href="altera_contrato.asp?id=<%=(rs_lista.Fields.Item("cod_contrato").Value)%>">
+							<span class="style5"><%=(rs_lista.Fields.Item("num_autos_contrato").Value)%></span>
+						</a>
 					</td>
 					<td>
-						<span class="style5"><%=(rs_lista.Fields.Item("num_contrato").Value)%></span>
+						<a href="altera_contrato.asp?id=<%=(rs_lista.Fields.Item("cod_contrato").Value)%>">
+							<span class="style5"><%=(rs_lista.Fields.Item("num_contrato").Value)%></span>
+						</a>
 					</td>
 					<td align="right">
 						<span class="style5 vlr"><%=(rs_lista.Fields.Item("vlr_destinado_contrato").Value)%></span>

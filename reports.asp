@@ -252,43 +252,43 @@
 							<select id="modelo_relatorio" class="form-control">
 								<option></option>
 								<option 
-									<% If Session("MM_UserAuthorization") <> 1 And Session("MM_UserAuthorization") <> 4 Then Response.Write "disabled='disabled'" End If %>
+									<% If Session("MM_UserAuthorization") = 5 Then Response.Write "disabled='disabled'" End If %>
 									<% If Request("cod_modelo_relatorio") <> "" Then If Request("cod_modelo_relatorio") = "ficha-tecnica-obra.asp" Then Response.Write "selected='selected'" End If End If %>
 									data-habilita-botoes="true" data-exibe-municipio="true" data-exibe-localidade="true" data-exibe-data="false" value="ficha-tecnica-obra.asp">
 									Ficha Técnica da Obra
 								</option>
 								<option 
-									<% If Session("MM_UserAuthorization") <> 1 And Session("MM_UserAuthorization") <> 4 Then Response.Write "disabled='disabled'" End If %>
+									<% If Session("MM_UserAuthorization") = 5 Then Response.Write "disabled='disabled'" End If %>
 									<% If Request("cod_modelo_relatorio") <> "" Then If Request("cod_modelo_relatorio") = "rel_convenio.asp" Then Response.Write "selected='selected'" End If End If %>
 									data-habilita-botoes="true" data-exibe-municipio="false" data-exibe-localidade="false" value="rel_convenio.asp">
 									Listagem de Convênios
 								</option>
 								<option 
-									<% If Session("MM_UserAuthorization") <> 1 And Session("MM_UserAuthorization") <> 4 Then Response.Write "disabled='disabled'" End If %>
+									<% If Session("MM_UserAuthorization") = 5 Then Response.Write "disabled='disabled'" End If %>
 									<% If Request("cod_modelo_relatorio") <> "" Then If Request("cod_modelo_relatorio") = "rel_contrato.asp" Then Response.Write "selected='selected'" End If End If %>
 									data-habilita-botoes="true" data-exibe-municipio="false" data-exibe-localidade="false" value="rel_contrato.asp">
 									Listagem de Contratos
 								</option>
 								<option 
-									<% If Session("MM_UserAuthorization") <> 1 And Session("MM_UserAuthorization") <> 4 Then Response.Write "disabled='disabled'" End If %>
+									<% If Session("MM_UserAuthorization") = 5 Then Response.Write "disabled='disabled'" End If %>
 									<% If Request("cod_modelo_relatorio") <> "" Then If Request("cod_modelo_relatorio") = "rel_gestores.asp" Then Response.Write "selected='selected'" End If End If %>
 									data-habilita-botoes="true" data-exibe-municipio="false" data-exibe-localidade="false" value="rel_gestores.asp">
 									Listagem de Gestores
 								</option>
 								<option 
-									<% If Session("MM_UserAuthorization") <> 1 And Session("MM_UserAuthorization") <> 4 Then Response.Write "disabled='disabled'" End If %>
+									<% If Session("MM_UserAuthorization") = 5 Then Response.Write "disabled='disabled'" End If %>
 									<% If Request("cod_modelo_relatorio") <> "" Then If Request("cod_modelo_relatorio") = "rel_licitacao.asp" Then Response.Write "selected='selected'" End If End If %>
 									data-habilita-botoes="true" data-exibe-municipio="false" data-exibe-localidade="false" value="rel_licitacao.asp">
 									Listagem de Licitações
 								</option>
 								<option 
-									<% If Session("MM_UserAuthorization") <> 1 And Session("MM_UserAuthorization") <> 4 Then Response.Write "disabled='disabled'" End If %>
+									<% If Session("MM_UserAuthorization") = 5 Then Response.Write "disabled='disabled'" End If %>
 									<% If Request("cod_modelo_relatorio") <> "" Then If Request("cod_modelo_relatorio") = "rel_info_complementares.asp" Then Response.Write "selected='selected'" End If End If %>
 									data-habilita-botoes="true" data-exibe-municipio="false" data-exibe-localidade="false" value="rel_info_complementares.asp">
 									Informações Complementares das Obras
 								</option>
 								<option 
-									<% If Session("MM_UserAuthorization") <> 1 And Session("MM_UserAuthorization") <> 4 Then Response.Write "disabled='disabled'" End If %>
+									<% If Session("MM_UserAuthorization") = 5 Then Response.Write "disabled='disabled'" End If %>
 									<% If Request("cod_modelo_relatorio") <> "" Then If Request("cod_modelo_relatorio") = "resumo-situacao.asp" Then Response.Write "selected='selected'" End If End If %>
 									data-habilita-botoes="true" data-exibe-municipio="false" data-exibe-localidade="false" value="resumo-situacao.asp">
 									Resumo da Situação por Município e Localidade
@@ -309,7 +309,7 @@
 									Relatório de Últimas Ocorrências
 								</option>
 								<option 
-									<% If Session("MM_UserAuthorization") <> 1 And Session("MM_UserAuthorization") <> 4 Then Response.Write "disabled='disabled'" End If %>
+									<% If Session("MM_UserAuthorization") = 5 Then Response.Write "disabled='disabled'" End If %>
 									<% If Request("cod_modelo_relatorio") <> "" Then If Request("cod_modelo_relatorio") = "rel_lancamentos_rdo.asp" Then Response.Write "selected='selected'" End If End If %>
 									data-habilita-botoes="true" data-exibe-municipio="false" data-exibe-localidade="false" data-exibe-data="true" value="rel_lancamentos_rdo.asp">
 									Relatório de RDO p/ Usuário

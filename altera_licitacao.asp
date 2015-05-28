@@ -174,7 +174,7 @@ rs_numRows = 0
 </head>
 
 <body>
-<p align="center"><strong><span class="style17">Alteração de Outorga </span></strong></p>
+<p align="center"><strong><span class="style17">Alteração de Licitação </span></strong></p>
     <form method="post" action="<%=MM_editAction%>" name="form1">
       <input type="hidden" name="MM_update" value="form1">
       <input type="hidden" name="MM_recordId" value="<%= rs.Fields.Item("id").Value %>">

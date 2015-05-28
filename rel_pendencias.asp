@@ -8,7 +8,7 @@
 	Set objCon = Server.CreateObject("ADODB.Connection")
   		objCon.Open MM_cpf_STRING
 
-	sql = "SELECT * FROM c_lista_rel_pendencias"
+	sql = "SELECT * FROM c_lista_rel_pendencias ORDER BY nme_municipio, nome_empreendimento"
 
 	Dim rs_lista
 
@@ -30,6 +30,7 @@
 	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
 	<script type="text/javascript" src="//code.jquery.com/jquery-1.11.2.min.js"></script>
 	<script type="text/javascript" src="js/jquery.number.min.js"></script>
+	<script type="text/javascript" src="js/jquery.table2excel.js"></script>
 	<script type="text/javascript" src="js/fullscreen.js"></script>
 	<script type="text/javascript" src="js/moment.min.js"></script>
 	<script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
@@ -38,6 +39,12 @@
 		$(function(){
 			$("li a.print").on("click", function(){
 				window.print();
+			});
+
+			$("li a.excel").on("click", function(){
+				$("table").table2excel({
+					name: "Relatório de Pendências"
+				});
 			});
 
 			$('[data-toggle="tooltip"]').tooltip()
@@ -61,6 +68,7 @@
 				<ul class="nav navbar-nav navbar-right">
 					<li><a href="javascript:window.history.back();"><i class="fa fa-chevron-left"></i> Voltar</a></li>
 					<li><a href="#" class="print"><i class="fa fa-print"></i> Imprimir</a></li>
+					<li><a href="#" class="excel"><i class="fa fa-file-excel-o"></i> Exportar p/ Excel</a></li>
 					<li><a href="<%= MM_Logout %>" class="sign-out"><i class="fa fa-sign-out"></i> Sair do Sistema</a></li>
 				</ul>
 			</div>
