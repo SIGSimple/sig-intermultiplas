@@ -283,7 +283,9 @@ If Not IsEmpty(Request.Form) Then
       objRS("cep_empresa") = Trim(Request.Form("cep_empresa"))
     End If
     If objRS.Fields("cod_municipio_empresa").properties("IsAutoIncrement") = False Then
-      objRS("cod_municipio_empresa") = Trim(Request.Form("cod_municipio_empresa"))
+      If Request.Form("cod_municipio_empresa") <> "" Then
+        objRS("cod_municipio_empresa") = Request.Form("cod_municipio_empresa")
+      End If
     End If
     If objRS.Fields("email_empresa").properties("IsAutoIncrement") = False Then
       objRS("email_empresa") = Trim(Request.Form("email_empresa"))

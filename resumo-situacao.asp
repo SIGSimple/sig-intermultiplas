@@ -257,14 +257,22 @@
 								If rs_lista.Fields.Item("vlr_total_reajuste").Value <> "" Then
 									Response.Write rs_lista.Fields.Item("vlr_total_reajuste").Value
 								Else
-									Response.Write rs_lista.Fields.Item("vlr_original").Value + rs_lista.Fields.Item("vlr_aditivo").Value
+									If rs_lista.Fields.Item("vlr_original").Value > 0 Then
+										Response.Write rs_lista.Fields.Item("vlr_original").Value + rs_lista.Fields.Item("vlr_aditivo").Value
+									Else
+										Response.Write rs_lista.Fields.Item("vlr_total_aditamento").Value
+									End If
 								End If
 							End If
 						Else
 							If rs_lista.Fields.Item("vlr_total_reajuste").Value <> "" Then
 								Response.Write rs_lista.Fields.Item("vlr_total_reajuste").Value
 							Else
-								Response.Write rs_lista.Fields.Item("vlr_original").Value + rs_lista.Fields.Item("vlr_aditivo").Value
+								If rs_lista.Fields.Item("vlr_original").Value > 0 Then
+									Response.Write rs_lista.Fields.Item("vlr_original").Value + rs_lista.Fields.Item("vlr_aditivo").Value
+								Else
+									Response.Write rs_lista.Fields.Item("vlr_total_aditamento").Value
+								End If
 							End If
 						End If
 					End If
@@ -435,7 +443,7 @@
 					</td>
 					<td class="text-middle text-center" style="max-width: 150px;"><%=(rs_lista.Fields.Item("desc_situacao_externa").Value)%></td>
 					<td class="text-middle text-center vlr <% If Request.QueryString("rep_universo_programa") <> "" Then Response.Write "hide" End If %>" style="max-width: 150px;">
-						<%
+						<%							
 							If rs_lista.Fields.Item("cod_situacao_externa").Value = 41 Or rs_lista.Fields.Item("cod_situacao_externa").Value = 44 Then
 								Response.Write rs_lista.Fields.Item("vlr_total_aditamento").Value
 							Else
@@ -446,14 +454,22 @@
 										If rs_lista.Fields.Item("vlr_total_reajuste").Value <> "" Then
 											Response.Write rs_lista.Fields.Item("vlr_total_reajuste").Value
 										Else
-											Response.Write rs_lista.Fields.Item("vlr_original").Value + rs_lista.Fields.Item("vlr_aditivo").Value
+											If rs_lista.Fields.Item("vlr_original").Value <> 0 Then
+												Response.Write rs_lista.Fields.Item("vlr_original").Value + rs_lista.Fields.Item("vlr_aditivo").Value
+											Else
+												Response.Write rs_lista.Fields.Item("vlr_total_aditamento").Value
+											End If
 										End If
 									End If
 								Else
 									If rs_lista.Fields.Item("vlr_total_reajuste").Value <> "" Then
 										Response.Write rs_lista.Fields.Item("vlr_total_reajuste").Value
 									Else
-										Response.Write rs_lista.Fields.Item("vlr_original").Value + rs_lista.Fields.Item("vlr_aditivo").Value
+										If rs_lista.Fields.Item("vlr_original").Value > 0 Then
+											Response.Write rs_lista.Fields.Item("vlr_original").Value + rs_lista.Fields.Item("vlr_aditivo").Value
+										Else
+											Response.Write rs_lista.Fields.Item("vlr_total_aditamento").Value
+										End If
 									End If
 								End If
 							End If

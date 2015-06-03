@@ -146,21 +146,25 @@
 				</div>
 				<div class="pull-right">
 					<ul class="pagination pagination-sm">
+						<li class="<%IF CInt(pg) = 1 Then Response.Write "disabled" End If%>"><a href="?cod_empreendimento=<%=(cod_empreendimento)%>&pg=1#table"><<</a></li>
+						<li class="<%IF CInt(pg) = 1 Then Response.Write "disabled" End If%>"><a href="?cod_empreendimento=<%=(cod_empreendimento)%>&pg=<%=(CInt(pg)-1)%>#table"><</a></li>
 						<%
 							i = 1
 							While i <= rs_fotos.PageCount
 								If CInt(pg) = i Then
 						%>
-						<li class="active"><a href="?cod_empreendimento=<%=(cod_empreendimento)%>&pg=<%=(i)%>"><%=(i)%></a></li>
+						<li class="active"><a href="?cod_empreendimento=<%=(cod_empreendimento)%>&pg=<%=(i)%>#table"><%=(i)%></a></li>
 						<%
 								Else
 						%>
-						<li><a href="?cod_empreendimento=<%=(cod_empreendimento)%>&pg=<%=(i)%>"><%=(i)%></a></li>
+						<li><a href="?cod_empreendimento=<%=(cod_empreendimento)%>&pg=<%=(i)%>#table"><%=(i)%></a></li>
 						<%
 								End If
 								i = (i+1)
 							Wend
 						%>
+						<li class="<%If CInt(pg) = rs_fotos.PageCount Then Response.Write "disabled" End If%>"><a href="?cod_empreendimento=<%=(cod_empreendimento)%>&pg=<%=(CInt(pg)+1)%>#table">></a></li>
+						<li class="<%If CInt(pg) = rs_fotos.PageCount Then Response.Write "disabled" End If%>"><a href="?cod_empreendimento=<%=(cod_empreendimento)%>&pg=<%=(rs_fotos.PageCount)%>#table">>></a></li>
 					</ul>
 				</div>
 			</div>
@@ -237,22 +241,26 @@
 			</div>
 
 			<div class="panel-footer text-center">
-				<ul class="pagination">
+				<ul class="pagination pagination-sm">
+					<li class="<%IF CInt(pg) = 1 Then Response.Write "disabled" End If%>"><a href="?cod_empreendimento=<%=(cod_empreendimento)%>&pg=1#table"><<</a></li>
+					<li class="<%IF CInt(pg) = 1 Then Response.Write "disabled" End If%>"><a href="?cod_empreendimento=<%=(cod_empreendimento)%>&pg=<%=(CInt(pg)-1)%>#table"><</a></li>
 					<%
 						i = 1
 						While i <= rs_fotos.PageCount
 							If CInt(pg) = i Then
 					%>
-					<li class="active"><a href="?cod_empreendimento=<%=(cod_empreendimento)%>&pg=<%=(i)%>"><%=(i)%></a></li>
+					<li class="active"><a href="?cod_empreendimento=<%=(cod_empreendimento)%>&pg=<%=(i)%>#table"><%=(i)%></a></li>
 					<%
 							Else
 					%>
-					<li><a href="?cod_empreendimento=<%=(cod_empreendimento)%>&pg=<%=(i)%>"><%=(i)%></a></li>
+					<li><a href="?cod_empreendimento=<%=(cod_empreendimento)%>&pg=<%=(i)%>#table"><%=(i)%></a></li>
 					<%
 							End If
 							i = (i+1)
 						Wend
 					%>
+					<li class="<%If CInt(pg) = rs_fotos.PageCount Then Response.Write "disabled" End If%>"><a href="?cod_empreendimento=<%=(cod_empreendimento)%>&pg=<%=(CInt(pg)+1)%>#table">></a></li>
+					<li class="<%If CInt(pg) = rs_fotos.PageCount Then Response.Write "disabled" End If%>"><a href="?cod_empreendimento=<%=(cod_empreendimento)%>&pg=<%=(rs_fotos.PageCount)%>#table">>></a></li>
 				</ul>
 			</div>
 		</div>

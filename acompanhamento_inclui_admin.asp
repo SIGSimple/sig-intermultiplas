@@ -619,12 +619,12 @@ rs_situacao_numRows = 0
       <h3>
         <%
           Select Case Session("MM_UserAuthorization")
-            Case 1,4,5
+            Case 1,3,4
+              Response.Write "Registro de Informações"
+            Case 5
               Response.Write "Registro de RDO"
             Case 2
               Response.Write "Registro de Ocorrência de Projeto"
-            Case 3
-              Response.Write "Registros de Acompanhamento"
             Case 6
               Response.Write "Registro de Ocorrência de Contrato, Medição ou Pagamento"
             Case 7
@@ -1043,8 +1043,12 @@ rs_situacao_numRows = 0
         <%
           End If
         %>
-        <td style="min-width: 100px;">Data do Registro</td>
+        <td style="min-width: 200px;">Tipo de Pendência</td>
+        <td style="min-width: 300px;">Descrição Pendência</td>
+        <td style="min-width: 80px;">Pendência?</td>
+        <td style="min-width: 100px;">Data Limíte Pendência</td>
         <td style="min-width: 200px;">Respons&aacute;vel</td>
+        <td style="min-width: 100px;">Data do Registro</td>
         <td style="min-width: 300px;">Registro</td>
         <%
           If Session("MM_UserAuthorization") = 1 or Session("MM_UserAuthorization") = 4 or Session("MM_UserAuthorization") = 5 Then
@@ -1071,10 +1075,6 @@ rs_situacao_numRows = 0
         <%
           End If
         %>
-        <td style="min-width: 80px;">Pendência?</td>
-        <td style="min-width: 200px;">Tipo de Pendência</td>
-        <td style="min-width: 300px;">Descrição Pendência</td>
-        <td style="min-width: 100px;">Data Limíte Pendência</td>
       </tr>
       <%
         While (NOT rs_lista_acomp.EOF)
@@ -1156,8 +1156,12 @@ rs_situacao_numRows = 0
         <%
           End If
         %>
-        <td class="text-center"><%=(rs_lista_acomp.Fields.Item("Data do Registro").Value)%></td>
+        <td class="text-center"><%=(rs_lista_acomp.Fields.Item("dsc_tipo_pendencia").Value)%></td>
+        <td><%=(rs_lista_acomp.Fields.Item("dsc_pendencia").Value)%></td>
+        <td class="text-center"><%=(rs_lista_acomp.Fields.Item("flg_pendencia").Value)%></td>
+        <td class="text-center"><%=(rs_lista_acomp.Fields.Item("dta_limite_pendencia").Value)%></td>
         <td class="text-center"><%=(rs_lista_acomp.Fields.Item("nme_interessado").Value)%></td>
+        <td class="text-center"><%=(rs_lista_acomp.Fields.Item("Data do Registro").Value)%></td>
         <td>
           <%
             If Not rs_lista_acomp.Fields.Item("Registro").Value = "" Then
@@ -1189,12 +1193,7 @@ rs_situacao_numRows = 0
         <td class="text-center"><%=(rs_lista_acomp.Fields.Item("dt_vistoria").Value)%></td>
         <%
           End If
-        %>
-        
-        <td class="text-center"><%=(rs_lista_acomp.Fields.Item("flg_pendencia").Value)%></td>
-        <td class="text-center"><%=(rs_lista_acomp.Fields.Item("dsc_tipo_pendencia").Value)%></td>
-        <td><%=(rs_lista_acomp.Fields.Item("dsc_pendencia").Value)%></td>
-        <td class="text-center"><%=(rs_lista_acomp.Fields.Item("dta_limite_pendencia").Value)%></td>
+        %>        
       </tr>
       <% 
           rs_lista_acomp.MoveNext()

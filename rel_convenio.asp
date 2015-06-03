@@ -8,7 +8,7 @@
 	Set objCon = Server.CreateObject("ADODB.Connection")
   		objCon.Open MM_cpf_STRING
 
-	sql = "SELECT * FROM c_lista_rel_convenios"
+	sql = "SELECT * FROM c_lista_rel_convenios ORDER BY nme_municipio, nome_empreendimento"
 
 	Dim rs_lista
 
@@ -130,7 +130,7 @@
 									<td><%=(rs_lista.Fields.Item("num_convenio").Value)%></td>
 									<td><%=(rs_lista.Fields.Item("dta_assinatura").Value)%></td>
 									<td><%=(rs_lista.Fields.Item("dta_publicacao_doe").Value)%></td>
-									<td><%=(rs_lista.Fields.Item("dta_vigencia").Value)%></td>
+									<td><%=(rs_lista.Fields.Item("dta_vigencia_total").Value)%></td>
 									<td><%=(rs_lista.Fields.Item("enquadramento").Value)%></td>
 									<td><%=(rs_lista.Fields.Item("programa").Value)%></td>
 									<td><%=(rs_lista.Fields.Item("coordenador_daee").Value)%></td>

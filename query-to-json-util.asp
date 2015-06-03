@@ -12,5 +12,9 @@
 	Dim sqlQuery
 		sqlQuery = Request.Form("sql")
 
+	If sqlQuery = "" Then
+		sqlQuery = Request.QueryString("sql")
+	End If
+
 	QueryToJSON(objCon, sqlQuery).Flush
 %>
