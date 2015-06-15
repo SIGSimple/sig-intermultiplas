@@ -161,10 +161,10 @@
 				<a class="navbar-brand" href="#">
 					<%
 						If Not IsNull(Request.QueryString("rep_universo_programa")) And Not IsEmpty(Request.QueryString("rep_universo_programa")) Then
-							Response.Write "Programa Água Limpa | Universo do Programa"
+							Response.Write "SIG | Universo do Programa"
 						Else
 							If Not IsNull(Request.QueryString("rep_universo_atendimento_programa")) And Not IsEmpty(Request.QueryString("rep_universo_atendimento_programa")) Then
-								Response.Write "Programa Água Limpa | Universo de Atendimento do Programa"
+								Response.Write "SIG | Universo de Atendimento do Programa"
 							Else
 								Response.Write "SIG - Resumo da Situação por Município e Localidade"
 							End If
@@ -175,7 +175,17 @@
 
 			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 				<ul class="nav navbar-nav navbar-right">
+					<%
+						If Request.QueryString("canClose") Then
+					%>
+					<li><a href="javascript:window.close();"><i class="fa fa-times-circle"></i> Fechar Janela</a></li>
+					<%
+						Else
+					%>
 					<li><a href="javascript:window.history.back();"><i class="fa fa-chevron-left"></i> Voltar</a></li>
+					<%
+						End If
+					%>
 					<li><a href="#" class="print"><i class="fa fa-print"></i> Imprimir</a></li>
 					<li><a href="#" class="excel"><i class="fa fa-file-excel-o"></i> Exportar p/ Excel</a></li>
 					<li><a href="#" class="expand"><i class="fa fa-expand"></i>&nbsp;&nbsp;Tela Cheia</a></li>
@@ -586,7 +596,7 @@
 			<div class="modal-content">
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-					<h4 class="modal-title" id="modalFichaTecnicaLabel"><strong>Programa Água Limpa</strong> | Ficha Técnica da Obra</h4>
+					<h4 class="modal-title" id="modalFichaTecnicaLabel"><strong>SIG</strong> | Ficha Técnica da Obra</h4>
 				</div>
 				<div class="modal-body">
 					<div class="row row-header">

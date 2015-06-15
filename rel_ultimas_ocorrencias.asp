@@ -10,11 +10,19 @@
 
 	Dim dta_filtro
 
-	If (Request.QueryString("data") <> "" And Request.QueryString("data") <> "0") Then 
-	  dta_filtro = Request.QueryString("data")
-	  dta = Split(dta_filtro,"/")
-	  sql = "SELECT * FROM c_lista_rel_ultimas_ocorrencias WHERE [Data do Registro] = #" & dta(1) & "/" & dta(0) & "/" & dta(2) & "# ORDER BY municipio ASC, nome_empreendimento ASC, [Data do Registro] ASC"
+	sql = "SELECT * FROM c_lista_rel_ultimas_ocorrencias "
+
+	If (Request.QueryString("data_inicio") <> "" And Request.QueryString("data_inicio") <> "0" And Request.QueryString("data_fim") <> "" And Request.QueryString("data_fim") <> "0") Then 
+	  dta_filtro_inicio = Request.QueryString("data_inicio")
+	  dta_filtro_fim 	= Request.QueryString("data_fim")
+
+	  dta_inicio 	= Split(dta_filtro_inicio,"/")
+	  dta_fim 		= Split(dta_filtro_fim,"/")
+
+	  sql = sql & "WHERE [Data do Registro] BETWEEN #" & dta_inicio(1) & "/" & dta_inicio(0) & "/" & dta_inicio(2) & "# AND #" & dta_fim(1) & "/" & dta_fim(0) & "/" & dta_fim(2) & "#"
 	End If
+
+	sql = sql & "ORDER BY municipio ASC, nome_empreendimento ASC, [Data do Registro] ASC"
 
 	Dim rs_lista
 
@@ -38,6 +46,7 @@
 	<script type="text/javascript" src="js/jquery.number.min.js"></script>
 	<script type="text/javascript" src="js/fullscreen.js"></script>
 	<script type="text/javascript" src="js/moment.min.js"></script>
+	<script type="text/javascript" src="js/jquery.table2excel.js"></script>
 	<script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
 	<script type="text/javascript" src="js/fancybox/jquery.fancybox.pack.js?v=2.1.5"></script>
 	<script type="text/javascript">
@@ -46,7 +55,13 @@
 				window.print();
 			});
 
-			$('[data-toggle="tooltip"]').tooltip()
+			$("li a.excel").on("click", function(){
+				$("table").table2excel({
+					name: "Relatório de Últimas Ocorrências"
+				});
+			});
+
+			$('[data-toggle="tooltip"]').tooltip();
 		});
 	</script>
 </head>
@@ -65,8 +80,9 @@
 
 			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 				<ul class="nav navbar-nav navbar-right">
-					<li><a href="javascript:window.history.back();"><i class="fa fa-chevron-left"></i> Voltar</a></li>
+					<li><a href="javascript:window.close();"><i class="fa fa-times-circle"></i> Fechar Janela</a></li>
 					<li><a href="#" class="print"><i class="fa fa-print"></i> Imprimir</a></li>
+					<li><a href="#" class="excel"><i class="fa fa-file-excel-o"></i> Exportar p/ Excel</a></li>
 					<li><a href="<%= MM_Logout %>" class="sign-out"><i class="fa fa-sign-out"></i> Sair do Sistema</a></li>
 				</ul>
 			</div>
@@ -109,6 +125,7 @@
 								<th class="text-center">Houve Vistoria?</th>
 								<th class="text-center">Data Vistoria</th>
 								<th class="text-center">Tipo</th>
+								<th class="text-center">Pendência?</th>
 							</thead>
 							<tbody>
 								<%
@@ -159,6 +176,9 @@
 									</td>
 									<td class="text-center">
 										<%=(rs_lista.Fields.Item("dsc_tipo_registro").Value)%>
+									</td>
+									<td class="text-center">
+										<%=(rs_lista.Fields.Item("e_pendencia").Value)%>
 									</td>
 								</tr>
 								<%

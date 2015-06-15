@@ -359,9 +359,13 @@
 
 							If Not rs_files.EOF Then
 								While Not rs_files.EOF
+									fileid = rs_files.Fields.Item("id_arquivo").Value
 						%>
 							<ul>
 								<li>
+									<a href="delete_file.asp?fileid=<%=(fileid)%>&foldername=LICENCA&filename=<%=(filename)%>&returnurl=<%=(Request.ServerVariables("URL"))%>?<%=(Request.QueryString)%>">
+					                    <img src="depto/imagens/delete.gif" width="16" height="15" border="0" />
+					                  </a>
 									<a href="download.asp?path=/ARQUIVOS/LICENCA&filename=<%=(rs_lista.Fields.Item("id").Value)%>_<%=(rs_files.Fields.Item("nme_arquivo").Value)%>">
 										<%=(rs_files.Fields.Item("nme_arquivo").Value)%>
 									</a>

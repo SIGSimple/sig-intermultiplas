@@ -79,13 +79,21 @@
 		}
 				
 		$(function() {
-			$(".input-group-addon.calendar, .fa-calendar").on("click", function() {
-				$(".datepicker").trigger("focus");
+			$(".input-group-addon.calendar-data, .fa-calendar").on("click", function() {
+				$("#data.datepicker").trigger("focus");
+			});
+
+			$(".input-group-addon.calendar-begin, .fa-calendar").on("click", function() {
+				$("#data_inicio.datepicker").trigger("focus");
+			});
+
+			$(".input-group-addon.calendar-end, .fa-calendar").on("click", function() {
+				$("#data_fim.datepicker").trigger("focus");
 			});
 
 			var selectedDate;
 
-			$("#data.datepicker").on("change", function() {
+			$(".datepicker").on("change", function() {
 				selectedDate = $(this).val();
 				var cod_empreendimento = $("#cod_empreendimento").val();
 
@@ -105,6 +113,17 @@
 				}
 			});
 
+			var selectedDateBegin;
+			var selectedDateEnd;
+
+			$("#data_inicio.datepicker").on("change", function() {
+				selectedDateBegin = $(this).val();
+			});
+
+			$("#data_fim.datepicker").on("change", function() {
+				selectedDateEnd = $(this).val();
+			});
+
 			var optionSelected = $("#modelo_relatorio option:selected")
 			if(optionSelected){
 				optionData = optionSelected.data();
@@ -122,25 +141,43 @@
 				var cod_emp = $("#cod_empreendimento").val();
 
 				if(cod_mun != "")
-					report_page += "?cod_municipio=" + cod_mun
+					report_page += "?cod_municipio=" + cod_mun;
 
 				if(cod_emp != "")
-					report_page += "&cod_empreendimento=" + cod_emp
+					report_page += "&cod_empreendimento=" + cod_emp;
 
 				var optionSelected = $("#modelo_relatorio option:selected");
 				if (optionSelected) {
 					optionData = optionSelected.data();
-					if(optionData.exibeData && selectedDate){
-						if(report_page.indexOf("?") != -1)
-							report_page += "&"
-						else
-							report_page += "?"
 
-						report_page += "data=" + selectedDate
+					if(optionData.exibeData && selectedDate) {
+						if(report_page.indexOf("?") != -1)
+							report_page += "&";
+						else
+							report_page += "?";
+						
+						report_page += "data=" + selectedDate;
 					}
+
+					if(optionData.exibePeriodo  && selectedDate) {
+						if(report_page.indexOf("?") != -1)
+							report_page += "&";
+						else
+							report_page += "?";
+						
+						report_page += "data_inicio=" + selectedDateBegin + "&data_fim=" + selectedDateEnd;
+					}
+
+					if(report_page.indexOf("?") != -1)
+						report_page += "&";
+					else
+						report_page += "?";
+
+					report_page += "canClose=1";
 				}
 
-				window.location.href = report_page
+				window.open(report_page, '_blank');
+				$(this).button("reset");
 			});
 
 			$("#btnClearForm").on("click", function(){
@@ -227,6 +264,13 @@
 				else if(!$("#data").closest("div.row").hasClass("hide"))
 					$("#data").closest("div.row").addClass("hide");
 
+				if(optionData.exibePeriodo) {
+					$("div.row.period").removeClass("hide");
+						getAvailabeDates();
+				}
+				else if(!$("div.row.period").hasClass("hide"))
+					$("div.row.period").addClass("hide");				
+
 
 				if( location.search.indexOf("&filtra_situacao=sim") != -1 ){
 					var cod_modelo_relatorio = $("#modelo_relatorio").val();
@@ -252,50 +296,74 @@
 							<select id="modelo_relatorio" class="form-control">
 								<option></option>
 								<option 
-									<% If Session("MM_UserAuthorization") = 5 Then Response.Write "disabled='disabled'" End If %>
+									<% If Session("MM_UserAuthorization") = 5 Then Response.Write "style='display: none;'" End If %>
 									<% If Request("cod_modelo_relatorio") <> "" Then If Request("cod_modelo_relatorio") = "ficha-tecnica-obra.asp" Then Response.Write "selected='selected'" End If End If %>
 									data-habilita-botoes="true" data-exibe-municipio="true" data-exibe-localidade="true" data-exibe-data="false" value="ficha-tecnica-obra.asp">
 									Ficha Técnica da Obra
 								</option>
 								<option 
-									<% If Session("MM_UserAuthorization") = 5 Then Response.Write "disabled='disabled'" End If %>
+									<% If Session("MM_UserAuthorization") = 5 Then Response.Write "style='display: none;'" End If %>
+									<% If Request("cod_modelo_relatorio") <> "" Then If Request("cod_modelo_relatorio") = "rel_municipios.asp" Then Response.Write "selected='selected'" End If End If %>
+									data-habilita-botoes="true" data-exibe-municipio="false" data-exibe-localidade="false" value="rel_municipios.asp">
+									Listagem de Municípios
+								</option>
+								<option 
+									<% If Session("MM_UserAuthorization") = 5 Then Response.Write "style='display: none;'" End If %>
 									<% If Request("cod_modelo_relatorio") <> "" Then If Request("cod_modelo_relatorio") = "rel_convenio.asp" Then Response.Write "selected='selected'" End If End If %>
 									data-habilita-botoes="true" data-exibe-municipio="false" data-exibe-localidade="false" value="rel_convenio.asp">
 									Listagem de Convênios
 								</option>
 								<option 
-									<% If Session("MM_UserAuthorization") = 5 Then Response.Write "disabled='disabled'" End If %>
+									<% If Session("MM_UserAuthorization") = 5 Then Response.Write "style='display: none;'" End If %>
 									<% If Request("cod_modelo_relatorio") <> "" Then If Request("cod_modelo_relatorio") = "rel_contrato.asp" Then Response.Write "selected='selected'" End If End If %>
 									data-habilita-botoes="true" data-exibe-municipio="false" data-exibe-localidade="false" value="rel_contrato.asp">
 									Listagem de Contratos
 								</option>
 								<option 
-									<% If Session("MM_UserAuthorization") = 5 Then Response.Write "disabled='disabled'" End If %>
+									<% If Session("MM_UserAuthorization") = 5 Then Response.Write "style='display: none;'" End If %>
 									<% If Request("cod_modelo_relatorio") <> "" Then If Request("cod_modelo_relatorio") = "rel_gestores.asp" Then Response.Write "selected='selected'" End If End If %>
 									data-habilita-botoes="true" data-exibe-municipio="false" data-exibe-localidade="false" value="rel_gestores.asp">
 									Listagem de Gestores
 								</option>
 								<option 
-									<% If Session("MM_UserAuthorization") = 5 Then Response.Write "disabled='disabled'" End If %>
+									<% If Session("MM_UserAuthorization") = 5 Then Response.Write "style='display: none;'" End If %>
 									<% If Request("cod_modelo_relatorio") <> "" Then If Request("cod_modelo_relatorio") = "rel_licitacao.asp" Then Response.Write "selected='selected'" End If End If %>
 									data-habilita-botoes="true" data-exibe-municipio="false" data-exibe-localidade="false" value="rel_licitacao.asp">
 									Listagem de Licitações
 								</option>
 								<option 
-									<% If Session("MM_UserAuthorization") = 5 Then Response.Write "disabled='disabled'" End If %>
+									<% If Session("MM_UserAuthorization") = 5 Then Response.Write "style='display: none;'" End If %>
+									<% If Request("cod_modelo_relatorio") <> "" Then If Request("cod_modelo_relatorio") = "rel_associacao_convenio_contrato_licitacao.asp" Then Response.Write "selected='selected'" End If End If %>
+									data-habilita-botoes="true" data-exibe-municipio="false" data-exibe-localidade="false" value="rel_associacao_convenio_contrato_licitacao.asp">
+									Listagem de Associação Convênio x Licitação x Contrato
+								</option>
+								<option 
+									<% If Session("MM_UserAuthorization") = 5 Then Response.Write "style='display: none;'" End If %>
+									<% If Request("cod_modelo_relatorio") <> "" Then If Request("cod_modelo_relatorio") = "rel_meio_ambiente.asp" Then Response.Write "selected='selected'" End If End If %>
+									data-habilita-botoes="true" data-exibe-municipio="false" data-exibe-localidade="false" value="rel_meio_ambiente.asp">
+									Relatório de Meio Ambiente
+								</option>
+								<option 
+									<% If Session("MM_UserAuthorization") = 5 Then Response.Write "style='display: none;'" End If %>
+									<% If Request("cod_modelo_relatorio") <> "" Then If Request("cod_modelo_relatorio") = "rel_planilhao.asp" Then Response.Write "selected='selected'" End If End If %>
+									data-habilita-botoes="true" data-exibe-municipio="false" data-exibe-localidade="false" value="rel_planilhao.asp">
+									Planilhão de Informações
+								</option>
+								<option 
+									<% If Session("MM_UserAuthorization") = 5 Then Response.Write "style='display: none;'" End If %>
 									<% If Request("cod_modelo_relatorio") <> "" Then If Request("cod_modelo_relatorio") = "rel_info_complementares.asp" Then Response.Write "selected='selected'" End If End If %>
 									data-habilita-botoes="true" data-exibe-municipio="false" data-exibe-localidade="false" value="rel_info_complementares.asp">
 									Informações Complementares das Obras
 								</option>
 								<option 
-									<% If Session("MM_UserAuthorization") = 5 Then Response.Write "disabled='disabled'" End If %>
+									<% If Session("MM_UserAuthorization") = 5 Then Response.Write "style='display: none;'" End If %>
 									<% If Request("cod_modelo_relatorio") <> "" Then If Request("cod_modelo_relatorio") = "resumo-situacao.asp" Then Response.Write "selected='selected'" End If End If %>
 									data-habilita-botoes="true" data-exibe-municipio="false" data-exibe-localidade="false" value="resumo-situacao.asp">
 									Resumo da Situação por Município e Localidade
 								</option>
 								<option
 									<% If Request("cod_modelo_relatorio") <> "" Then If Request("cod_modelo_relatorio") = "rel_pendencias.asp" Then Response.Write "selected='selected'" End If End If %>
-									data-habilita-botoes="true" data-exibe-municipio="false" data-exibe-localidade="false" data-exibe-data="false" value="rel_pendencias.asp">
+									data-habilita-botoes="true" data-exibe-municipio="false" data-exibe-localidade="false" data-exibe-data="false" data-exibe-periodo="true" value="rel_pendencias.asp">
 									Relatório de Pendências
 								</option>
 								<option 
@@ -305,11 +373,11 @@
 								</option>
 								<option 
 									<% If Request("cod_modelo_relatorio") <> "" Then If Request("cod_modelo_relatorio") = "rel_ultimas_ocorrencias.asp" Then Response.Write "selected='selected'" End If End If %>
-									data-habilita-botoes="false" data-exibe-municipio="false" data-exibe-localidade="false" data-exibe-data="true" value="rel_ultimas_ocorrencias.asp">
+									data-habilita-botoes="true" data-exibe-municipio="false" data-exibe-localidade="false" data-exibe-data="false" data-exibe-periodo="true" value="rel_ultimas_ocorrencias.asp">
 									Relatório de Últimas Ocorrências
 								</option>
 								<option 
-									<% If Session("MM_UserAuthorization") = 5 Then Response.Write "disabled='disabled'" End If %>
+									<% If Session("MM_UserAuthorization") = 5 Then Response.Write "style='display: none;'" End If %>
 									<% If Request("cod_modelo_relatorio") <> "" Then If Request("cod_modelo_relatorio") = "rel_lancamentos_rdo.asp" Then Response.Write "selected='selected'" End If End If %>
 									data-habilita-botoes="true" data-exibe-municipio="false" data-exibe-localidade="false" data-exibe-data="true" value="rel_lancamentos_rdo.asp">
 									Relatório de RDO p/ Usuário
@@ -404,7 +472,29 @@
 							<label class="control-label">Data:</label>
 							<div class="input-group">
 								<input type="text" id="data" class="form-control datepicker">
-								<span class="input-group-addon calendar cursor"><i class="fa fa-calendar"></i></span>
+								<span class="input-group-addon calendar calendar-data cursor"><i class="fa fa-calendar"></i></span>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="row <% If Request("cod_mun") = "" Then Response.Write "hide" End If %> period">
+					<div class="col-xs-4">
+						<div class="form-group">
+							<label class="control-label">De:</label>
+							<div class="input-group">
+								<input type="text" id="data_inicio" class="form-control datepicker">
+								<span class="input-group-addon calendar calendar-begin cursor"><i class="fa fa-calendar"></i></span>
+							</div>
+						</div>
+					</div>
+
+					<div class="col-xs-4">
+						<div class="form-group">
+							<label class="control-label">Até:</label>
+							<div class="input-group">
+								<input type="text" id="data_fim" class="form-control datepicker">
+								<span class="input-group-addon calendar calendar-end cursor"><i class="fa fa-calendar"></i></span>
 							</div>
 						</div>
 					</div>

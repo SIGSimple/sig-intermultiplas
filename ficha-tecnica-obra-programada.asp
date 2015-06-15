@@ -146,7 +146,17 @@
 
 			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 				<ul class="nav navbar-nav navbar-right">
+					<%
+						If Request.QueryString("canClose") Then
+					%>
+					<li><a href="javascript:window.close();"><i class="fa fa-times-circle"></i> Fechar Janela</a></li>
+					<%
+						Else
+					%>
 					<li><a href="javascript:window.history.back();"><i class="fa fa-chevron-left"></i> Voltar</a></li>
+					<%
+						End If
+					%>
 					<li><a href="informacao-municipio-resumida.asp?cod_municipio=<%=(cod_municipio)%>"><i class="fa fa-list-alt"></i> Inf. Município</a></li>
 					<%
 						If rs_dados_obra.Fields.Item("latitude_longitude").Value <> "" Then

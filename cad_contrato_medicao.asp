@@ -20,6 +20,7 @@
 			
 			' INÍCIO CAMPOS
 			rs_update("cod_contrato") 	= Trim(Request.Form("cod_contrato"))
+			rs_update("num_autos") 		= Trim(Request.Form("num_autos"))
 			rs_update("dta_medicao") 	= Trim(Request.Form("dta_medicao"))
 			' FIM CAMPOS
 			
@@ -97,6 +98,14 @@
 				</tr>
 				<tr valign="baseline">
 					<td align="right" nowrap bgcolor="#CCCCCC" class="style7">
+						<span class="style22">Núm. Autos Medição:</span>
+					</td>
+					<td bgcolor="#CCCCCC">
+						<input type="text" name="num_autos" value="" size="10">
+					</td>
+				</tr>
+				<tr valign="baseline">
+					<td align="right" nowrap bgcolor="#CCCCCC" class="style7">
 						<span class="style22">Período Medição:</span>
 					</td>
 					<td bgcolor="#CCCCCC">
@@ -115,6 +124,9 @@
 			<table border="0">
 				<tr bgcolor="#999999">
 					<td>&nbsp;</td>
+					<td>
+						<span class="style7">Núm. Autos Medição</span>
+					</td>
 					<td>
 						<span class="style7">Período Medição</span>
 					</td>
@@ -146,6 +158,11 @@
 						<a href="delete_contrato_medicao.asp?id=<%=(rs_lista.Fields.Item("id").Value)%>&cod_contrato=<%=(Request.QueryString("cod_contrato"))%>&num_autos=<%=(Request.QueryString("num_autos"))%>&dta_medicao=<%=(rs_lista.Fields.Item("dta_medicao").Value)%>&mes_ano_medicao=<%=(mes)%>/<%=(ano)%>">
 							<img src="const/imagens/delete.gif" width="16" height="15" border="0" />
 						</a>
+					</td>
+					<td>
+						<span class="style5">
+							<%=(rs_lista.Fields.Item("num_autos").Value)%>
+						</span>
 					</td>
 					<td align="center">
 						<span class="style5">

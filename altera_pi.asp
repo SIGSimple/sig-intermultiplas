@@ -164,118 +164,60 @@ If (CStr(Request("MM_update")) <> "" And CStr(Request("MM_recordId")) <> "") The
     End If
   End Function
 
-  If Session("MM_UserAuthorization") = 1 Then
-    frmField_PI                             = IIf(Request.Form("PI") = "", "", Request.Form("PI"))
-
-    frmField_cod_predio                     = IIf(Request.Form("cod_predio") = "", "", Request.Form("cod_predio"))
-    
-    If frmField_cod_predio <> "" Then
-      data = Split(frmField_cod_predio, "-")
-
-      frmField_cod_predio = data(1)
-      frmField_id_predio = data(0)
-      frmField_municipio = data(2)
-    End If
-
-    frmField_nome_empreendimento            = IIf(Request.Form("nome_empreendimento") = "", "", Request.Form("nome_empreendimento"))
-    frmField_descricao_empreendimento       = IIf(Request.Form("descricao_empreendimento") = "", "", Request.Form("descricao_empreendimento"))
-    frmField_cod_tipo_empreendimento        = IIf(Request.Form("cod_tipo_empreendimento") = "", "NULL", Request.Form("cod_tipo_empreendimento"))
-    frmField_cod_programa                   = IIf(Request.Form("cod_programa") = "", "NULL", Request.Form("cod_programa"))
-  End If
-
-  If Session("MM_UserAuthorization") = 3 Then
-    'frmField_dsc_situacao_anterior          = IIf(Request.Form("dsc_situacao_anterior") = "", "", Request.Form("dsc_situacao_anterior"))
-    'frmField_dsc_situacao_atual             = IIf(Request.Form("dsc_situacao_atual") = "", "", Request.Form("dsc_situacao_atual"))
-    frmField_dsc_resultado_obtido           = IIf(Request.Form("dsc_resultado_obtido") = "", "", Request.Form("dsc_resultado_obtido"))
-    frmField_endereco                       = IIf(Request.Form("endereco") = "", "", Request.Form("endereco"))
-    frmField_cep                            = IIf(Request.Form("cep") = "", "", Request.Form("cep"))
-  End If
-
-  If Session("MM_UserAuthorization") = 1 Then
-    frmField_latitude_longitude             = IIf(Request.Form("latitude_longitude") = "", "", Request.Form("latitude_longitude"))
-  End If
-
-  If Session("MM_UserAuthorization") = 3 Then
-    frmField_email                          = IIf(Request.Form("email") = "", "", Request.Form("email"))
-    frmField_telefone                       = IIf(Request.Form("telefone") = "", "", Request.Form("telefone"))
-    frmField_qtd_populacao_urbana_2010      = IIf(Request.Form("qtd_populacao_urbana_2010") = "", "NULL", Request.Form("qtd_populacao_urbana_2010"))
-    'frmField_qtd_populacao_urbana_2030      = IIf(Request.Form("qtd_populacao_urbana_2030") = "", "NULL", Request.Form("qtd_populacao_urbana_2030"))
-    frmField_valor_contrato                 = IIf(Request.Form("ValorContrato") = "", "0", Replace(Request.Form("ValorContrato"), ",","."))
-    frmField_dta_inicio_obras               = IIf(Request.Form("dta_inicio_obras") = "", "NULL", "'"& Request.Form("dta_inicio_obras") &"'")
-    frmField_num_percentual_executado       = IIf(Request.Form("num_percentual_executado") = "", "0", Replace(Request.Form("num_percentual_executado"), ",","."))
-    frmField_dta_previsao_termino           = IIf(Request.Form("dta_previsao_termino") = "", "NULL", "'"& Request.Form("dta_previsao_termino") &"'")
-    frmField_dta_inauguracao                = IIf(Request.Form("dta_inauguracao") = "", "NULL", "'"& Request.Form("dta_inauguracao") &"'")
-    frmField_dta_previsao_inauguracao       = IIf(Request.Form("dta_previsao_inauguracao") = "", "NULL", "'"& Request.Form("dta_previsao_inauguracao") &"'")
-  End If
-  
-  If Session("MM_UserAuthorization") = 1 Or Session("MM_UserAuthorization") = 4 Then
-    frmField_cod_fiscal                     = IIf(Request.Form("cod_fiscal") = "", "NULL", Request.Form("cod_fiscal"))
-    frmField_cod_engenheiro_daee            = IIf(Request.Form("cod_engenheiro_daee") = "", "NULL", Request.Form("cod_engenheiro_daee"))
-    frmField_cod_engenheiro_plan_consorcio  = IIf(Request.Form("cod_engenheiro_plan_consorcio") = "", "NULL", Request.Form("cod_engenheiro_plan_consorcio"))
-    frmField_cod_fiscal_consorcio           = IIf(Request.Form("cod_fiscal_consorcio") = "", "NULL", Request.Form("cod_fiscal_consorcio"))
-    frmField_cod_engenheiro_medicao         = IIf(Request.Form("cod_engenheiro_medicao") = "", "NULL", Request.Form("cod_engenheiro_medicao"))
-    frmField_cod_engenheiro_construtora     = IIf(Request.Form("cod_engenheiro_construtora") = "", "NULL", Request.Form("cod_engenheiro_construtora"))
-    frmField_cod_situacao                   = IIf(Request.Form("cod_situacao") = "", "NULL", Request.Form("cod_situacao"))
-  End If
-  
-  If Session("MM_UserAuthorization") = 3 Then
-    frmField_cod_situacao_externa             = IIf(Request.Form("cod_situacao_externa") = "", "NULL", Request.Form("cod_situacao_externa"))
-    frmField_dsc_observacoes_relatorio_mensal = IIf(Request.Form("dsc_observacoes_relatorio_mensal") = "", "", Request.Form("dsc_observacoes_relatorio_mensal"))
-
-    frmField_cod_bacia_hidrografica                  = IIF(Request.Form("cod_bacia_hidrografica") = "", "NULL", Request.Form("cod_bacia_hidrografica"))
-    frmField_cod_manancial_lancamento                = IIF(Request.Form("cod_manancial_lancamento") = "", "NULL", Request.Form("cod_manancial_lancamento"))
-    frmField_qtd_metragem_coletor_tronco             = IIF(Request.Form("qtd_metragem_coletor_tronco") = "", "0", Request.Form("qtd_metragem_coletor_tronco"))
-    frmField_qtd_metragem_interceptor                = IIF(Request.Form("qtd_metragem_interceptor") = "", "0", Request.Form("qtd_metragem_interceptor"))
-    frmField_qtd_metragem_emissario_fluente_bruto    = IIF(Request.Form("qtd_metragem_emissario_fluente_bruto") = "", "0", Request.Form("qtd_metragem_emissario_fluente_bruto"))
-    frmField_qtd_eee                                 = IIF(Request.Form("qtd_eee") = "", "0", Request.Form("qtd_eee"))
-    frmField_qtd_metragem_linha_recalque             = IIF(Request.Form("qtd_metragem_linha_recalque") = "", "0", Request.Form("qtd_metragem_linha_recalque"))
-    frmField_cod_tipo_ete                            = IIF(Request.Form("cod_tipo_ete") = "", "NULL", Request.Form("cod_tipo_ete"))
-    frmField_dsc_estacao_tratamento                  = IIF(Request.Form("dsc_estacao_tratamento") = "", "", Request.Form("dsc_estacao_tratamento"))
-    frmField_qtd_metragem_emissario_efluente_tratado = IIF(Request.Form("qtd_metragem_emissario_efluente_tratado") = "", "0", Request.Form("qtd_metragem_emissario_efluente_tratado"))
-    frmField_flg_estudo_elaborado_daee               = IIF(Request.Form("flg_estudo_elaborado_daee") = "", "0", Request.Form("flg_estudo_elaborado_daee"))
-    frmField_dsc_observacoes                         = IIF(Request.Form("dsc_observacoes") = "", "", Request.Form("dsc_observacoes"))
-    frmField_cod_parceiro                            = IIF(Request.Form("cod_parceiro") = "", "NULL", Request.Form("cod_parceiro"))
-    frmField_dsc_parceria_realizacao                 = IIF(Request.Form("dsc_parceria_realizacao") = "", "", Request.Form("dsc_parceria_realizacao"))
-    frmField_dsc_observacoes_gestor                  = IIF(Request.Form("dsc_observacoes_gestor") = "", "", Request.Form("dsc_observacoes_gestor"))
-  End If
+  frmField_cod_tipo_empreendimento                 = IIf(Request.Form("cod_tipo_empreendimento") = "", "NULL", Request.Form("cod_tipo_empreendimento"))
+  frmField_cod_programa                            = IIf(Request.Form("cod_programa") = "", "NULL", Request.Form("cod_programa"))
+  'frmField_dsc_situacao_anterior                  = IIf(Request.Form("dsc_situacao_anterior") = "", "", Request.Form("dsc_situacao_anterior"))
+  'frmField_dsc_situacao_atual                     = IIf(Request.Form("dsc_situacao_atual") = "", "", Request.Form("dsc_situacao_atual"))
+  frmField_dsc_resultado_obtido                    = IIf(Request.Form("dsc_resultado_obtido") = "", "", Request.Form("dsc_resultado_obtido"))
+  frmField_endereco                                = IIf(Request.Form("endereco") = "", "", Request.Form("endereco"))
+  frmField_cep                                     = IIf(Request.Form("cep") = "", "", Request.Form("cep"))
+  frmField_latitude_longitude                      = IIf(Request.Form("latitude_longitude") = "", "", Request.Form("latitude_longitude"))
+  frmField_email                                   = IIf(Request.Form("email") = "", "", Request.Form("email"))
+  frmField_telefone                                = IIf(Request.Form("telefone") = "", "", Request.Form("telefone"))
+  frmField_qtd_populacao_urbana_2010               = IIf(Request.Form("qtd_populacao_urbana_2010") = "", "NULL", Request.Form("qtd_populacao_urbana_2010"))
+  'frmField_qtd_populacao_urbana_2030              = IIf(Request.Form("qtd_populacao_urbana_2030") = "", "NULL", Request.Form("qtd_populacao_urbana_2030"))
+  frmField_valor_contrato                          = IIf(Request.Form("ValorContrato") = "", "0", Replace(Request.Form("ValorContrato"), ",","."))
+  frmField_dta_inicio_obras                        = IIf(Request.Form("dta_inicio_obras") = "", "NULL", "'"& Request.Form("dta_inicio_obras") &"'")
+  frmField_num_percentual_executado                = IIf(Request.Form("num_percentual_executado") = "", "0", Replace(Request.Form("num_percentual_executado"), ",","."))
+  frmField_dta_previsao_termino                    = IIf(Request.Form("dta_previsao_termino") = "", "NULL", "'"& Request.Form("dta_previsao_termino") &"'")
+  frmField_dta_inauguracao                         = IIf(Request.Form("dta_inauguracao") = "", "NULL", "'"& Request.Form("dta_inauguracao") &"'")
+  frmField_dta_previsao_inauguracao                = IIf(Request.Form("dta_previsao_inauguracao") = "", "NULL", "'"& Request.Form("dta_previsao_inauguracao") &"'")
+  frmField_cod_fiscal                              = IIf(Request.Form("cod_fiscal") = "", "NULL", Request.Form("cod_fiscal"))
+  frmField_cod_engenheiro_daee                     = IIf(Request.Form("cod_engenheiro_daee") = "", "NULL", Request.Form("cod_engenheiro_daee"))
+  frmField_cod_engenheiro_plan_consorcio           = IIf(Request.Form("cod_engenheiro_plan_consorcio") = "", "NULL", Request.Form("cod_engenheiro_plan_consorcio"))
+  frmField_cod_fiscal_consorcio                    = IIf(Request.Form("cod_fiscal_consorcio") = "", "NULL", Request.Form("cod_fiscal_consorcio"))
+  frmField_cod_engenheiro_medicao                  = IIf(Request.Form("cod_engenheiro_medicao") = "", "NULL", Request.Form("cod_engenheiro_medicao"))
+  frmField_cod_engenheiro_construtora              = IIf(Request.Form("cod_engenheiro_construtora") = "", "NULL", Request.Form("cod_engenheiro_construtora"))
+  frmField_cod_situacao                            = IIf(Request.Form("cod_situacao") = "", "NULL", Request.Form("cod_situacao"))
+  frmField_cod_situacao_externa                    = IIf(Request.Form("cod_situacao_externa") = "", "NULL", Request.Form("cod_situacao_externa"))
+  frmField_dsc_observacoes_relatorio_mensal        = IIf(Request.Form("dsc_observacoes_relatorio_mensal") = "", "", Request.Form("dsc_observacoes_relatorio_mensal"))
+  frmField_cod_bacia_hidrografica                  = IIF(Request.Form("cod_bacia_hidrografica") = "", "NULL", Request.Form("cod_bacia_hidrografica"))
+  frmField_cod_manancial_lancamento                = IIF(Request.Form("cod_manancial_lancamento") = "", "NULL", Request.Form("cod_manancial_lancamento"))
+  frmField_qtd_metragem_coletor_tronco             = IIF(Request.Form("qtd_metragem_coletor_tronco") = "", "0", Request.Form("qtd_metragem_coletor_tronco"))
+  frmField_qtd_metragem_interceptor                = IIF(Request.Form("qtd_metragem_interceptor") = "", "0", Request.Form("qtd_metragem_interceptor"))
+  frmField_qtd_metragem_emissario_fluente_bruto    = IIF(Request.Form("qtd_metragem_emissario_fluente_bruto") = "", "0", Request.Form("qtd_metragem_emissario_fluente_bruto"))
+  frmField_qtd_eee                                 = IIF(Request.Form("qtd_eee") = "", "0", Request.Form("qtd_eee"))
+  frmField_qtd_metragem_linha_recalque             = IIF(Request.Form("qtd_metragem_linha_recalque") = "", "0", Request.Form("qtd_metragem_linha_recalque"))
+  frmField_cod_tipo_ete                            = IIF(Request.Form("cod_tipo_ete") = "", "NULL", Request.Form("cod_tipo_ete"))
+  frmField_dsc_estacao_tratamento                  = IIF(Request.Form("dsc_estacao_tratamento") = "", "", Request.Form("dsc_estacao_tratamento"))
+  frmField_qtd_metragem_emissario_efluente_tratado = IIF(Request.Form("qtd_metragem_emissario_efluente_tratado") = "", "0", Request.Form("qtd_metragem_emissario_efluente_tratado"))
+  frmField_flg_estudo_elaborado_daee               = IIF(Request.Form("flg_estudo_elaborado_daee") = "", "", Request.Form("flg_estudo_elaborado_daee"))
+  frmField_dsc_observacoes                         = IIF(Request.Form("dsc_observacoes") = "", "", Request.Form("dsc_observacoes"))
+  frmField_cod_parceiro                            = IIF(Request.Form("cod_parceiro") = "", "NULL", Request.Form("cod_parceiro"))
+  frmField_dsc_parceria_realizacao                 = IIF(Request.Form("dsc_parceria_realizacao") = "", "", Request.Form("dsc_parceria_realizacao"))
+  frmField_dsc_observacoes_gestor                  = IIF(Request.Form("dsc_observacoes_gestor") = "", "", Request.Form("dsc_observacoes_gestor"))
 
   MM_editQuery = "UPDATE " & MM_editTable & " SET "
-
-  If Session("MM_UserAuthorization") = 1 Then
-    MM_editQuery = MM_editQuery & "PI='"& frmField_PI &"',cod_predio='"& frmField_cod_predio &"',id_predio="& frmField_id_predio &",municipio='"& frmField_municipio &"',nome_empreendimento='"& frmField_nome_empreendimento &"',[Descrição da Intervenção FDE]='"& frmField_descricao_empreendimento &"',cod_tipo_empreendimento="& frmField_cod_tipo_empreendimento &",cod_programa="& frmField_cod_programa
-  End If
-
-  If Session("MM_UserAuthorization") = 3 Then
-    'MM_editQuery = MM_editQuery & "dsc_situacao_anterior='"& frmField_dsc_situacao_anterior &"',dsc_situacao_atual='"& frmField_dsc_situacao_atual & "'"
-    MM_editQuery = MM_editQuery & "dsc_resultado_obtido='"& frmField_dsc_resultado_obtido & "',endereco='"& frmField_endereco &"',cep='"& frmField_cep &"'"
-  End If
-
-  If Session("MM_UserAuthorization") = 1 Then  
-    MM_editQuery = MM_editQuery & ",latitude_longitude='"& frmField_latitude_longitude &"'"
-  End If
-
-  If Session("MM_UserAuthorization") = 3 Then  
-    MM_editQuery = MM_editQuery & ",email='"& frmField_email &"',telefone='"& frmField_telefone &"',qtd_populacao_urbana_2010="& frmField_qtd_populacao_urbana_2010 &",[Valor do Contrato]="& frmField_valor_contrato &",dta_inicio_obras="& frmField_dta_inicio_obras &",num_percentual_executado="& frmField_num_percentual_executado &",dta_previsao_termino="& frmField_dta_previsao_termino & ",dta_inauguracao=" & frmField_dta_inauguracao & ",dta_previsao_inauguracao=" & frmField_dta_previsao_inauguracao
+  MM_editQuery = MM_editQuery & "cod_tipo_empreendimento="& frmField_cod_tipo_empreendimento &",cod_programa="& frmField_cod_programa
+  'MM_editQuery = MM_editQuery & "dsc_situacao_anterior='"& frmField_dsc_situacao_anterior &"',dsc_situacao_atual='"& frmField_dsc_situacao_atual & "'"
+  MM_editQuery = MM_editQuery & ",dsc_resultado_obtido='"& frmField_dsc_resultado_obtido & "',endereco='"& frmField_endereco &"',cep='"& frmField_cep & "'"
+  MM_editQuery = MM_editQuery & ",latitude_longitude='"& frmField_latitude_longitude &"'"
+  MM_editQuery = MM_editQuery & ",email='"& frmField_email &"',telefone='"& frmField_telfone &"',qtd_populacao_urbana_2010="& frmField_qtd_populacao_urbana_2010 &",[Valor do Contrato]="& frmField_valor_contrato &",dta_inicio_obras="& frmField_dta_inicio_obras &",num_percentual_executado="& frmField_num_percentual_executado &",dta_previsao_termino="& frmField_dta_previsao_termino & ",dta_inauguracao=" & frmField_dta_inauguracao & ",dta_previsao_inauguracao=" & frmField_dta_previsao_inauguracao
     '&",qtd_populacao_urbana_2030="& frmField_qtd_populacao_urbana_2030
-  End If
-  
-  If Session("MM_UserAuthorization") = 1 Then
-    MM_editQuery = MM_editQuery & ",cod_fiscal="& frmField_cod_fiscal &",cod_engenheiro_daee="& frmField_cod_engenheiro_daee &",cod_engenheiro_plan_consorcio="& frmField_cod_engenheiro_plan_consorcio &",cod_fiscal_consorcio="& frmField_cod_fiscal_consorcio &",cod_engenheiro_medicao="& frmField_cod_engenheiro_medicao &",cod_engenheiro_construtora="& frmField_cod_engenheiro_construtora
-  End If
-
-  If Session("MM_UserAuthorization") = 1 Or Session("MM_UserAuthorization") = 4 Then
-    If Session("MM_UserAuthorization") = 1 Then
-      MM_editQuery = MM_editQuery & ","
-    End If
-
-    MM_editQuery = MM_editQuery & "cod_situacao="& frmField_cod_situacao
-  End If
-
-  If Session("MM_UserAuthorization") = 3 Then
-    MM_editQuery = MM_editQuery & ",cod_situacao_externa="& frmField_cod_situacao_externa & ",dsc_observacoes_relatorio_mensal='"& frmField_dsc_observacoes_relatorio_mensal &"'"
-    MM_editQuery = MM_editQuery & ",cod_bacia_hidrografica="& frmField_cod_bacia_hidrografica &",cod_manancial_lancamento="& frmField_cod_manancial_lancamento &",qtd_metragem_coletor_tronco="& frmField_qtd_metragem_coletor_tronco &",qtd_metragem_interceptor="& frmField_qtd_metragem_interceptor &",qtd_metragem_emissario_fluente_bruto="& frmField_qtd_metragem_emissario_fluente_bruto &",qtd_eee="& frmField_qtd_eee &",qtd_metragem_linha_recalque="& frmField_qtd_metragem_linha_recalque &",cod_tipo_ete="& frmField_cod_tipo_ete &",dsc_estacao_tratamento='"& frmField_dsc_estacao_tratamento &"',qtd_metragem_emissario_efluente_tratado="& frmField_qtd_metragem_emissario_efluente_tratado &",flg_estudo_elaborado_daee="& frmField_flg_estudo_elaborado_daee &",dsc_observacoes_obra='"& frmField_dsc_observacoes &"',cod_parceiro="& frmField_cod_parceiro &"" &",dsc_parceria_realizacao='"& frmField_dsc_parceria_realizacao &"',dsc_observacoes_gestor='"& frmField_dsc_observacoes_gestor & "'"
-  End If
-
+  MM_editQuery = MM_editQuery & ",cod_fiscal="& frmField_cod_fiscal &",cod_engenheiro_daee="& frmField_cod_engenheiro_daee &",cod_engenheiro_plan_consorcio="& frmField_cod_engenheiro_plan_consorcio &",cod_fiscal_consorcio="& frmField_cod_fiscal_consorcio &",cod_engenheiro_medicao="& frmField_cod_engenheiro_medicao &",cod_engenheiro_construtora="& frmField_cod_engenheiro_construtora
+  MM_editQuery = MM_editQuery & ",cod_situacao="& frmField_cod_situacao
+  MM_editQuery = MM_editQuery & ",cod_situacao_externa="& frmField_cod_situacao_externa & ",dsc_observacoes_relatorio_mensal='"& frmField_dsc_observacoes_relatorio_mensal &"'"
+  MM_editQuery = MM_editQuery & ",cod_bacia_hidrografica="& frmField_cod_bacia_hidrografica &",cod_manancial_lancamento="& frmField_cod_manancial_lancamento &",qtd_metragem_coletor_tronco="& frmField_qtd_metragem_coletor_tronco &",qtd_metragem_interceptor="& frmField_qtd_metragem_interceptor &",qtd_metragem_emissario_fluente_bruto="& frmField_qtd_metragem_emissario_fluente_bruto &",qtd_eee="& frmField_qtd_eee &",qtd_metragem_linha_recalque="& frmField_qtd_metragem_linha_recalque &",cod_tipo_ete="& frmField_cod_tipo_ete &",dsc_estacao_tratamento='"& frmField_dsc_estacao_tratamento &"',qtd_metragem_emissario_efluente_tratado="& frmField_qtd_metragem_emissario_efluente_tratado &",flg_estudo_elaborado_daee='"& frmField_flg_estudo_elaborado_daee &"',dsc_observacoes_obra='"& frmField_dsc_observacoes &"',cod_parceiro="& frmField_cod_parceiro &"" &",dsc_parceria_realizacao='"& frmField_dsc_parceria_realizacao &"',dsc_observacoes_gestor='"& frmField_dsc_observacoes_gestor & "'"
   MM_editQuery = MM_editQuery & " where " & MM_editColumn & " = " & MM_recordId
 
   If (Not MM_abortEdit) Then
@@ -505,10 +447,6 @@ rs_situacao_numRows = 0
         </td>
       </tr>
 
-      <%
-        If Session("MM_UserAuthorization") = 1 Then
-      %>
-
       <!-- TIPO -->
       <tr valign="baseline">
         <td align="right" nowrap bgcolor="#CCCCCC" class="style9">
@@ -567,12 +505,6 @@ rs_situacao_numRows = 0
         </td>
       </tr>
 
-      <%
-        End If
-
-        If Session("MM_UserAuthorization") = 3 Then
-      %>
-
       <!-- SITUAÇÃO ANTERIOR -->
       <!-- <tr valign="baseline">
         <td align="right" valign="middle" nowrap bgcolor="#CCCCCC" class="style9"><span class="style10">Situação Anterior:</span></td>
@@ -613,14 +545,6 @@ rs_situacao_numRows = 0
         </td>
       </tr>
 
-      <%
-        End If
-      %>
-
-      <%
-        If Session("MM_UserAuthorization") = 1 Then
-      %>
-
       <!-- LOCALIZAÇÃO GEOGRÁFICA (LAT,LONG) -->
       <tr valign="baseline">
         <td align="right" nowrap bgcolor="#CCCCCC" class="style9"><span class="style10">Localização Geográfica (Lat, Long):</span></td>
@@ -628,12 +552,6 @@ rs_situacao_numRows = 0
           <input name="latitude_longitude" type="text" class="style9" value="<%=(rs_pi.Fields.Item("latitude_longitude").Value)%>">
         </td>
       </tr>
-
-      <%
-        End If
-
-        If Session("MM_UserAuthorization") = 3 Then
-      %>
 
       <!-- EMAIL -->
       <tr valign="baseline">
@@ -738,11 +656,6 @@ rs_situacao_numRows = 0
         </td>
       </tr>
 
-      <%
-        End If
-
-        If Session("MM_UserAuthorization") = 1 Then
-      %>
       <!-- ENG. OBRAS CONSÓRCIO -->
       <tr valign="baseline">
         <td align="right" nowrap bgcolor="#CCCCCC" class="style9">
@@ -913,11 +826,6 @@ rs_situacao_numRows = 0
         </td>
       </tr>
 
-      <%
-        End If
-
-        If Session("MM_UserAuthorization") = 1 Or Session("MM_UserAuthorization") = 4 Then
-      %>
       <!-- SITUAÇÃO INTERNA -->
       <tr valign="baseline">
         <td align="right" nowrap bgcolor="#CCCCCC" class="style9">
@@ -946,12 +854,6 @@ rs_situacao_numRows = 0
           </select>
         </td>
       </tr>
-
-      <%
-        End If
-
-        If Session("MM_UserAuthorization") = 3 Then
-      %>
 
       <!-- SITUAÇÃO EXTERNA -->
       <tr valign="baseline">
@@ -997,230 +899,244 @@ rs_situacao_numRows = 0
       </tr>
 
       <tr valign="baseline">
-          <td align="right" nowrap bgcolor="#CCCCCC" class="style9">
-            <span class="style22">Bacia Hidrográfica:</span>
-          </td>
-          <td bgcolor="#CCCCCC">
-            <select name="cod_bacia_hidrografica">
-              <option value=""></option>
-              <%
-                strQ = "SELECT * FROM tb_bacia_hidrografica "
-
-                Set rs_combo = Server.CreateObject("ADODB.Recordset")
-                  rs_combo.CursorLocation = 3
-                  rs_combo.CursorType = 3
-                  rs_combo.LockType = 1
-                  rs_combo.Open strQ, objCon, , , &H0001
-
-                If Not rs_combo.EOF Then
-                  While Not rs_combo.EOF
-                     If Trim(rs_combo.Fields.Item("nme_bacia_hidrografica").Value) <> "" Then
-                      Response.Write "      <OPTION value='" & (rs_combo.Fields.Item("id").Value) & "'"
-                      If Lcase(rs_combo.Fields.Item("id").Value) = Lcase(rs_pi.Fields.Item("cod_bacia_hidrografica").Value) then
-                        Response.Write "selected"
-                      End If
-                      Response.Write ">" & (rs_combo.Fields.Item("nme_bacia_hidrografica").Value) & "</OPTION>"
-                    End If
-                    rs_combo.MoveNext
-                  Wend
-                End If
-              %>
-            </select>
-          </td>
-        </tr>
-        <tr valign="baseline">
-          <td align="right" nowrap bgcolor="#CCCCCC" class="style9">
-            <span class="style22">Manancial de Lançamento:</span>
-          </td>
-          <td bgcolor="#CCCCCC">
-            <select name="cod_manancial_lancamento">
-              <option value=""></option>
-              <%
-                strQ = "SELECT * FROM tb_manancial_lancamento"
-
-                Set rs_combo = Server.CreateObject("ADODB.Recordset")
-                  rs_combo.CursorLocation = 3
-                  rs_combo.CursorType = 3
-                  rs_combo.LockType = 1
-                  rs_combo.Open strQ, objCon, , , &H0001
-
-                If Not rs_combo.EOF Then
-                  While Not rs_combo.EOF
-                    If Trim(rs_combo.Fields.Item("nme_manancial").Value) <> "" Then
-                      Response.Write "      <OPTION value='" & (rs_combo.Fields.Item("id").Value) & "'"
-                      If Lcase(rs_combo.Fields.Item("id").Value) = Lcase(rs_pi.Fields.Item("cod_manancial_lancamento").Value) then
-                        Response.Write "selected"
-                      End If
-                      Response.Write ">" & (rs_combo.Fields.Item("nme_manancial").Value) & "</OPTION>"
-                    End If
-                    rs_combo.MoveNext
-                  Wend
-                End If
-              %>
-            </select>
-          </td>
-        </tr>
-        <tr valign="baseline">
-          <td align="right" nowrap bgcolor="#CCCCCC" class="style9">
-            <span class="style22">Coletor Tronco (m):</span>
-          </td>
-          <td bgcolor="#CCCCCC">
-            <input type="text" name="qtd_metragem_coletor_tronco" value="<%=(rs_pi.Fields.Item("qtd_metragem_coletor_tronco").Value)%>" size="32">
-          </td>
-        </tr>
-        <tr valign="baseline">
-          <td align="right" nowrap bgcolor="#CCCCCC" class="style9">
-            <span class="style22">Interceptor (m):</span>
-          </td>
-          <td bgcolor="#CCCCCC">
-            <input type="text" name="qtd_metragem_interceptor" value="<%=(rs_pi.Fields.Item("qtd_metragem_interceptor").Value)%>" size="32"/>
-          </td>
-        </tr>
-        <tr valign="baseline">
-          <td align="right" nowrap bgcolor="#CCCCCC" class="style9">
-            <span class="style22">Emissário de Efluente Bruto (m):</span>
-          </td>
-          <td bgcolor="#CCCCCC">
-            <input type="text" name="qtd_metragem_emissario_fluente_bruto" value="<%=(rs_pi.Fields.Item("qtd_metragem_emissario_fluente_bruto").Value)%>" size="32"/>
-          </td>
-        </tr>
-        <tr valign="baseline">
-          <td align="right" nowrap bgcolor="#CCCCCC" class="style9">
-            <span class="style22">Estação Elevatória de Esgoto (und):</span>
-          </td>
-          <td bgcolor="#CCCCCC">
-            <input type="text" name="qtd_eee" value="<%=(rs_pi.Fields.Item("qtd_eee").Value)%>" size="32">
-          </td>
-        </tr>
-        <tr valign="baseline">
-          <td align="right" nowrap bgcolor="#CCCCCC" class="style9">
-            <span class="style22">Linha de Recalque (m):</span>
-          </td>
-          <td bgcolor="#CCCCCC">
-            <input type="text" name="qtd_metragem_linha_recalque" value="<%=(rs_pi.Fields.Item("qtd_metragem_linha_recalque").Value)%>" size="32">
-          </td>
-        </tr>
-        <tr valign="baseline">
-          <td align="right" nowrap bgcolor="#CCCCCC" class="style9">
-            <span class="style22">Tipo de ETE:</span>
-          </td>
-          <td bgcolor="#CCCCCC">
-            <select name="cod_tipo_ete">
-              <option value=""></option>
-              <%
-                strQ = "SELECT * FROM tb_tipo_ete "
-
-                Set rs_combo = Server.CreateObject("ADODB.Recordset")
-                  rs_combo.CursorLocation = 3
-                  rs_combo.CursorType = 3
-                  rs_combo.LockType = 1
-                  rs_combo.Open strQ, objCon, , , &H0001
-
-                If Not rs_combo.EOF Then
-                  While Not rs_combo.EOF
-                    If Trim(rs_combo.Fields.Item("nme_tipo_ete").Value) <> "" Then
-                      Response.Write "      <OPTION value='" & (rs_combo.Fields.Item("id").Value) & "'"
-                      If Lcase(rs_combo.Fields.Item("id").Value) = Lcase(rs_pi.Fields.Item("cod_tipo_ete").Value) then
-                        Response.Write "selected"
-                      End If
-                      Response.Write ">" & (rs_combo.Fields.Item("nme_tipo_ete").Value) & "</OPTION>"
-                    End If
-                    rs_combo.MoveNext
-                  Wend
-                End If
-              %>
-            </select>
-          </td>
-        </tr>
-        <tr valign="middle">
-          <td align="right" nowrap bgcolor="#CCCCCC" class="style9">
-            <span class="style22">Estação de Tratamento:</span>
-          </td>
-          <td bgcolor="#CCCCCC">
-            <textarea name="dsc_estacao_tratamento" cols="25" style="width: 98%;"><%=(rs_pi.Fields.Item("dsc_estacao_tratamento").Value)%></textarea>
-          </td>
-        </tr>
-        <tr valign="baseline">
-          <td align="right" nowrap bgcolor="#CCCCCC" class="style9">
-            <span class="style22">Emissário de Efluente Tratado (m):</span>
-          </td>
-          <td bgcolor="#CCCCCC">
-            <input type="text" name="qtd_metragem_emissario_efluente_tratado" value="<%=(rs_pi.Fields.Item("qtd_metragem_emissario_efluente_tratado").Value)%>" size="32">
-          </td>
-        </tr>
-        <tr valign="baseline">
-          <td align="right" nowrap bgcolor="#CCCCCC" class="style9">
-            <span class="style22">Estudo Elaborado pelo DAEE?:</span>
-          </td>
-          <td bgcolor="#CCCCCC">
+        <td align="right" nowrap bgcolor="#CCCCCC" class="style9">
+          <span class="style22">Bacia Hidrográfica:</span>
+        </td>
+        <td bgcolor="#CCCCCC">
+          <select name="cod_bacia_hidrografica">
+            <option value=""></option>
             <%
-            value = rs_pi.Fields.Item("flg_estudo_elaborado_daee").Value
-            checked = ""
+              strQ = "SELECT * FROM tb_bacia_hidrografica "
 
-            If value = True Then
-              value = 1
-              checked = "checked=""checked"""
-            Else
-              value = 0
-            End If
+              Set rs_combo = Server.CreateObject("ADODB.Recordset")
+                rs_combo.CursorLocation = 3
+                rs_combo.CursorType = 3
+                rs_combo.LockType = 1
+                rs_combo.Open strQ, objCon, , , &H0001
 
-            Response.Write "<input type=""checkbox"" name=""flg_estudo_elaborado_daee"" "& checked &"/>"
-          %>
-          </td>
-        </tr>
-        <tr valign="middle">
-          <td align="right" nowrap bgcolor="#CCCCCC" class="style9">
-            <span class="style22">Observações da Bacia:</span>
-          </td>
-          <td bgcolor="#CCCCCC">
-            <textarea name="dsc_observacoes" cols="50" rows="5" class="style9" style="width: 98%;"><%=(rs_pi.Fields.Item("dsc_observacoes_obra").Value)%></textarea>
-          </td>
-        </tr>
-        <tr valign="middle">
-          <td align="right" nowrap bgcolor="#CCCCCC" class="style9">
-            <span class="style22">Parceria/Realização:</span>
-          </td>
-          <td bgcolor="#CCCCCC">
-            <select name="cod_parceiro">
-              <option value=""></option>
-              <%
-                strQ = "SELECT * FROM tb_parceiro "
-
-                Set rs_combo = Server.CreateObject("ADODB.Recordset")
-                  rs_combo.CursorLocation = 3
-                  rs_combo.CursorType = 3
-                  rs_combo.LockType = 1
-                  rs_combo.Open strQ, objCon, , , &H0001
-
-                If Not rs_combo.EOF Then
-                  While Not rs_combo.EOF
-                    If Trim(rs_combo.Fields.Item("nme_parceiro").Value) <> "" Then
-                      Response.Write "      <OPTION value='" & (rs_combo.Fields.Item("id").Value) & "'"
-                      If Lcase(rs_combo.Fields.Item("id").Value) = Lcase(rs_pi.Fields.Item("cod_parceiro").Value) then
-                        Response.Write "selected"
-                      End If
-                      Response.Write ">" & (rs_combo.Fields.Item("nme_parceiro").Value) & "</OPTION>"
+              If Not rs_combo.EOF Then
+                While Not rs_combo.EOF
+                   If Trim(rs_combo.Fields.Item("nme_bacia_hidrografica").Value) <> "" Then
+                    Response.Write "      <OPTION value='" & (rs_combo.Fields.Item("id").Value) & "'"
+                    If Lcase(rs_combo.Fields.Item("id").Value) = Lcase(rs_pi.Fields.Item("cod_bacia_hidrografica").Value) then
+                      Response.Write "selected"
                     End If
-                    rs_combo.MoveNext
-                  Wend
+                    Response.Write ">" & (rs_combo.Fields.Item("nme_bacia_hidrografica").Value) & "</OPTION>"
+                  End If
+                  rs_combo.MoveNext
+                Wend
+              End If
+            %>
+          </select>
+        </td>
+      </tr>
+
+      <tr valign="baseline">
+        <td align="right" nowrap bgcolor="#CCCCCC" class="style9">
+          <span class="style22">Manancial de Lançamento:</span>
+        </td>
+        <td bgcolor="#CCCCCC">
+          <select name="cod_manancial_lancamento">
+            <option value=""></option>
+            <%
+              strQ = "SELECT * FROM tb_manancial_lancamento"
+
+              Set rs_combo = Server.CreateObject("ADODB.Recordset")
+                rs_combo.CursorLocation = 3
+                rs_combo.CursorType = 3
+                rs_combo.LockType = 1
+                rs_combo.Open strQ, objCon, , , &H0001
+
+              If Not rs_combo.EOF Then
+                While Not rs_combo.EOF
+                  If Trim(rs_combo.Fields.Item("nme_manancial").Value) <> "" Then
+                    Response.Write "      <OPTION value='" & (rs_combo.Fields.Item("id").Value) & "'"
+                    If Lcase(rs_combo.Fields.Item("id").Value) = Lcase(rs_pi.Fields.Item("cod_manancial_lancamento").Value) then
+                      Response.Write "selected"
+                    End If
+                    Response.Write ">" & (rs_combo.Fields.Item("nme_manancial").Value) & "</OPTION>"
+                  End If
+                  rs_combo.MoveNext
+                Wend
+              End If
+            %>
+          </select>
+        </td>
+      </tr>
+
+      <tr valign="baseline">
+        <td align="right" nowrap bgcolor="#CCCCCC" class="style9">
+          <span class="style22">Coletor Tronco (m):</span>
+        </td>
+        <td bgcolor="#CCCCCC">
+          <input type="text" name="qtd_metragem_coletor_tronco" value="<%=(rs_pi.Fields.Item("qtd_metragem_coletor_tronco").Value)%>" size="32">
+        </td>
+      </tr>
+
+      <tr valign="baseline">
+        <td align="right" nowrap bgcolor="#CCCCCC" class="style9">
+          <span class="style22">Interceptor (m):</span>
+        </td>
+        <td bgcolor="#CCCCCC">
+          <input type="text" name="qtd_metragem_interceptor" value="<%=(rs_pi.Fields.Item("qtd_metragem_interceptor").Value)%>" size="32"/>
+        </td>
+      </tr>
+
+      <tr valign="baseline">
+        <td align="right" nowrap bgcolor="#CCCCCC" class="style9">
+          <span class="style22">Emissário de Efluente Bruto (m):</span>
+        </td>
+        <td bgcolor="#CCCCCC">
+          <input type="text" name="qtd_metragem_emissario_fluente_bruto" value="<%=(rs_pi.Fields.Item("qtd_metragem_emissario_fluente_bruto").Value)%>" size="32"/>
+        </td>
+      </tr>
+
+      <tr valign="baseline">
+        <td align="right" nowrap bgcolor="#CCCCCC" class="style9">
+          <span class="style22">Estação Elevatória de Esgoto (und):</span>
+        </td>
+        <td bgcolor="#CCCCCC">
+          <input type="text" name="qtd_eee" value="<%=(rs_pi.Fields.Item("qtd_eee").Value)%>" size="32">
+        </td>
+      </tr>
+
+      <tr valign="baseline">
+        <td align="right" nowrap bgcolor="#CCCCCC" class="style9">
+          <span class="style22">Linha de Recalque (m):</span>
+        </td>
+        <td bgcolor="#CCCCCC">
+          <input type="text" name="qtd_metragem_linha_recalque" value="<%=(rs_pi.Fields.Item("qtd_metragem_linha_recalque").Value)%>" size="32">
+        </td>
+      </tr>
+
+      <tr valign="baseline">
+        <td align="right" nowrap bgcolor="#CCCCCC" class="style9">
+          <span class="style22">Tipo de ETE:</span>
+        </td>
+        <td bgcolor="#CCCCCC">
+          <select name="cod_tipo_ete">
+            <option value=""></option>
+            <%
+              strQ = "SELECT * FROM tb_tipo_ete "
+
+              Set rs_combo = Server.CreateObject("ADODB.Recordset")
+                rs_combo.CursorLocation = 3
+                rs_combo.CursorType = 3
+                rs_combo.LockType = 1
+                rs_combo.Open strQ, objCon, , , &H0001
+
+              If Not rs_combo.EOF Then
+                While Not rs_combo.EOF
+                  If Trim(rs_combo.Fields.Item("nme_tipo_ete").Value) <> "" Then
+                    Response.Write "      <OPTION value='" & (rs_combo.Fields.Item("id").Value) & "'"
+                    If Lcase(rs_combo.Fields.Item("id").Value) = Lcase(rs_pi.Fields.Item("cod_tipo_ete").Value) then
+                      Response.Write "selected"
+                    End If
+                    Response.Write ">" & (rs_combo.Fields.Item("nme_tipo_ete").Value) & "</OPTION>"
+                  End If
+                  rs_combo.MoveNext
+                Wend
+              End If
+            %>
+          </select>
+        </td>
+      </tr>
+
+      <tr valign="middle">
+        <td align="right" nowrap bgcolor="#CCCCCC" class="style9">
+          <span class="style22">Estação de Tratamento:</span>
+        </td>
+        <td bgcolor="#CCCCCC">
+          <textarea name="dsc_estacao_tratamento" cols="25" style="width: 98%;"><%=(rs_pi.Fields.Item("dsc_estacao_tratamento").Value)%></textarea>
+        </td>
+      </tr>
+
+      <tr valign="baseline">
+        <td align="right" nowrap bgcolor="#CCCCCC" class="style9">
+          <span class="style22">Emissário de Efluente Tratado (m):</span>
+        </td>
+        <td bgcolor="#CCCCCC">
+          <input type="text" name="qtd_metragem_emissario_efluente_tratado" value="<%=(rs_pi.Fields.Item("qtd_metragem_emissario_efluente_tratado").Value)%>" size="32">
+        </td>
+      </tr>
+
+      <tr valign="baseline">
+        <td align="right" nowrap bgcolor="#CCCCCC" class="style9">
+          <span class="style22">Estudo Elaborado pelo DAEE?:</span>
+        </td>
+        <td bgcolor="#CCCCCC">
+          <select name="flg_estudo_elaborado_daee">
+            <option value=""></option>
+            <option value="Sim"
+              <%
+                If Lcase("Sim") = Lcase(rs_pi.Fields.Item("flg_estudo_elaborado_daee").Value) then
+                  Response.Write "selected"
                 End If
               %>
-            </select>
-            <br/>
-            <textarea name="dsc_parceria_realizacao" cols="25" style="width: 98%;"><%=(rs_pi.Fields.Item("dsc_parceria_realizacao").Value)%></textarea>
-          </td>
-        </tr>
-        <tr valign="middle">
-          <td align="right" nowrap bgcolor="#CCCCCC" class="style9">
-            <span class="style22">Observações Gerais:</span>
-          </td>
-          <td bgcolor="#CCCCCC">
-            <textarea name="dsc_observacoes_gestor" cols="50" rows="5" class="style9" style="width: 98%;"><%=(rs_pi.Fields.Item("dsc_observacoes_gestor").Value)%></textarea>
-          </td>
-        </tr>
-      <%
-        End If
-      %>
+            >Sim</option>
+            <option value="Não"
+              <%
+                If Lcase("Não") = Lcase(rs_pi.Fields.Item("flg_estudo_elaborado_daee").Value) then
+                  Response.Write "selected"
+                End If
+              %>
+            >Não</option>
+          </select>
+        </td>
+      </tr>
+
+      <tr valign="middle">
+        <td align="right" nowrap bgcolor="#CCCCCC" class="style9">
+          <span class="style22">Observações da Bacia:</span>
+        </td>
+        <td bgcolor="#CCCCCC">
+          <textarea name="dsc_observacoes" cols="50" rows="5" class="style9" style="width: 98%;"><%=(rs_pi.Fields.Item("dsc_observacoes_obra").Value)%></textarea>
+        </td>
+      </tr>
+
+      <tr valign="middle">
+        <td align="right" nowrap bgcolor="#CCCCCC" class="style9">
+          <span class="style22">Parceria/Realização:</span>
+        </td>
+        <td bgcolor="#CCCCCC">
+          <select name="cod_parceiro">
+            <option value=""></option>
+            <%
+              strQ = "SELECT * FROM tb_parceiro "
+
+              Set rs_combo = Server.CreateObject("ADODB.Recordset")
+                rs_combo.CursorLocation = 3
+                rs_combo.CursorType = 3
+                rs_combo.LockType = 1
+                rs_combo.Open strQ, objCon, , , &H0001
+
+              If Not rs_combo.EOF Then
+                While Not rs_combo.EOF
+                  If Trim(rs_combo.Fields.Item("nme_parceiro").Value) <> "" Then
+                    Response.Write "      <OPTION value='" & (rs_combo.Fields.Item("id").Value) & "'"
+                    If Lcase(rs_combo.Fields.Item("id").Value) = Lcase(rs_pi.Fields.Item("cod_parceiro").Value) then
+                      Response.Write "selected"
+                    End If
+                    Response.Write ">" & (rs_combo.Fields.Item("nme_parceiro").Value) & "</OPTION>"
+                  End If
+                  rs_combo.MoveNext
+                Wend
+              End If
+            %>
+          </select>
+          <br/>
+          <textarea name="dsc_parceria_realizacao" cols="25" style="width: 98%;"><%=(rs_pi.Fields.Item("dsc_parceria_realizacao").Value)%></textarea>
+        </td>
+      </tr>
+
+      <tr valign="middle">
+        <td align="right" nowrap bgcolor="#CCCCCC" class="style9">
+          <span class="style22">Observações Gerais:</span>
+        </td>
+        <td bgcolor="#CCCCCC">
+          <textarea name="dsc_observacoes_gestor" cols="50" rows="5" class="style9" style="width: 98%;"><%=(rs_pi.Fields.Item("dsc_observacoes_gestor").Value)%></textarea>
+        </td>
+      </tr>
 
       <tr valign="baseline">
         <td align="right" nowrap bgcolor="#CCCCCC" class="style9">

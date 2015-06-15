@@ -53,6 +53,91 @@
 		sql = sql & "WHERE dsc_situacao_operacao = '"& Request.QueryString("dsc_situacao_operacao") &"'"
 	End If
 
+	qtd_necessita_reparos 					= 0
+	qtd_problemas_bombas 					= 0
+	qtd_falta_limpeza 						= 0
+	qtd_despejo_irregular_residuos 			= 0
+	qtd_falta_funcionario_operacao 			= 0
+	qtd_danos_cercamento 					= 0
+	qtd_danos_tratamento_preliminar 		= 0
+	qtd_danos_talude 						= 0
+	qtd_danos_lagoa 						= 0
+	qtd_problemas_diversos 					= 0
+	qtd_danos_emissarios 					= 0
+	qtd_danos_caixa_passagem_interligacoes 	= 0
+	qtd_danos_drenagem 						= 0
+	qtd_partes_inoperantes 					= 0
+
+	qtd_total_obras 						= 0
+
+	Set rs_lista_original = Server.CreateObject("ADODB.Recordset")
+		rs_lista_original.CursorLocation = 3
+		rs_lista_original.CursorType = 3
+		rs_lista_original.LockType = 1
+		rs_lista_original.Open sql, objCon, , , &H0001
+
+	while(Not rs_lista_original.EOF)
+		qtd_total_obras = (qtd_total_obras + 1)
+
+		If (rs_lista_original.Fields.Item("flg_necessita_reparos").Value = 1) Then
+			qtd_necessita_reparos = (qtd_necessita_reparos + 1)
+		End If 
+
+		If (rs_lista_original.Fields.Item("flg_problemas_bombas").Value = 1) Then
+			qtd_problemas_bombas = (qtd_problemas_bombas + 1)
+		End If 
+
+		If (rs_lista_original.Fields.Item("flg_falta_limpeza").Value = 1) Then
+			qtd_falta_limpeza = (qtd_falta_limpeza + 1)
+		End If 
+
+		If (rs_lista_original.Fields.Item("flg_despejo_irregular_residuos").Value = 1) Then
+			qtd_despejo_irregular_residuos = (qtd_despejo_irregular_residuos + 1)
+		End If 
+
+		If (rs_lista_original.Fields.Item("flg_falta_funcionario_operacao").Value = 1) Then
+			qtd_falta_funcionario_operacao = (qtd_falta_funcionario_operacao + 1)
+		End If 
+
+		If (rs_lista_original.Fields.Item("flg_danos_cercamento").Value = 1) Then
+			qtd_danos_cercamento = (qtd_danos_cercamento + 1)
+		End If 
+
+		If (rs_lista_original.Fields.Item("flg_danos_tratamento_preliminar").Value = 1) Then
+			qtd_danos_tratamento_preliminar = (qtd_danos_tratamento_preliminar + 1)
+		End If 
+
+		If (rs_lista_original.Fields.Item("flg_danos_talude").Value = 1) Then
+			qtd_danos_talude = (qtd_danos_talude + 1)
+		End If 
+
+		If (rs_lista_original.Fields.Item("flg_danos_lagoa").Value = 1) Then
+			qtd_danos_lagoa = (qtd_danos_lagoa + 1)
+		End If 
+
+		If (rs_lista_original.Fields.Item("flg_problemas_diversos").Value = 1) Then
+			qtd_problemas_diversos = (qtd_problemas_diversos + 1)
+		End If 
+
+		If (rs_lista_original.Fields.Item("flg_danos_emissarios").Value = 1) Then
+			qtd_danos_emissarios = (qtd_danos_emissarios + 1)
+		End If 
+
+		If (rs_lista_original.Fields.Item("flg_danos_caixa_passagem_interligacoes").Value = 1) Then
+			qtd_danos_caixa_passagem_interligacoes = (qtd_danos_caixa_passagem_interligacoes + 1)
+		End If 
+
+		If (rs_lista_original.Fields.Item("flg_danos_drenagem").Value = 1) Then
+			qtd_danos_drenagem = (qtd_danos_drenagem + 1)
+		End If 
+
+		If (rs_lista_original.Fields.Item("flg_partes_inoperantes").Value = 1) Then
+			qtd_partes_inoperantes = (qtd_partes_inoperantes + 1)
+		End If 
+
+		rs_lista_original.MoveNext()
+	Wend
+
 	Set rs_lista_matriz = Server.CreateObject("ADODB.Recordset")
 		rs_lista_matriz.CursorLocation = 3
 		rs_lista_matriz.CursorType = 3
@@ -127,7 +212,14 @@
 						dataLabels: {
 							enabled: false
 						},
-						showInLegend: true
+						showInLegend: true,
+						point: {
+							events: {
+								legendItemClick: function(e) {
+									e.preventDefault();
+								}
+							}
+						}
 					}
 				},
 				series: [{
@@ -222,7 +314,12 @@
 						<table class="table table-bordered table-condensed table-striped table-hover">
 							<thead>
 								<tr class="active">
-									<th><a class="btn btn-xs btn-default" href="<%=(Request.ServerVariables("URL"))%>"><i class="fa fa-times-circle"></i></a></th>
+									<th>
+										<a class="btn btn-xs btn-default" href="<%=(Request.ServerVariables("URL"))%>"
+											data-toggle="tooltip" data-placement="top" title="Limpar Filtro">
+											<i class="fa fa-times-circle"></i>
+										</a>
+									</th>
 									<th>Situação</th>
 									<th class="text-center" width="100">Qtd. Obras</th>
 								</tr>
@@ -266,7 +363,35 @@
 
 		<div class="panel panel-default">
 			<div class="panel-heading">
-				<h3 class="panel-title">Matriz de Controle de Manutenção</h3>
+				<h3 class="panel-title clearfix">
+					Matriz de Controle de Manutenção
+					<% If Request.QueryString("dsc_situacao_operacao") <> "" Then %>
+					- <%
+							labelColor = ""
+							Select Case Request.QueryString("dsc_situacao_operacao")
+								Case "Operando"
+									labelColor = "success"
+								Case "Operando em teste"
+									labelColor = "info"
+								Case "Operando Parcialmente"
+									labelColor = "yellow"
+								Case "Estado de Abandono"
+									labelColor = "danger"
+								Case "Inoperante"
+									labelColor = "warning"
+							End Select
+						%>
+
+						<span class="label label-<%=(labelColor)%>"><%=(Request.QueryString("dsc_situacao_operacao"))%></span>
+					<% End If %>
+						
+					<div class="pull-right">
+						<a class="btn btn-xs btn-default" href="rel_obras_concluidas-excel.asp"><i class="fa fa-file-excel-o"></i> Exportar p/ Excel</a>
+						<% If Request.QueryString("dsc_situacao_operacao") <> "" Then %>
+							<a class="btn btn-xs btn-default" href="<%=(Request.ServerVariables("URL"))%>"><i class="fa fa-times-circle"></i> Limpar Filtro</a>
+						<% End If %>
+					</div>
+				</h3>
 			</div>
 			<div class="panel-body">
 				<table id="table" class="table table-bordered table-condensed table-striped table-hover">
@@ -313,6 +438,9 @@
 						</th>
 						<th class="text-center">
 							<i class="fa fa-code-fork" data-toggle="tooltip" data-placement="top" title="Danos de Drenagem"></i>
+						</th>
+						<th class="text-center">
+							<i class="fa fa-clipboard" data-toggle="tooltip" data-placement="top" title="Partes Inoperantes"></i>
 						</th>
 					</thead>
 					<tbody>
@@ -520,37 +648,76 @@
 									End If
 								%>
 							</td>
+							<td class="text-center" width="50">
+								<%
+									If rs_lista_matriz.Fields.Item("flg_partes_inoperantes").Value = 1 Then
+								%>
+								<a tabindex="0" role="button" class="label label-primary" data-toggle="popover" 
+									data-placement="bottom" data-trigger="hover" title="Partes Inoperantes"
+									data-content="<%=(rs_lista_matriz.Fields.Item("dsc_partes_inoperantes").Value)%>">
+									<i class="fa fa-clipboard"></i>
+								</a>
+								<%
+									End If
+								%>
+							</td>
 						</tr>
 						<%
 								rs_lista_matriz.MoveNext()
 								rec = (rec+1)
 							Wend
 						%>
+						<tr>
+							<th colspan="3" class="text-right">TOTAL</th>
+							<th class="text-center"><%=(qtd_total_obras)%></th>
+							<th class="text-center"><%=(qtd_necessita_reparos)%></th>
+							<th class="text-center"><%=(qtd_problemas_bombas)%></th>
+							<th class="text-center"><%=(qtd_falta_limpeza)%></th>
+							<th class="text-center"><%=(qtd_despejo_irregular_residuos)%></th>
+							<th class="text-center"><%=(qtd_falta_funcionario_operacao)%></th>
+							<th class="text-center"><%=(qtd_danos_cercamento)%></th>
+							<th class="text-center"><%=(qtd_danos_tratamento_preliminar)%></th>
+							<th class="text-center"><%=(qtd_danos_talude)%></th>
+							<th class="text-center"><%=(qtd_danos_lagoa)%></th>
+							<th class="text-center"><%=(qtd_problemas_diversos)%></th>
+							<th class="text-center"><%=(qtd_danos_emissarios)%></th>
+							<th class="text-center"><%=(qtd_danos_caixa_passagem_interligacoes)%></th>
+							<th class="text-center"><%=(qtd_danos_drenagem)%></th>
+							<th class="text-center"><%=(qtd_partes_inoperantes)%></th>
+						</tr>
 					</tbody>
 				</table>
 			</div>
 			<div class="panel-footer clearfix">
 				<div class="pull-right">
 					<ul class="pagination pagination-sm">
-						<li class="<%IF CInt(pg) = 1 Then Response.Write "disabled" End If%>"><a href="?pg=1#table"><<</a></li>
-						<li class="<%IF CInt(pg) = 1 Then Response.Write "disabled" End If%>"><a href="?pg=<%=(CInt(pg)-1)%>#table"><</a></li>
+						<li class="<%IF CInt(pg) = 1 Then Response.Write "disabled" End If%>">
+							<a href="?pg=1<% If (Request.QueryString("dsc_situacao_operacao") <> "") Then Response.Write "&dsc_situacao_operacao="& Request.QueryString("dsc_situacao_operacao") End IF %>#table"><<</a>
+						</li>
+						<li class="<%IF CInt(pg) = 1 Then Response.Write "disabled" End If%>">
+							<a href="?pg=<%=(CInt(pg)-1)%><% If (Request.QueryString("dsc_situacao_operacao") <> "") Then Response.Write "&dsc_situacao_operacao="& Request.QueryString("dsc_situacao_operacao") End IF %>#table"><</a>
+						</li>
 						<%
 							i = 1
 							While i <= rs_lista_matriz.PageCount
 								If CInt(pg) = i Then
 						%>
-						<li class="active"><a href="?pg=<%=(i)%>#table"><%=(i)%></a></li>
+						<li class="active"><a href="?pg=<%=(i)%><% If (Request.QueryString("dsc_situacao_operacao") <> "") Then Response.Write "&dsc_situacao_operacao="& Request.QueryString("dsc_situacao_operacao") End IF %>#table"><%=(i)%></a></li>
 						<%
 								Else
 						%>
-						<li><a href="?pg=<%=(i)%>#table"><%=(i)%></a></li>
+						<li><a href="?pg=<%=(i)%><% If (Request.QueryString("dsc_situacao_operacao") <> "") Then Response.Write "&dsc_situacao_operacao="& Request.QueryString("dsc_situacao_operacao") End IF %>#table"><%=(i)%></a></li>
 						<%
 								End If
 								i = (i+1)
 							Wend
 						%>
-						<li class="<%If CInt(pg) = rs_lista_matriz.PageCount Then Response.Write "disabled" End If%>"><a href="?pg=<%=(CInt(pg)+1)%>#table">></a></li>
-						<li class="<%If CInt(pg) = rs_lista_matriz.PageCount Then Response.Write "disabled" End If%>"><a href="?pg=<%=(rs_lista_matriz.PageCount)%>#table">>></a></li>
+						<li class="<%If CInt(pg) = rs_lista_matriz.PageCount Then Response.Write "disabled" End If%>">
+							<a href="?pg=<%=(CInt(pg)+1)%><% If (Request.QueryString("dsc_situacao_operacao") <> "") Then Response.Write "&dsc_situacao_operacao="& Request.QueryString("dsc_situacao_operacao") End IF %>#table">></a>
+						</li>
+						<li class="<%If CInt(pg) = rs_lista_matriz.PageCount Then Response.Write "disabled" End If%>">
+							<a href="?pg=<%=(rs_lista_matriz.PageCount)%><% If (Request.QueryString("dsc_situacao_operacao") <> "") Then Response.Write "&dsc_situacao_operacao="& Request.QueryString("dsc_situacao_operacao") End IF %>#table">>></a>
+						</li>
 					</ul>
 				</div>
 			</div>

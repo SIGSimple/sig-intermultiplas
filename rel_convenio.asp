@@ -35,6 +35,7 @@
 	<script type="text/javascript" src="js/fullscreen.js"></script>
 	<script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
 	<script type="text/javascript" src="js/fancybox/jquery.fancybox.pack.js?v=2.1.5"></script>
+	<script type="text/javascript" src="js/jquery.floatThead.min.js"></script>
 	<script type="text/javascript">
 		$(function(){
 			$("li a.print").on("click", function(){
@@ -42,7 +43,7 @@
 			});
 
 			$("li a.excel").on("click", function(){
-				$("table").table2excel({
+				$("table#data").table2excel({
 					name: "Listagem de Convênios"
 				});
 			});
@@ -51,6 +52,10 @@
 			$.each(vlr_lines, function(i, item){
 				$(item).val("R$ " + $.number($(item).val(), 2, ",", "."));
 				$(item).text("R$ " + $.number($(item).text(), 2, ",", "."));
+			});
+
+			$("table#data").floatThead({
+				scrollingTop: 60
 			});
 		});
 	</script>
@@ -70,7 +75,7 @@
 
 			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 				<ul class="nav navbar-nav navbar-right">n
-					<li><a href="javascript:window.history.back();"><i class="fa fa-chevron-left"></i> Voltar</a></li>
+					<li><a href="javascript:window.close();"><i class="fa fa-times-circle"></i> Fechar Janela</a></li>
 					<li><a href="#" class="print"><i class="fa fa-print"></i> Imprimir</a></li>
 					<li><a href="#" class="excel"><i class="fa fa-file-excel-o"></i> Exportar p/ Excel</a></li>
 					<li><a href="#" class="expand"><i class="fa fa-expand"></i>&nbsp;&nbsp;Tela Cheia</a></li>
@@ -97,26 +102,28 @@
 
 				<div class="row">
 					<div class="col-xs-12">
-						<table class="table table-bordered table-condensed table-hover table-striped">
+						<table id="data" class="table table-bordered table-condensed table-hover table-striped">
 							<thead>
-								<th class="text-center text-middle">Município</th>
-								<th class="text-center text-middle">Localidade</th>
-								<th class="text-center text-middle">Projetista</th>
-								<th class="text-center text-middle">Nº Autos</th>
-								<th class="text-center text-middle">Nº Convênio</th>
-								<th class="text-center text-middle">Dt. Assinatura</th>
-								<th class="text-center text-middle">Dt. Publ. D.O.E.</th>
-								<th class="text-center text-middle">Vigência Até</th>
-								<th class="text-center text-middle">Enquadramento</th>
-								<th class="text-center text-middle">Programa</th>
-								<th class="text-center text-middle">Coord. DAEE</th>
-								<th class="text-center text-middle">Prazo Original</th>
-								<th class="text-center text-middle">Aditivos (Prazo)</th>
-								<th class="text-center text-middle">Prazo Total</th>
-								<th class="text-center text-middle">Valor Destinado ao Contrato</th>
-								<th class="text-center text-middle">Valor Original</th>
-								<th class="text-center text-middle">Aditivos (Valor)</th>
-								<th class="text-center text-middle">Valor Total</th>
+								<tr class="active">
+									<th class="text-center text-middle">Município</th>
+									<th class="text-center text-middle">Localidade</th>
+									<th class="text-center text-middle">Projetista</th>
+									<th class="text-center text-middle">Nº Autos</th>
+									<th class="text-center text-middle">Nº Convênio</th>
+									<th class="text-center text-middle">Dt. Assinatura</th>
+									<th class="text-center text-middle">Dt. Publ. D.O.E.</th>
+									<th class="text-center text-middle">Vigência Até</th>
+									<th class="text-center text-middle">Enquadramento</th>
+									<th class="text-center text-middle">Programa</th>
+									<th class="text-center text-middle">Coord. DAEE</th>
+									<th class="text-center text-middle">Prazo Original</th>
+									<th class="text-center text-middle">Aditivos (Prazo)</th>
+									<th class="text-center text-middle">Prazo Total</th>
+									<th class="text-center text-middle">Valor Destinado ao Contrato</th>
+									<th class="text-center text-middle">Valor Original</th>
+									<th class="text-center text-middle">Aditivos (Valor)</th>
+									<th class="text-center text-middle">Valor Total</th>
+								</tr>
 							</thead>
 							<tbody>
 								<%

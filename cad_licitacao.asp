@@ -47,6 +47,10 @@
 				rs_update("cod_situacao_licitacao") = Request.Form("cod_situacao_licitacao")
 			End If
 
+			If Request.Form("vlr_licitacao") <> "" Then
+				rs_update("vlr_licitacao") 		= Replace(Trim(Request.Form("vlr_licitacao")), ",", ".")
+			End If
+
 			' FIM CAMPOS
 			
 			rs_update.Update
@@ -71,9 +75,15 @@
 		<script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
 		<script type="text/javascript" src="//code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
 		<script type="text/javascript" src="js/datepicker-pt-BR.js"></script>
+		<script type="text/javascript" src="js/jquery.number.min.js"></script>
 		<script type="text/javascript">
 			$(function() {
 				$(".datepicker").datepicker($.datepicker.regional["pt-BR"]);
+
+				var vlr_lines = $(".vlr");
+				$.each(vlr_lines, function(i, item){
+					$(item).html("R$ "+$.number($(item).html(), 2, ",", "."));
+				});
 			});
 		</script>
 	</head>
@@ -211,6 +221,14 @@
 				</tr>
 				<tr valign="baseline">
 					<td align="right" nowrap bgcolor="#CCCCCC" class="style7">
+						<span class="style22">Valor Estimado:</span>
+					</td>
+					<td bgcolor="#CCCCCC">
+						<input type="text" name="vlr_licitacao" value="" size="15">
+					</td>
+				</tr>
+				<tr valign="baseline">
+					<td align="right" nowrap bgcolor="#CCCCCC" class="style7">
 						<span class="style22">Status/Situação:</span>
 					</td>
 					<td bgcolor="#CCCCCC">
@@ -276,6 +294,9 @@
 						<span class="style7">Data da Licitação</span>
 					</td>
 					<td>
+						<span class="style7">Valor Estimado</span>
+					</td>
+					<td>
 						<span class="style7">Status/Situação</span>
 					</td>
 					<td>&nbsp;</td>
@@ -327,6 +348,9 @@
 					</td>
 					<td>
 						<span class="style5"><%=(rs_lista.Fields.Item("dta_licitacao").Value)%></span>
+					</td>
+					<td>
+						<span class="style5 vlr"><%=(rs_lista.Fields.Item("vlr_licitacao_").Value)%></span>
 					</td>
 					<td>
 						<span class="style5"><%=(rs_lista.Fields.Item("dsc_situacao").Value)%></span>

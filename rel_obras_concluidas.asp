@@ -65,6 +65,8 @@
 			$("li a.map").on("click", function(){
 				$("#modalMapa").modal("show");
 			});
+
+			adjustNumLayout();
 		});
 	</script>
 </head>
@@ -83,6 +85,7 @@
 
 			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 				<ul class="nav navbar-nav navbar-right">
+					<li><a href="javascript:window.history.back();"><i class="fa fa-chevron-left"></i> Voltar</a></li>
 					<%
 						If rsDadosGerais.Fields.Item("latitude_longitude").Value <> "" Then
 					%>
@@ -90,7 +93,6 @@
 					<%
 						End If
 					%>
-					<li><a href="javascript:window.history.back();"><i class="fa fa-chevron-left"></i> Voltar</a></li>
 					<li><a href="#" class="expand"><i class="fa fa-expand"></i>&nbsp;&nbsp;Tela Cheia</a></li>
 					<li><a href="<%= MM_Logout %>" class="sign-out"><i class="fa fa-sign-out"></i> Sair do Sistema</a></li>
 				</ul>
@@ -217,12 +219,12 @@
 									<div class="form-group">
 										<label class="col-xs-2 col-sm-2 col-md-2 col-lg-2 control-label">População Atual (2010):</label>
 										<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
-											<input type="text" class="form-control" readonly="readonly" value="<%=(rsDadosGerais.Fields.Item("qtd_populacao_2010").Value)%>">
+											<input type="text" class="form-control num" readonly="readonly" value="<%=(rsDadosGerais.Fields.Item("qtd_populacao_2010").Value)%>">
 										</div>
 
 										<label class="col-xs-2 col-sm-2 col-md-2 col-lg-2 control-label">População Futura (2030):</label>
 										<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
-											<input type="text" class="form-control" readonly="readonly" value="<%=(rsDadosGerais.Fields.Item("qtd_populacao_2030").Value)%>">
+											<input type="text" class="form-control num" readonly="readonly" value="<%=(rsDadosGerais.Fields.Item("qtd_populacao_2030").Value)%>">
 										</div>
 									</div>
 								</form>

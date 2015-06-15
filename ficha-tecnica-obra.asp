@@ -83,9 +83,17 @@
 		dta_assinatura = rs_dados_contrato.Fields.Item("dta_assinatura").Value
 		dta_os = rs_dados_contrato.Fields.Item("dta_os").Value
 
-		prz_total_execucao 	= CInt(rs_dados_contrato.Fields.Item("prz_original_execucao_meses").Value) + CInt(rs_dados_contrato.Fields.Item("prz_aditivo").Value)
-		prz_total_contrato 	= CInt(rs_dados_contrato.Fields.Item("prz_original_contrato_meses").Value) + CInt(rs_dados_contrato.Fields.Item("prz_aditivo").Value)
-		vlr_total 			= rs_dados_contrato.Fields.Item("vlr_original").Value + rs_dados_contrato.Fields.Item("vlr_aditivo").Value
+		If Not IsNull(rs_dados_contrato.Fields.Item("prz_original_execucao_meses").Value) Then
+			prz_total_execucao 	= CInt(rs_dados_contrato.Fields.Item("prz_original_execucao_meses").Value) + CInt(rs_dados_contrato.Fields.Item("prz_aditivo").Value)
+		End If
+
+		If Not IsNull(rs_dados_contrato.Fields.Item("prz_original_contrato_meses").Value) Then
+			prz_total_contrato 	= CInt(rs_dados_contrato.Fields.Item("prz_original_contrato_meses").Value) + CInt(rs_dados_contrato.Fields.Item("prz_aditivo").Value)
+		End If
+
+		If Not IsNull(rs_dados_contrato.Fields.Item("vlr_original").Value) Then
+			vlr_total 			= rs_dados_contrato.Fields.Item("vlr_original").Value + rs_dados_contrato.Fields.Item("vlr_aditivo").Value
+		End If
 		
 		If rs_dados_contrato.Fields.Item("vlr_total_reajuste").Value > 0 Then
 			vlr_total_reajuste = rs_dados_contrato.Fields.Item("vlr_total_reajuste").Value
@@ -599,7 +607,17 @@
 
 			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 				<ul class="nav navbar-nav navbar-right">
+					<%
+						If Request.QueryString("canClose") Then
+					%>
+					<li><a href="javascript:window.close();"><i class="fa fa-times-circle"></i> Fechar Janela</a></li>
+					<%
+						Else
+					%>
 					<li><a href="javascript:window.history.back();"><i class="fa fa-chevron-left"></i> Voltar</a></li>
+					<%
+						End If
+					%>
 					<li><a href="informacao-municipio-resumida.asp?cod_municipio=<%=(cod_municipio)%>"><i class="fa fa-list-alt"></i> Inf. Município</a></li>
 					<%
 						If rs_dados_obra.Fields.Item("latitude_longitude").Value <> "" Then
@@ -734,8 +752,7 @@
 									</div>
 
 									<%
-										If (Session("MM_UserAuthorization") = 1 Or Session("MM_UserAuthorization") = 8 OR Session("MM_UserAuthorization") = 9) Then
-											If rs_dados_obra.Fields.Item("dsc_observacoes_relatorio_mensal").Value <> "" Then
+										If rs_dados_obra.Fields.Item("dsc_observacoes_relatorio_mensal").Value <> "" Then
 									%>
 
 									<div class="form-group">
@@ -746,7 +763,6 @@
 									</div>
 									
 									<%
-											End If
 										End If
 									%>
 
@@ -935,7 +951,7 @@
 											pth_url = Replace(pth_url, "\", "/")
 											img_url = pth_url
 
-											If Not CInt(rs_fotos.Fields.Item("flg_pmweb_file").Value) = 1 Then
+											If Not rs_fotos.Fields.Item("flg_pmweb_file").Value Then
 												img_url = img_url & rs_fotos.Fields.Item("cod_referencia").Value & "_"
 											End If
 

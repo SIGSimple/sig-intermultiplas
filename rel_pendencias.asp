@@ -8,7 +8,19 @@
 	Set objCon = Server.CreateObject("ADODB.Connection")
   		objCon.Open MM_cpf_STRING
 
-	sql = "SELECT * FROM c_lista_rel_pendencias ORDER BY nme_municipio, nome_empreendimento"
+	sql = "SELECT * FROM c_lista_rel_pendencias "
+
+	If (Request.QueryString("data_inicio") <> "" And Request.QueryString("data_inicio") <> "0" And Request.QueryString("data_fim") <> "" And Request.QueryString("data_fim") <> "0") Then 
+	  dta_filtro_inicio = Request.QueryString("data_inicio")
+	  dta_filtro_fim 	= Request.QueryString("data_fim")
+
+	  dta_inicio 	= Split(dta_filtro_inicio,"/")
+	  dta_fim 		= Split(dta_filtro_fim,"/")
+
+	  sql = sql & "WHERE [Data do Registro] BETWEEN #" & dta_inicio(1) & "/" & dta_inicio(0) & "/" & dta_inicio(2) & "# AND #" & dta_fim(1) & "/" & dta_fim(0) & "/" & dta_fim(2) & "#"
+	End If
+
+	sql = sql & "ORDER BY [Data do Registro] ASC"
 
 	Dim rs_lista
 
@@ -66,7 +78,7 @@
 
 			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 				<ul class="nav navbar-nav navbar-right">
-					<li><a href="javascript:window.history.back();"><i class="fa fa-chevron-left"></i> Voltar</a></li>
+					<li><a href="javascript:window.close();"><i class="fa fa-times-circle"></i> Fechar Janela</a></li>
 					<li><a href="#" class="print"><i class="fa fa-print"></i> Imprimir</a></li>
 					<li><a href="#" class="excel"><i class="fa fa-file-excel-o"></i> Exportar p/ Excel</a></li>
 					<li><a href="<%= MM_Logout %>" class="sign-out"><i class="fa fa-sign-out"></i> Sair do Sistema</a></li>

@@ -35,6 +35,7 @@
 	<script type="text/javascript" src="js/fullscreen.js"></script>
 	<script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
 	<script type="text/javascript" src="js/fancybox/jquery.fancybox.pack.js?v=2.1.5"></script>
+	<script type="text/javascript" src="js/jquery.floatThead.min.js"></script>
 	<script type="text/javascript">
 		$(function(){
 			$("li a.print").on("click", function(){
@@ -42,9 +43,13 @@
 			});
 
 			$("li a.excel").on("click", function(){
-				$("table").table2excel({
+				$("table#data").table2excel({
 					name: "Listagem de Contratos"
 				});
+			});
+
+			$("table#data").floatThead({
+				scrollingTop: 60
 			});
 
 			var vlr_lines = $(".vlr");
@@ -70,7 +75,7 @@
 
 			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 				<ul class="nav navbar-nav navbar-right">n
-					<li><a href="javascript:window.history.back();"><i class="fa fa-chevron-left"></i> Voltar</a></li>
+					<li><a href="javascript:window.close();"><i class="fa fa-times-circle"></i> Fechar Janela</a></li>
 					<li><a href="#" class="print"><i class="fa fa-print"></i> Imprimir</a></li>
 					<li><a href="#" class="excel"><i class="fa fa-file-excel-o"></i> Exportar p/ Excel</a></li>
 					<li><a href="#" class="expand"><i class="fa fa-expand"></i>&nbsp;&nbsp;Tela Cheia</a></li>
@@ -97,50 +102,58 @@
 
 				<div class="row">
 					<div class="col-xs-12">
-						<table class="table table-bordered table-condensed table-hover table-striped">
+						<table id="data" class="table table-bordered table-condensed table-hover table-striped">
 							<thead>
-								<th class="text-center text-middle">Município</th>
-								<th class="text-center text-middle">Localidade</th>
-								<th class="text-center text-middle">Situação Atual</th>
-								<th class="text-center text-middle">Nº Autos Licitação</th>
-								<th class="text-center text-middle">Nº Edital</th>
-								<th class="text-center text-middle">Nº Autos Convênio</th>
-								<th class="text-center text-middle">Nº Convênio</th>
-								<th class="text-center text-middle">Empresa Contratada</th>
-								<th class="text-center text-middle">Eng. Empresa Contr.</th>
-								<th class="text-center text-middle">Nº Autos Contrato</th>
-								<th class="text-center text-middle">Nº Contrato</th>
-								<th class="text-center text-middle">Dt. Assinatura</th>
-								<th class="text-center text-middle">Dt. Publ. D.O.E.</th>
-								<th class="text-center text-middle">Dt. Pedido Empenho</th>
-								<th class="text-center text-middle">Dt. Base</th>
-								<th class="text-center text-middle">Dt. Inauguração</th>
-								<th class="text-center text-middle">Dt. Termo Rec. Provisório</th>
-								<th class="text-center text-middle">Dt. Termo Rec. Definitivo</th>
-								<th class="text-center text-middle">Dt. Enc. Contrato</th>
-								<th class="text-center text-middle">Dt. Rec. Contratual</th>
-								<th class="text-center text-middle">Dt. O.S.</th>
-								<th class="text-center text-middle">Vigência Até (Digitado)</th>
-								<th class="text-center text-middle">Vigência Até (Calculado)</th>
-								
-								<th class="text-center text-middle">Prazo Original Execução Serviço</th>
-								<th class="text-center text-middle">Aditivos (Prazo)</th>
-								<th class="text-center text-middle">Prazo Total Serviço</th>
+								<tr class="active">
+									<th class="text-center text-middle">Município</th>
+									<th class="text-center text-middle">Localidade</th>
+									<th class="text-center text-middle">Situação Atual</th>
+									<th class="text-center text-middle">Nº Autos Licitação</th>
+									<th class="text-center text-middle">Nº Edital</th>
+									<th class="text-center text-middle">Nº Autos Convênio</th>
+									<th class="text-center text-middle">Nº Convênio</th>
+									<th class="text-center text-middle">Empresa Contratada</th>
+									<th class="text-center text-middle">Eng. Empresa Contr.</th>
+									<th class="text-center text-middle">Nº Autos Contrato</th>
+									<th class="text-center text-middle">Nº Contrato</th>
+									<th class="text-center text-middle">Dt. Assinatura</th>
+									<th class="text-center text-middle">Dt. Publ. D.O.E.</th>
+									<th class="text-center text-middle">Dt. Pedido Empenho</th>
+									<th class="text-center text-middle">Dt. Base</th>
+									<th class="text-center text-middle">Dt. Inauguração</th>
+									<th class="text-center text-middle">Dt. Termo Rec. Provisório</th>
+									<th class="text-center text-middle">Dt. Termo Rec. Definitivo</th>
+									<th class="text-center text-middle">Dt. Enc. Contrato</th>
+									<th class="text-center text-middle">Dt. Rec. Contratual</th>
+									<th class="text-center text-middle">Dt. O.S.</th>
+									<th class="text-center text-middle">Vigência Até (Digitado)</th>
+									<th class="text-center text-middle">Vigência Até (Calculado)</th>
+									
+									<th class="text-center text-middle">Prazo Original Execução Serviço</th>
+									<th class="text-center text-middle">Aditivos (Prazo)</th>
+									<th class="text-center text-middle">Prazo Total Serviço</th>
 
-								<th class="text-center text-middle">Prazo Original Contrato</th>
-								<th class="text-center text-middle">Aditivos (Prazo)</th>
-								<th class="text-center text-middle">Prazo Total Contrato</th>
-								
-								<th class="text-center text-middle" style="min-width: 150px;">Valor Original</th>
-								<th class="text-center text-middle" style="min-width: 150px;">Aditivos (Valor)</th>
-								<th class="text-center text-middle" style="min-width: 150px;">Valor Total</th>
+									<th class="text-center text-middle">Prazo Original Contrato</th>
+									<th class="text-center text-middle">Aditivos (Prazo)</th>
+									<th class="text-center text-middle">Prazo Total Contrato</th>
+									
+									<th class="text-center text-middle" style="min-width: 150px;">Valor Original</th>
+									<th class="text-center text-middle" style="min-width: 150px;">Aditivos (Valor)</th>
+									<th class="text-center text-middle" style="min-width: 150px;">Valor Total</th>
+								</tr>
 							</thead>
 							<tbody>
 								<%
 									While (NOT rs_lista.EOF)
 										prz_total_execucao 	= rs_lista.Fields.Item("prz_original_execucao_meses").Value + rs_lista.Fields.Item("prz_aditivo").Value
 										prz_total_contrato 	= rs_lista.Fields.Item("prz_original_contrato_meses").Value + rs_lista.Fields.Item("prz_aditivo").Value
-										vlr_total 			= rs_lista.Fields.Item("vlr_original").Value + rs_lista.Fields.Item("vlr_aditivo").Value
+										
+										If rs_lista.Fields.Item("vlr_total_reajuste").Value <> "" Then
+											vlr_total 		= rs_lista.Fields.Item("vlr_total_reajuste").Value
+										Else
+											vlr_total 		= rs_lista.Fields.Item("vlr_original").Value + rs_lista.Fields.Item("vlr_aditivo").Value
+										End If
+										
 										dta_os 				= rs_lista.Fields.Item("dta_os").Value
 								%>
 								<tr>

@@ -195,7 +195,17 @@
 
 			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 				<ul class="nav navbar-nav navbar-right">
+					<%
+						If Request.QueryString("canClose") Then
+					%>
+					<li><a href="javascript:window.close();"><i class="fa fa-times-circle"></i> Fechar Janela</a></li>
+					<%
+						Else
+					%>
 					<li><a href="javascript:window.history.back();"><i class="fa fa-chevron-left"></i> Voltar</a></li>
+					<%
+						End If
+					%>
 					<li><a href="informacao-municipio-resumida.asp?cod_municipio=<%=(cod_municipio)%>"><i class="fa fa-list-alt"></i> Inf. Município</a></li>
 					<%
 						If rs_dados_obra.Fields.Item("latitude_longitude").Value <> "" Then
@@ -370,18 +380,12 @@
 
 						<table class="table table-bordered table-condensed">
 							<tbody>
-								<%
-									If ((Session("MM_UserAuthorization") = 8 Or Session("MM_UserAuthorization") = 9)) Then
-								%>
 								<tr>
 									<td class="text-middle text-bold" width="150">
 										Últimas Informações
 									</td>
 									<td id="txt-ultimas-informacoes"></td>
 								</tr>
-								<%
-									End If
-								%>
 								<tr>
 									<td class="text-middle text-bold" width="150">
 										Observações Gerais

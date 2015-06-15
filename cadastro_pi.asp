@@ -157,23 +157,15 @@ If (CStr(Request("MM_insert")) <> "") Then
   Set frmField_cod_tipo_empreendimento = Request.Form("cod_tipo_empreendimento")
   Set frmField_cod_programa = Request.Form("cod_programa")
   Set frmField_dsc_resultado_obtido = Request.Form("dsc_resultado_obtido")
-
-  If Session("MM_UserAuthorization") = 3 Then
-    'Set frmField_dsc_situacao_anterior = Request.Form("dsc_situacao_anterior")
-    'Set frmField_dsc_situacao_atual = Request.Form("dsc_situacao_atual")
-    Set frmField_endereco = Request.Form("endereco")
-    Set frmField_cep = Request.Form("cep")
-  End If
-
+  'Set frmField_dsc_situacao_anterior = Request.Form("dsc_situacao_anterior")
+  'Set frmField_dsc_situacao_atual = Request.Form("dsc_situacao_atual")
+  Set frmField_endereco = Request.Form("endereco")
+  Set frmField_cep = Request.Form("cep")
   Set frmField_latitude_longitude = Request.Form("latitude_longitude")
-
-  If Session("MM_UserAuthorization") = 3 Then
-    Set frmField_email = Request.Form("email")
-    Set frmField_telefone = Request.Form("telefone")
-    Set frmField_qtd_populacao_urbana_2010 = Request.Form("qtd_populacao_urbana_2010")
-    'Set frmField_qtd_populacao_urbana_2030 = Request.Form("qtd_populacao_urbana_2030")
-  End If
-  
+  Set frmField_email = Request.Form("email")
+  Set frmField_telefone = Request.Form("telefone")
+  Set frmField_qtd_populacao_urbana_2010 = Request.Form("qtd_populacao_urbana_2010")
+  'Set frmField_qtd_populacao_urbana_2030 = Request.Form("qtd_populacao_urbana_2030")
   Set frmField_cod_fiscal = Request.Form("cod_fiscal")
   Set frmField_cod_engenheiro_daee = Request.Form("cod_engenheiro_daee")
   Set frmField_cod_engenheiro_plan_consorcio = Request.Form("cod_engenheiro_plan_consorcio")
@@ -181,31 +173,16 @@ If (CStr(Request("MM_insert")) <> "") Then
   Set frmField_cod_engenheiro_medicao = Request.Form("cod_engenheiro_medicao")
   Set frmField_cod_engenheiro_construtora = Request.Form("cod_engenheiro_construtora")
   Set frmField_cod_situacao = Request.Form("cod_situacao")
-  
-  If Session("MM_UserAuthorization") = 3 Then
-    Set frmField_cod_situacao_externa = Request.Form("cod_situacao_externa")
-  End If
+  Set frmField_cod_situacao_externa = Request.Form("cod_situacao_externa")
 
   MM_editQuery = "insert into "& MM_editTable &" ("
   MM_editQuery = MM_editQuery & "PI,cod_predio,id_predio,municipio,nome_empreendimento,[Descrição da Intervenção FDE],cod_tipo_empreendimento,cod_programa"
-
-  If Session("MM_UserAuthorization") = 3 Then
-    'MM_editQuery = MM_editQuery & ",dsc_situacao_anterior,dsc_situacao_atual,dsc_resultado_obtido,endereco,cep"
-    MM_editQuery = MM_editQuery & ",dsc_resultado_obtido,endereco,cep"
-  End If
-  
+  'MM_editQuery = MM_editQuery & ",dsc_situacao_anterior,dsc_situacao_atual,dsc_resultado_obtido,endereco,cep"
+  MM_editQuery = MM_editQuery & ",dsc_resultado_obtido,endereco,cep"
   MM_editQuery = MM_editQuery & ",latitude_longitude"
-
-  If Session("MM_UserAuthorization") = 3 Then  
-    MM_editQuery = MM_editQuery & ",email,telefone,qtd_populacao_urbana_2010" ',qtd_populacao_urbana_2030'
-  End If
-  
+  MM_editQuery = MM_editQuery & ",email,telefone,qtd_populacao_urbana_2010" ',qtd_populacao_urbana_2030'
   MM_editQuery = MM_editQuery & ",cod_fiscal,cod_engenheiro_daee,cod_engenheiro_plan_consorcio,cod_fiscal_consorcio,cod_engenheiro_medicao,cod_engenheiro_construtora,cod_situacao"
-
-  If Session("MM_UserAuthorization") = 3 Then
-    MM_editQuery = MM_editQuery & ",cod_situacao_externa"
-  End If
-
+  MM_editQuery = MM_editQuery & ",cod_situacao_externa"
   MM_editQuery = MM_editQuery & ") values ("
   MM_editQuery = MM_editQuery & "'" & frmField_PI                              & "'," 'PI'
   MM_editQuery = MM_editQuery & "'" & frmField_cod_predio(1)                   & "'," 'cod_predio'
@@ -215,24 +192,16 @@ If (CStr(Request("MM_insert")) <> "") Then
   MM_editQuery = MM_editQuery & "'" & frmField_descricao_empreendimento        & "'," '[Descrição da Intervenção FDE]'
   MM_editQuery = MM_editQuery & ""  & frmField_cod_tipo_empreendimento         & ","  'cod_tipo_empreendimento'
   MM_editQuery = MM_editQuery & ""  & frmField_cod_programa                    & ""  'cod_programa'
-
-  If Session("MM_UserAuthorization") = 3 Then
-    'MM_editQuery = MM_editQuery & ",'" & frmField_dsc_situacao_anterior         & "'" 'dsc_situacao_anterior'
-    'MM_editQuery = MM_editQuery & ",'" & frmField_dsc_situacao_atual            & "'" 'dsc_situacao_atual'
-    MM_editQuery = MM_editQuery & ",'" & frmField_dsc_resultado_obtido          & "'" 'dsc_resultado_obtido'
-    MM_editQuery = MM_editQuery & ",'" & frmField_endereco                      & "'" 'endereco'
-    MM_editQuery = MM_editQuery & ",'" & frmField_cep                           & "'" 'cep'
-  End If
-
+  'MM_editQuery = MM_editQuery & ",'" & frmField_dsc_situacao_anterior         & "'" 'dsc_situacao_anterior'
+  'MM_editQuery = MM_editQuery & ",'" & frmField_dsc_situacao_atual            & "'" 'dsc_situacao_atual'
+  MM_editQuery = MM_editQuery & ",'" & frmField_dsc_resultado_obtido          & "'" 'dsc_resultado_obtido'
+  MM_editQuery = MM_editQuery & ",'" & frmField_endereco                      & "'" 'endereco'
+  MM_editQuery = MM_editQuery & ",'" & frmField_cep                           & "'" 'cep'
   MM_editQuery = MM_editQuery & ",'" & frmField_latitude_longitude              & "'" 'latitude_longitude'
-
-  If Session("MM_UserAuthorization") = 3 Then
-    MM_editQuery = MM_editQuery & ",'" & frmField_email                         & "'" 'email'
-    MM_editQuery = MM_editQuery & ",'" & frmField_telefone                      & "'" 'telefone'
-    MM_editQuery = MM_editQuery & ","  & frmField_qtd_populacao_urbana_2010     & ""  'qtd_populacao_urbana_2010'
-    'MM_editQuery = MM_editQuery & ","  & frmField_qtd_populacao_urbana_2030     & ""  'qtd_populacao_urbana_2030'
-  End If
-
+  MM_editQuery = MM_editQuery & ",'" & frmField_email                         & "'" 'email'
+  MM_editQuery = MM_editQuery & ",'" & frmField_telefone                      & "'" 'telefone'
+  MM_editQuery = MM_editQuery & ","  & frmField_qtd_populacao_urbana_2010     & ""  'qtd_populacao_urbana_2010'
+  'MM_editQuery = MM_editQuery & ","  & frmField_qtd_populacao_urbana_2030     & ""  'qtd_populacao_urbana_2030'
   MM_editQuery = MM_editQuery & ","  & frmField_cod_fiscal                    & ""  'cod_fiscal'
   MM_editQuery = MM_editQuery & ","  & frmField_cod_engenheiro_daee           & ""  'cod_engenheiro_daee'
   MM_editQuery = MM_editQuery & ","  & frmField_cod_engenheiro_plan_consorcio & ""  'cod_engenheiro_plan_consorcio'
@@ -240,10 +209,7 @@ If (CStr(Request("MM_insert")) <> "") Then
   MM_editQuery = MM_editQuery & ","  & frmField_cod_engenheiro_medicao        & ""  'cod_engenheiro_medicao'
   MM_editQuery = MM_editQuery & ","  & frmField_cod_engenheiro_construtora    & ""  'cod_engenheiro_construtora'
   MM_editQuery = MM_editQuery & ","  & frmField_cod_situacao                  & ""  'cod_situacao'
-  
-  If Session("MM_UserAuthorization") = 3 Then
-    MM_editQuery = MM_editQuery & ","  & frmField_cod_situacao_externa          & ""  'cod_situacao_externa'
-  End If
+  MM_editQuery = MM_editQuery & ","  & frmField_cod_situacao_externa          & ""  'cod_situacao_externa'
   
   MM_editQuery = MM_editQuery & ")"
 
@@ -739,16 +705,12 @@ function MM_validateForm() { //v4.0
   </p>
 
   <%
-    If Session("MM_UserAuthorization") = 1 Then 
+    If Session("MM_UserAuthorization") = 1 Or Session("MM_UserAuthorization") = 3 Then 
   %>
   <form method="POST" action="<%=MM_editAction%>" name="form1" onsubmit="validateForm(event)">
     <input type="hidden" name="MM_insert" value="form1">
 
     <table align="center">
-      <%
-        If Session("MM_UserAuthorization") = 1 Then
-      %>
-
       <!-- MUNICÍPIO -->
       <tr valign="baseline">
         <td align="right" nowrap bgcolor="#CCCCCC" class="style9">
@@ -854,12 +816,6 @@ function MM_validateForm() { //v4.0
         </td>
       </tr>
 
-      <%
-        End If
-
-        If Session("MM_UserAuthorization") = 3 Then
-      %>
-
       <!-- BENEFÍCIO GERAL DA OBRA -->
       <tr valign="baseline">
         <td align="right" valign="middle" nowrap bgcolor="#CCCCCC" class="style9"><span class="style10">Benefício Geral da Obra:</span></td>
@@ -900,14 +856,6 @@ function MM_validateForm() { //v4.0
         </td>
       </tr>
 
-      <%
-        End If
-      %>
-
-      <%
-        If Session("MM_UserAuthorization") = 1 Then
-      %>
-
       <!-- LOCALIZAÇÃO GEOGRÁFICA (LAT,LONG) -->
       <tr valign="baseline">
         <td align="right" nowrap bgcolor="#CCCCCC" class="style9"><span class="style10">Localização Geográfica (Lat, Long):</span></td>
@@ -915,12 +863,6 @@ function MM_validateForm() { //v4.0
           <input name="latitude_longitude" type="text" class="style9" value="">
         </td>
       </tr>
-
-      <%
-        End If
-
-        If Session("MM_UserAuthorization") = 3 Then
-      %>
 
       <!-- EMAIL -->
       <tr valign="baseline">
@@ -953,12 +895,6 @@ function MM_validateForm() { //v4.0
           <input name="qtd_populacao_urbana_2030" type="text" class="style9" value="" disabled="disabled">
         </td>
       </tr>
-
-      <%
-        End If
-
-        If Session("MM_UserAuthorization") = 1 Then
-      %>
 
       <!-- ENG. OBRAS CONSÓRCIO -->
       <tr valign="baseline">
@@ -1106,11 +1042,6 @@ function MM_validateForm() { //v4.0
         </td>
       </tr>
 
-      <%
-        End If
-
-        If Session("MM_UserAuthorization") = 1 Or Session("MM_UserAuthorization") = 4 Then
-      %>
       <!-- SITUAÇÃO INTERNA -->
       <tr valign="baseline">
         <td align="right" nowrap bgcolor="#CCCCCC" class="style9">
@@ -1136,12 +1067,6 @@ function MM_validateForm() { //v4.0
         </td>
       </tr>
 
-      <%
-        End If
-
-        If Session("MM_UserAuthorization") = 3 Then
-      %>
-
       <!-- SITUAÇÃO EXTERNA -->
       <tr valign="baseline">
         <td align="right" nowrap bgcolor="#CCCCCC" class="style9">
@@ -1166,10 +1091,6 @@ function MM_validateForm() { //v4.0
           </select>
         </td>
       </tr>
-
-      <%
-        End If
-      %>
 
       <tr valign="baseline">
         <td align="right" nowrap bgcolor="#CCCCCC" class="style9">
@@ -1198,21 +1119,9 @@ function MM_validateForm() { //v4.0
           <td style="min-width: 80px;"><span class="style7">Autos</span></td>
           <td style="min-width: 80px;"><span class="style7">Bacia DAEE</span></td>
           <td style="min-width: 150px;"><span class="style7">Objeto da Obra</span></td>
-          
-          <%
-            If Session("MM_UserAuthorization") = 1 Then
-          %>
-
           <td style="min-width: 100px;"><span class="style7">Tipo</span></td>
           <td style="min-width: 150px;"><span class="style7">Programa</span></td>
           <td style="min-width: 150px;"><span class="style7">Localização Geográfica (Lat,Long)</span></td>
-
-          <%
-            End If
-
-            If Session("MM_UserAuthorization") = 3 Then
-          %>
-
           <!-- <td style="min-width: 150px;"><span class="style7">Situação Anterior</span></td>
           <td style="min-width: 150px;"><span class="style7">Situação Atual</span></td> -->
           <td style="min-width: 150px;"><span class="style7">Beneficio Geral da Obra</span></td>
@@ -1229,39 +1138,15 @@ function MM_validateForm() { //v4.0
           <td style="min-width: 150px;"><span class="style7">Concluída/Inaugurada em</span></td>
           <td style="min-width: 150px;"><span class="style7">Previsão de Inauguração</span></td>
           <td style="min-width: 150px;"><span class="style7">Carga Orgânica Retirada (ton./mês)</span></td>
-
-          <%
-            End If
-
-            If Session("MM_UserAuthorization") = 1 Then
-          %>
-
           <td style="min-width: 150px;"><span class="style7">Eng. Obras Consórcio</span></td>
           <td style="min-width: 150px;"><span class="style7">Eng. DAEE</span></td>
           <td style="min-width: 150px;"><span class="style7">Eng. Plan. Obras Consórcio</span></td>
           <td style="min-width: 150px;"><span class="style7">Fiscal do Consórcio</span></td>
           <td style="min-width: 150px;"><span class="style7">Eng. Resp. Medições</span></td>
           <td style="min-width: 150px;"><span class="style7">Eng. Obras Construtora</span></td>
-
-          <%
-            End If
-
-            If Session("MM_UserAuthorization") = 1 Or Session("MM_UserAuthorization") = 4 Then
-          %>
-
           <td style="min-width: 150px;"><span class="style7">Situação Interna</span></td>
-          <%
-            End If
-
-            If Session("MM_UserAuthorization") = 3 Then
-          %>
-
           <td style="min-width: 150px;"><span class="style7">Situação Atual do Empreendimento</span></td>
           <td style="min-width: 150px;"><span class="style7">Observações Rel. Mensal</span></td>
-
-          <%
-            End If
-          %>
         </tr>
       </thead>
       <%
@@ -1276,21 +1161,9 @@ function MM_validateForm() { //v4.0
         <td><span class="style9"><%=(rs_lista_pi.Fields.Item("PI").Value)%></span></td>
         <td align="center"><span class="style9"><%=( Mid(rs_lista_pi.Fields.Item("bacia_daee").Value, 1, 3) )%></span></td>
         <td><span class="style9"><%=(rs_lista_pi.Fields.Item("Descrição da Intervenção FDE").Value)%></span></td>
-
-        <%
-          If Session("MM_UserAuthorization") = 1 Then
-        %>
-
         <td><span class="style9"><%=(rs_lista_pi.Fields.Item("tipo_empreendimento").Value)%></span></td>
         <td><span class="style9"><%=(rs_lista_pi.Fields.Item("programa").Value)%></span></td>
         <td><span class="style9"><%=(rs_lista_pi.Fields.Item("latitude_longitude").Value)%></span></td>
-
-        <%
-          End If
-
-          If Session("MM_UserAuthorization") = 3 Then
-        %>
-
         <!-- <td><span class="style9"><%=(rs_lista_pi.Fields.Item("dsc_situacao_anterior").Value)%></span></td>
         <td><span class="style9"><%=(rs_lista_pi.Fields.Item("dsc_situacao_atual").Value)%></span></td> -->
         <td><span class="style9"><%=(rs_lista_pi.Fields.Item("dsc_resultado_obtido").Value)%></span></td>
@@ -1320,7 +1193,6 @@ function MM_validateForm() { //v4.0
         <td><span class="style9"><%=(rs_lista_pi.Fields.Item("dta_previsao_termino").Value)%></span></td>
         <td><span class="style9"><%=(rs_lista_pi.Fields.Item("dta_inauguracao").Value)%></span></td>
         <td><span class="style9"><%=(rs_lista_pi.Fields.Item("dta_previsao_inauguracao").Value)%></span></td>
-
         <td>
           <span class="style9">
             <%
@@ -1333,40 +1205,15 @@ function MM_validateForm() { //v4.0
             %>
           </span>
         </td>
-
-        <%
-          End If
-
-          If Session("MM_UserAuthorization") = 1 Then
-        %>
-
         <td><div align="left"><span class="style9"><%=(rs_lista_pi.Fields.Item("eng_obras_consorcio").Value)%></span></div></td>
         <td><div align="left"><span class="style9"><%=(rs_lista_pi.Fields.Item("eng_daee").Value)%></span></div></td>
         <td><div align="left"><span class="style9"><%=(rs_lista_pi.Fields.Item("eng_plan_consorcio").Value)%></span></div></td>
         <td><div align="left"><span class="style9"><%=(rs_lista_pi.Fields.Item("fiscal_consorcio").Value)%></span></div></td>
         <td><div align="left"><span class="style9"><%=(rs_lista_pi.Fields.Item("eng_medicao").Value)%></span></div></td>
         <td><div align="left"><span class="style9"><%=(rs_lista_pi.Fields.Item("eng_obras_construtora").Value)%></span></div></td>
-
-        <%
-          End If
-
-          If Session("MM_UserAuthorization") = 1 Or Session("MM_UserAuthorization") = 4 Then
-        %>
-
         <td><div align="left"><span class="style9"><%=(rs_lista_pi.Fields.Item("desc_situacao_interna").Value)%></span></div></td>
-
-        <%
-          End If
-
-          If Session("MM_UserAuthorization") = 3 Then
-        %>
-
         <td><div align="left"><span class="style9"><%=(rs_lista_pi.Fields.Item("desc_situacao_externa").Value)%></span></div></td>
         <td><div align="left"><span class="style9"><%=(rs_lista_pi.Fields.Item("dsc_observacoes_relatorio_mensal").Value)%></span></div></td>
-
-        <%
-          End If
-        %>
       </tr>
       <% 
           Repeat1__index=Repeat1__index+1

@@ -52,8 +52,8 @@ If (CStr(Request("MM_update")) = "form1" And CStr(Request("MM_recordId")) <> "")
   MM_editColumn = "id"
   MM_recordId = "" + Request.Form("MM_recordId") + ""
   MM_editRedirectUrl = "cad_licitacao.asp"
-  MM_fieldsStr  = "num_autos|value|cod_tipo_contratacao|value|cod_financiador|value|cod_modalidade|value|num_edital|value|dta_publicacao_doe|value|dta_licitacao|value|cod_situacao_licitacao|value"
-  MM_columnsStr = "num_autos|',none,''|cod_tipo_contratacao|none,none,NULL|cod_financiador|none,none,NULL|cod_modalidade|none,none,NULL|num_edital|',none,''|dta_publicacao_doe|',none,NULL|dta_licitacao|',none,NULL|cod_situacao_licitacao|none,none,NULL"
+  MM_fieldsStr  = "num_autos|value|cod_tipo_contratacao|value|cod_financiador|value|cod_modalidade|value|num_edital|value|dta_publicacao_doe|value|dta_licitacao|value|cod_situacao_licitacao|value|vlr_licitacao|value"
+  MM_columnsStr = "num_autos|',none,''|cod_tipo_contratacao|none,none,NULL|cod_financiador|none,none,NULL|cod_modalidade|none,none,NULL|num_edital|',none,''|dta_publicacao_doe|',none,NULL|dta_licitacao|',none,NULL|cod_situacao_licitacao|none,none,NULL|vlr_licitacao|',none,NULL"
 
   ' create the MM_fields and MM_columns arrays
   MM_fields = Split(MM_fieldsStr, "|")
@@ -305,6 +305,14 @@ rs_numRows = 0
           </td>
           <td bgcolor="#CCCCCC">
             <input type="text" class="datepicker" name="dta_licitacao" value="<%=(rs.Fields.Item("dta_licitacao").Value)%>" size="32">
+          </td>
+        </tr>
+        <tr valign="baseline">
+          <td align="right" nowrap bgcolor="#CCCCCC" class="style7">
+            <span class="style22">Valor Estimado</span>
+          </td>
+          <td bgcolor="#CCCCCC">
+            <input type="text" name="vlr_licitacao" value="<%=(rs.Fields.Item("vlr_licitacao").Value)%>" size="32">
           </td>
         </tr>
         <tr valign="baseline">

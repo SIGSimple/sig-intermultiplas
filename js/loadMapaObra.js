@@ -5,7 +5,7 @@ function initMap(){
 	var mapOptions = {
 		streetViewControl: false,
 		scrollWheel: false,
-		zoom: 18,
+		zoom: 17,
 		mapTypeId: google.maps.MapTypeId.SATELLITE
 	};
 

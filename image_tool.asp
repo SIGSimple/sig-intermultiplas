@@ -192,6 +192,20 @@
 							End If
 
 							img_url = img_url & rs_fotos.Fields.Item("nme_arquivo").Value
+
+							full_name = rs_fotos.Fields.Item("pth_arquivo").Value
+
+							If Not rs_fotos.Fields.Item("flg_pmweb_file").Value Then
+								full_name = full_name & rs_fotos.Fields.Item("cod_referencia").Value & "_"
+							End If
+
+							full_name = full_name & rs_fotos.Fields.Item("nme_arquivo").Value
+
+							Set fso = CreateObject("Scripting.FileSystemObject")
+							ext = fso.GetExtensionName(full_name)
+							Set fso = Nothing
+
+							If ext <> "pdf" Then
 					%>
 					<div class="col-xs-12 col-sm-2 col-md-2">
 						<div class="thumbnail">
@@ -208,7 +222,7 @@
 							%>
 							<div class="caption">
 								<!-- <h4>Thumbnail label</h4> -->
-								<!--<p class="thumbnail-label"><%=(rs_fotos.Fields.Item("dsc_observacoes").Value)%></p>-->
+								<p class="thumbnail-label thumbnail-label-data"><%=(rs_fotos.Fields.Item("dta_registro").Value)%></p>
 								<p>
 									<a href="<%=(img_url)%>" rel="group" title="<%=(rs_fotos.Fields.Item("dsc_observacoes").Value)%>" class="btn btn-default btn-block btn-xs fancybox" role="button"><i class="fa fa-expand"></i> Ampliar imagem</a>
 								</p>
@@ -233,6 +247,8 @@
 						</div>
 					</div>
 					<%
+							End If
+
 							rs_fotos.MoveNext()
 							rec = (rec+1)
 						Wend

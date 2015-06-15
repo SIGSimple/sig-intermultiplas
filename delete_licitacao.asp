@@ -164,6 +164,9 @@ rs_delete_us_numRows = rs_delete_us_numRows + Repeat1__numRows
         <span class="style5">Data da Licitação</span>
       </td>
       <td>
+        <span class="style5">Valor Estimado</span>
+      </td>
+      <td>
         <span class="style5">Status/Situação</span>
       </td>
     </tr>
@@ -189,6 +192,9 @@ rs_delete_us_numRows = rs_delete_us_numRows + Repeat1__numRows
         </td>
         <td>
           <span class="style3"><%=(rs_delete_us.Fields.Item("dta_licitacao").Value)%></span>
+        </td>
+        <td>
+          <span class="style3"><%=(rs_delete_us.Fields.Item("vlr_licitacao").Value)%></span>
         </td>
         <td>
           <span class="style3"><%=(rs_delete_us.Fields.Item("dsc_situacao").Value)%></span>

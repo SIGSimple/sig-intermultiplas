@@ -291,7 +291,7 @@
 			$.each(localidades, function(i, item) {
 				var link = "";
 
-				switch(item.cod_situacao_interna){
+				switch(item.cod_situacao_externa){
 					case 39: // Concluída
 						link = "ficha-tecnica-obra-concluida.asp?cod_empreendimento=" + item.cod_empreendimento;
 						break;
@@ -312,7 +312,7 @@
 				var itemLayout = '<tr>'+
 									'<td class="text-middle">'+ item.nme_municipio + '</td>'+
 									'<td class="text-middle">'+ item.nme_empreendimento + '</td>'+
-									'<td class="text-middle"><a href="'+ link +'" class="btn btn-sm btn-primary">Ficha Técnica</a></td>'+
+									'<td class="text-middle"><a href="'+ link +'&canClose=1" class="btn btn-sm btn-primary" target="_blank">Ficha Técnica</a></td>'+
 								'</tr>';
 				$("table.table-localidades tbody").append(itemLayout);
 			});
@@ -486,7 +486,7 @@
 								cod_empreendimento: item.PI,
 								nme_empreendimento: item.nome_empreendimento,
 								cod_situacao_interna: item.cod_situacao,
-								dsc_situacao_interna: item.dsc_situacao_interna
+								dsc_situacao_externa: item.dsc_situacao_externa
 							};
 
 							items.push(itemData);
@@ -625,35 +625,75 @@
 			$(".btn-details").on("click", function(){
 				if($(this).hasClass("btn-show-obras-concluidas")){
 					$("#modalQtdObrasLabel.modal-title").text("Obras concluídas");
-					loadEmpreendimentosBySituacao("SELECT * FROM c_lista_pi WHERE cod_situacao = 39 ORDER BY nme_municipio ASC, nome_empreendimento ASC");
+					loadEmpreendimentosBySituacao(""+
+						"SELECT tb_pi.PI, c_lista_predios.nme_municipio, tb_pi.nome_empreendimento, tb_situacao_pi.cod_situacao, tb_situacao_pi.desc_situacao AS dsc_situacao_externa "+ 
+						"FROM (tb_pi INNER JOIN c_lista_predios ON tb_pi.id_predio = c_lista_predios.id_predio) "+
+						"LEFT JOIN tb_situacao_pi ON tb_pi.cod_situacao_externa = tb_situacao_pi.cod_situacao "+
+						"WHERE tb_situacao_pi.cod_situacao = 39 "+
+						"ORDER BY nme_municipio ASC, nome_empreendimento ASC");
 				}
 				else if($(this).hasClass("btn-show-obras-em-andamento")){
 					$("#modalQtdObrasLabel.modal-title").text("Obras em Andamento");
-					loadEmpreendimentosBySituacao("SELECT * FROM c_lista_pi WHERE cod_situacao IN (40,42,43) ORDER BY nme_municipio ASC, nome_empreendimento ASC");
+					loadEmpreendimentosBySituacao(""+
+						"SELECT tb_pi.PI, c_lista_predios.nme_municipio, tb_pi.nome_empreendimento, tb_situacao_pi.cod_situacao, tb_situacao_pi.desc_situacao AS dsc_situacao_externa "+ 
+						"FROM (tb_pi INNER JOIN c_lista_predios ON tb_pi.id_predio = c_lista_predios.id_predio) "+
+						"LEFT JOIN tb_situacao_pi ON tb_pi.cod_situacao_externa = tb_situacao_pi.cod_situacao "+
+						"WHERE tb_situacao_pi.cod_situacao IN (40,42,43) "+
+						"ORDER BY nme_municipio ASC, nome_empreendimento ASC");
 				}
 				else if($(this).hasClass("btn-show-obras-em-atendimento")){
 					$("#modalQtdObrasLabel.modal-title").text("Obras em Atendimento");
-					loadEmpreendimentosBySituacao("SELECT * FROM c_lista_pi WHERE cod_situacao = 40 ORDER BY nme_municipio ASC, nome_empreendimento ASC");
+					loadEmpreendimentosBySituacao(""+
+						"SELECT tb_pi.PI, c_lista_predios.nme_municipio, tb_pi.nome_empreendimento, tb_situacao_pi.cod_situacao, tb_situacao_pi.desc_situacao AS dsc_situacao_externa "+ 
+						"FROM (tb_pi INNER JOIN c_lista_predios ON tb_pi.id_predio = c_lista_predios.id_predio) "+
+						"LEFT JOIN tb_situacao_pi ON tb_pi.cod_situacao_externa = tb_situacao_pi.cod_situacao "+
+						"WHERE tb_situacao_pi.cod_situacao = 40 "+
+						"ORDER BY nme_municipio ASC, nome_empreendimento ASC");
 				}
 				else if($(this).hasClass("btn-show-obras-finalizada-nao-operando")){
 					$("#modalQtdObrasLabel.modal-title").text("Obras Finalizadas e Não Operando");
-					loadEmpreendimentosBySituacao("SELECT * FROM c_lista_pi WHERE cod_situacao = 42 ORDER BY nme_municipio ASC, nome_empreendimento ASC");
+					loadEmpreendimentosBySituacao(""+
+						"SELECT tb_pi.PI, c_lista_predios.nme_municipio, tb_pi.nome_empreendimento, tb_situacao_pi.cod_situacao, tb_situacao_pi.desc_situacao AS dsc_situacao_externa "+ 
+						"FROM (tb_pi INNER JOIN c_lista_predios ON tb_pi.id_predio = c_lista_predios.id_predio) "+
+						"LEFT JOIN tb_situacao_pi ON tb_pi.cod_situacao_externa = tb_situacao_pi.cod_situacao "+
+						"WHERE tb_situacao_pi.cod_situacao = 42 "+
+						"ORDER BY nme_municipio ASC, nome_empreendimento ASC");
 				}
 				else if($(this).hasClass("btn-show-obras-paralizadas")){
 					$("#modalQtdObrasLabel.modal-title").text("Obras Paralizadas");
-					loadEmpreendimentosBySituacao("SELECT * FROM c_lista_pi WHERE cod_situacao = 43 ORDER BY nme_municipio ASC, nome_empreendimento ASC");
+					loadEmpreendimentosBySituacao(""+
+						"SELECT tb_pi.PI, c_lista_predios.nme_municipio, tb_pi.nome_empreendimento, tb_situacao_pi.cod_situacao, tb_situacao_pi.desc_situacao AS dsc_situacao_externa "+ 
+						"FROM (tb_pi INNER JOIN c_lista_predios ON tb_pi.id_predio = c_lista_predios.id_predio) "+
+						"LEFT JOIN tb_situacao_pi ON tb_pi.cod_situacao_externa = tb_situacao_pi.cod_situacao "+
+						"WHERE tb_situacao_pi.cod_situacao = 43 "+
+						"ORDER BY nme_municipio ASC, nome_empreendimento ASC");
 				}
 				else if($(this).hasClass("btn-show-obras-atendimento-programado")){
 					$("#modalQtdObrasLabel.modal-title").text("Obras Atendimento Programado");
-					loadEmpreendimentosBySituacao("SELECT * FROM c_lista_pi WHERE cod_situacao = 44 ORDER BY nme_municipio ASC, nome_empreendimento ASC");
+					loadEmpreendimentosBySituacao(""+
+						"SELECT tb_pi.PI, c_lista_predios.nme_municipio, tb_pi.nome_empreendimento, tb_situacao_pi.cod_situacao, tb_situacao_pi.desc_situacao AS dsc_situacao_externa "+ 
+						"FROM (tb_pi INNER JOIN c_lista_predios ON tb_pi.id_predio = c_lista_predios.id_predio) "+
+						"LEFT JOIN tb_situacao_pi ON tb_pi.cod_situacao_externa = tb_situacao_pi.cod_situacao "+
+						"WHERE tb_situacao_pi.cod_situacao = 44 "+
+						"ORDER BY nme_municipio ASC, nome_empreendimento ASC");
 				}
 				else if($(this).hasClass("btn-show-obras-nao-atendidas")){
 					$("#modalQtdObrasLabel.modal-title").text("Obras Não Atendidas");
-					loadEmpreendimentosBySituacao("SELECT * FROM c_lista_pi WHERE cod_situacao = 41 ORDER BY nme_municipio ASC, nome_empreendimento ASC");
+					loadEmpreendimentosBySituacao(""+
+						"SELECT tb_pi.PI, c_lista_predios.nme_municipio, tb_pi.nome_empreendimento, tb_situacao_pi.cod_situacao, tb_situacao_pi.desc_situacao AS dsc_situacao_externa "+ 
+						"FROM (tb_pi INNER JOIN c_lista_predios ON tb_pi.id_predio = c_lista_predios.id_predio) "+
+						"LEFT JOIN tb_situacao_pi ON tb_pi.cod_situacao_externa = tb_situacao_pi.cod_situacao "+
+						"WHERE tb_situacao_pi.cod_situacao = 41 "+
+						"ORDER BY nme_municipio ASC, nome_empreendimento ASC");
 				}
 				else if($(this).hasClass("btn-show-obras-atendimento-potencial")){
 					$("#modalQtdObrasLabel.modal-title").text("Obras Atendimento Potencial");
-					loadEmpreendimentosBySituacao("SELECT * FROM c_lista_pi WHERE cod_situacao = 45 ORDER BY nme_municipio ASC, nome_empreendimento ASC");
+					loadEmpreendimentosBySituacao(""+
+						"SELECT tb_pi.PI, c_lista_predios.nme_municipio, tb_pi.nome_empreendimento, tb_situacao_pi.cod_situacao, tb_situacao_pi.desc_situacao AS dsc_situacao_externa "+ 
+						"FROM (tb_pi INNER JOIN c_lista_predios ON tb_pi.id_predio = c_lista_predios.id_predio) "+
+						"LEFT JOIN tb_situacao_pi ON tb_pi.cod_situacao_externa = tb_situacao_pi.cod_situacao "+
+						"WHERE tb_situacao_pi.cod_situacao = 45 "+
+						"ORDER BY nme_municipio ASC, nome_empreendimento ASC");
 				}
 			});
 		}
@@ -680,8 +720,8 @@
 								cod_empreendimento: item.PI,
 								nme_municipio: item.nme_municipio,
 								nme_empreendimento: item.nome_empreendimento,
-								cod_situacao_interna: item.cod_situacao,
-								dsc_situacao_interna: item.dsc_situacao_interna
+								cod_situacao_externa: item.cod_situacao,
+								dsc_situacao_externa: item.dsc_situacao_externa
 							};
 
 							items.push(itemData);
