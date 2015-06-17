@@ -202,7 +202,7 @@
 									<th class="text-center text-middle" rowspan="2">Tipo ETE</th>
 									<th class="text-center text-middle" rowspan="2">Estação de Tratamento (desc.)</th>
 									<th class="text-center text-middle" rowspan="2">Emissário Efluente Tratado (metros)</th>
-									<th class="text-center text-middle" rowspan="2">Estudo Elab. DAEE</th>
+									<th class="text-center text-middle" rowspan="2">Estudo Contratado pelo DAEE ou PM</th>
 									<th class="text-center text-middle" rowspan="2">Observações</th>
 									<th class="text-center text-middle" rowspan="2">Benefício Geral da Obra</th>
 									<th class="text-center text-middle" rowspan="2">Parceria/Realização</th>

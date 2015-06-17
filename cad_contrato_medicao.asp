@@ -19,9 +19,17 @@
 			rs_update.Addnew()
 			
 			' INÍCIO CAMPOS
+			
 			rs_update("cod_contrato") 	= Trim(Request.Form("cod_contrato"))
-			rs_update("num_autos") 		= Trim(Request.Form("num_autos"))
-			rs_update("dta_medicao") 	= Trim(Request.Form("dta_medicao"))
+
+			If Request.Form("num_autos") <> "" Then
+				rs_update("num_autos") = Trim(Request.Form("num_autos"))
+			End If
+
+			If Request.Form("dta_medicao") <> "" Then
+				rs_update("dta_medicao") 	= Trim(Request.Form("dta_medicao"))
+			End If
+
 			' FIM CAMPOS
 			
 			rs_update.Update
@@ -150,8 +158,10 @@
 
 						While Not rs_lista.EOF
 							i = i + 1
-							mes = Trim(CaptalizeText(MonthName(rs_lista.Fields.Item("mes_medicao").Value,True)))
-							ano = Trim(rs_lista.Fields.Item("ano_medicao").Value)
+							If rs_lista.Fields.Item("mes_medicao").Value <> "" And rs_lista.Fields.Item("ano_medicao").Value <> "" Then
+								mes = Trim(CaptalizeText(MonthName(rs_lista.Fields.Item("mes_medicao").Value,True)))
+								ano = Trim(rs_lista.Fields.Item("ano_medicao").Value)
+							End If
 				%>
 				<tr bgcolor="#CCCCCC">
 					<td>

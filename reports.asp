@@ -351,6 +351,12 @@
 								</option>
 								<option 
 									<% If Session("MM_UserAuthorization") = 5 Then Response.Write "style='display: none;'" End If %>
+									<% If Request("cod_modelo_relatorio") <> "" Then If Request("cod_modelo_relatorio") = "rel_planilha_financeiro.asp" Then Response.Write "selected='selected'" End If End If %>
+									data-habilita-botoes="true" data-exibe-municipio="false" data-exibe-localidade="false" value="rel_planilha_financeiro.asp">
+									Planilha Financeiro Contratos
+								</option>
+								<option 
+									<% If Session("MM_UserAuthorization") = 5 Then Response.Write "style='display: none;'" End If %>
 									<% If Request("cod_modelo_relatorio") <> "" Then If Request("cod_modelo_relatorio") = "rel_info_complementares.asp" Then Response.Write "selected='selected'" End If End If %>
 									data-habilita-botoes="true" data-exibe-municipio="false" data-exibe-localidade="false" value="rel_info_complementares.asp">
 									Informações Complementares das Obras

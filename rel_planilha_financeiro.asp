@@ -27,7 +27,7 @@
 			});
 
 			$("li a.excel").on("click", function(){
-				$("table").table2excel({
+				$("table#data").table2excel({
 					name: "Planilha Financeiro Contratos"
 				});
 			});
@@ -167,6 +167,13 @@
 								}
 							}
 
+							var dta_termino_projetado;
+							var dta_aprox_ = moment(dta_aprox, "DD/MM/YYYY");
+							var dta_termino_previsto_ = moment(dta_termino_previsto, "DD/MM/YYYY");
+							var diff = dta_termino_previsto_.diff(dta_aprox_, "months");
+							var hoje = moment();
+							dta_termino_projetado = hoje.add(diff, "months");
+
 							vlr_total_planejado 			= String(vlr_total_planejado).replace(".",",");
 							vlr_total_planejado_ult_medicao = String(vlr_total_planejado_ult_medicao).replace(".",",");
 							vlr_total_medido 				= String(vlr_total_medido).replace(".",",");
@@ -177,7 +184,7 @@
 							htmlLines += "<td rowspan='3' class='text-middle text-right'>R$ "+ $.number(vlr_total_planejado_ult_medicao, 2, ",", ".") +"</td>";
 							htmlLines += "<td rowspan='3' class='text-middle text-center'>"+ moment(dta_aprox, "DD/MM/YYYY").format("MMM/YYYY") +"</td>";
 							htmlLines += "<td rowspan='3' class='text-middle text-center'>"+ moment(dta_termino_previsto, "DD/MM/YYYY").format("MMM/YYYY") +"</td>";
-							htmlLines += "<td rowspan='3' class='text-middle'></td>";
+							htmlLines += "<td rowspan='3' class='text-middle text-center'>"+ dta_termino_projetado.format("DD/MM/YYYY") +"</td>";
 							
 							htmlLines += "</tr>";
 							htmlLines += "<tr>";
@@ -274,7 +281,7 @@
 
 				<div class="row">
 					<div class="col-xs-12">
-						<table class="table table-data table-bordered table-condensed table-hover table-striped">
+						<table id="data" class="table table-data table-bordered table-condensed table-hover table-striped">
 							<thead>
 								<tr class="active">
 									<th class="text-middle text-center" style="min-width: 250px;">Município</th>

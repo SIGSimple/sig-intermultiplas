@@ -42,7 +42,7 @@
 			});
 
 			$("li a.excel").on("click", function(){
-				$("table").table2excel({
+				$("table#data").table2excel({
 					name: "Informações Complementares das Obras"
 				});
 			});
@@ -91,7 +91,7 @@
 
 				<div class="row">
 					<div class="col-xs-12">
-						<table class="table table-bordered table-condensed table-hover table-striped">
+						<table id="data" class="table table-bordered table-condensed table-hover table-striped">
 							<thead>
 								<th class="text-center text-middle">Município</th>
 								<th class="text-center text-middle">Localidade</th>
@@ -109,7 +109,7 @@
 								<th class="text-center text-middle">Tipo ETE</th>
 								<th class="text-center text-middle">Estação de Tratamento (desc.)</th>
 								<th class="text-center text-middle">Emissário Efluente Tratado (metros)</th>
-								<th class="text-center text-middle">Estudo Elab. DAEE</th>
+								<th class="text-center text-middle">Estudo Contratado pelo DAEE ou PM</th>
 								<th class="text-center text-middle">Observações</th>
 								<th class="text-center text-middle">Benefício Geral da Obra</th>
 								<th class="text-center text-middle">Parceria/Realização</th>
@@ -135,15 +135,7 @@
 									<td><%=(rs_lista.Fields.Item("nme_tipo_ete").Value)%></td>
 									<td><%=(rs_lista.Fields.Item("dsc_estacao_tratamento").Value)%></td>
 									<td><%=(rs_lista.Fields.Item("qtd_metragem_emissario_efluente_tratado").Value)%></td>
-									<td>
-										<%
-											If rs_lista.Fields.Item("flg_estudo_elaborado_daee").Value Then
-												Response.Write "Sim"
-											Else
-												Response.Write "Não"
-											End If
-										%>
-									</td>
+									<td><%=(rs_lista.Fields.Item("flg_estudo_elaborado_daee").Value)%></td>
 									<td><%=(rs_lista.Fields.Item("dsc_observacoes_obra").Value)%></td>
 									<td><%=(rs_lista.Fields.Item("dsc_resultado_obtido").Value)%></td>
 									<td><%=(rs_lista.Fields.Item("nme_parceria_realizacao").Value)%></td>

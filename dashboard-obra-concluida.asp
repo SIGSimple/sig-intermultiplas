@@ -53,6 +53,16 @@
 		sql = sql & "WHERE dsc_situacao_operacao = '"& Request.QueryString("dsc_situacao_operacao") &"'"
 	End If
 
+	If Request.QueryString("flg_filtro") <> "" Then
+		If InStr(sql, "WHERE") > 0 Then
+			sql = sql & " AND "
+		Else
+			sql = sql & " WHERE "
+		End If
+
+		sql = sql & " Not IsNull(tb_info_emp_concluidos."& Request.QueryString("flg_filtro") & ")"
+	End If
+
 	qtd_necessita_reparos 					= 0
 	qtd_problemas_bombas 					= 0
 	qtd_falta_limpeza 						= 0
@@ -189,7 +199,7 @@
 			$('[data-toggle="tooltip"]').tooltip();
 			$('[data-toggle="popover"]').popover();
 
-			var colors = ["#E74C3C", "#F39C12", "#18BC9C", "#3498DB", "#F9FF00"];
+			var colors = ["#E74C3C", "#18BC9C", "#3498DB", "#F9FF00", "#F39C12"];
 
 			$('#chart-situacao-operacao').highcharts({
 				colors: colors,
@@ -342,7 +352,7 @@
 										qtd_total_obras_concluidas = qtd_total_obras_concluidas + qtd_obras
 								%>
 								<tr>
-									<td width="20"><a class="btn btn-xs btn-primary" href="?dsc_situacao_operacao=<%=(dsc_situacao_operacao)%>#table"><i class="fa fa-search"></i></td>
+									<td width="20"><a class="btn btn-xs btn-primary" href="?dsc_situacao_operacao=<%=(dsc_situacao_operacao)%><% If Request.QueryString("flg_filtro") <> "" Then Response.Write "&flg_filtro=" & Request.QueryString("flg_filtro") End If %>#table"><i class="fa fa-search"></i></td>
 									<td><%=(dsc_situacao_operacao)%></td>
 									<td class="text-center"><%=(qtd_obras)%></td>
 								</tr>
@@ -375,10 +385,10 @@
 									labelColor = "info"
 								Case "Operando Parcialmente"
 									labelColor = "yellow"
-								Case "Estado de Abandono"
-									labelColor = "danger"
-								Case "Inoperante"
+								Case "Operando Precariamente"
 									labelColor = "warning"
+								Case "Inoperante"
+									labelColor = "danger"
 							End Select
 						%>
 
@@ -387,7 +397,7 @@
 						
 					<div class="pull-right">
 						<a class="btn btn-xs btn-default" href="rel_obras_concluidas-excel.asp"><i class="fa fa-file-excel-o"></i> Exportar p/ Excel</a>
-						<% If Request.QueryString("dsc_situacao_operacao") <> "" Then %>
+						<% If Request.QueryString("dsc_situacao_operacao") <> "" Or Request.QueryString("flg_filtro") <> "" Then %>
 							<a class="btn btn-xs btn-default" href="<%=(Request.ServerVariables("URL"))%>"><i class="fa fa-times-circle"></i> Limpar Filtro</a>
 						<% End If %>
 					</div>
@@ -401,46 +411,74 @@
 						<th>Localidade</th>
 						<th class="text-center">Situação</th>
 						<th class="text-center">
-							<i class="fa fa-wrench" data-toggle="tooltip" data-placement="top" title="Necessita de Reparos"></i>
+							<a class="btn btn-xs btn-default" href="?flg_filtro=dsc_necessita_reparos<% If Request.QueryString("dsc_situacao_operacao") <> "" Then Response.Write "&dsc_situacao_operacao=" & Request.QueryString("dsc_situacao_operacao") End If %>">
+								<i class="fa fa-wrench" data-toggle="tooltip" data-placement="top" title="Necessita de Reparos"></i>
+							</a>
 						</th>
 						<th class="text-center">
-							<i class="fa fa-bomb" data-toggle="tooltip" data-placement="top" title="Problema nas Bombas"></i>
+							<a class="btn btn-xs btn-default" href="?flg_filtro=dsc_problemas_bombas<% If Request.QueryString("dsc_situacao_operacao") <> "" Then Response.Write "&dsc_situacao_operacao=" & Request.QueryString("dsc_situacao_operacao") End If %>">
+								<i class="fa fa-bomb" data-toggle="tooltip" data-placement="top" title="Problema nas Bombas"></i>
+							</a>
 						</th>
 						<th class="text-center">
-							<i class="fa fa-eraser" data-toggle="tooltip" data-placement="top" title="Falta Limpeza"></i>
+							<a class="btn btn-xs btn-default" href="?flg_filtro=dsc_falta_limpeza<% If Request.QueryString("dsc_situacao_operacao") <> "" Then Response.Write "&dsc_situacao_operacao=" & Request.QueryString("dsc_situacao_operacao") End If %>">
+								<i class="fa fa-eraser" data-toggle="tooltip" data-placement="top" title="Falta Limpeza"></i>
+							</a>
 						</th>
 						<th class="text-center">
-							<i class="fa fa-trash-o" data-toggle="tooltip" data-placement="top" title="Despejo Irregular de Resíduos"></i>
+							<a class="btn btn-xs btn-default" href="?flg_filtro=dsc_despejo_irregular_residuos<% If Request.QueryString("dsc_situacao_operacao") <> "" Then Response.Write "&dsc_situacao_operacao=" & Request.QueryString("dsc_situacao_operacao") End If %>">
+								<i class="fa fa-trash-o" data-toggle="tooltip" data-placement="top" title="Despejo Irregular de Resíduos"></i>
+							</a>
 						</th>
 						<th class="text-center">
-							<i class="fa fa-user" data-toggle="tooltip" data-placement="top" title="Falta Funcionário p/ Operação Diária"></i>
+							<a class="btn btn-xs btn-default" href="?flg_filtro=dsc_falta_funcionario_operacao<% If Request.QueryString("dsc_situacao_operacao") <> "" Then Response.Write "&dsc_situacao_operacao=" & Request.QueryString("dsc_situacao_operacao") End If %>">
+								<i class="fa fa-user" data-toggle="tooltip" data-placement="top" title="Falta Funcionário p/ Operação Diária"></i>
+							</a>
 						</th>
 						<th class="text-center">
-							<i class="fa fa-table" data-toggle="tooltip" data-placement="top" title="Danos no Cercamento"></i>
+							<a class="btn btn-xs btn-default" href="?flg_filtro=dsc_danos_cercamento<% If Request.QueryString("dsc_situacao_operacao") <> "" Then Response.Write "&dsc_situacao_operacao=" & Request.QueryString("dsc_situacao_operacao") End If %>">
+								<i class="fa fa-table" data-toggle="tooltip" data-placement="top" title="Danos no Cercamento"></i>
+							</a>
 						</th>
 						<th class="text-center">
-							<i class="fa fa-filter" data-toggle="tooltip" data-placement="top" title="Danos no Tratamento Preliminar"></i>
+							<a class="btn btn-xs btn-default" href="?flg_filtro=dsc_danos_tratamento_preliminar<% If Request.QueryString("dsc_situacao_operacao") <> "" Then Response.Write "&dsc_situacao_operacao=" & Request.QueryString("dsc_situacao_operacao") End If %>">
+								<i class="fa fa-filter" data-toggle="tooltip" data-placement="top" title="Danos no Tratamento Preliminar"></i>
+							</a>
 						</th>
 						<th class="text-center">
-							<i class="fa fa-area-chart" data-toggle="tooltip" data-placement="top" title="Danos no Talude"></i>
+							<a class="btn btn-xs btn-default" href="?flg_filtro=dsc_danos_talude<% If Request.QueryString("dsc_situacao_operacao") <> "" Then Response.Write "&dsc_situacao_operacao=" & Request.QueryString("dsc_situacao_operacao") End If %>">
+								<i class="fa fa-area-chart" data-toggle="tooltip" data-placement="top" title="Danos no Talude"></i>
+							</a>
 						</th>
 						<th class="text-center">
-							<i class="fa fa-tint" data-toggle="tooltip" data-placement="top" title="Danos nas Lagoas"></i>
+							<a class="btn btn-xs btn-default" href="?flg_filtro=dsc_danos_lagoa<% If Request.QueryString("dsc_situacao_operacao") <> "" Then Response.Write "&dsc_situacao_operacao=" & Request.QueryString("dsc_situacao_operacao") End If %>">
+								<i class="fa fa-tint" data-toggle="tooltip" data-placement="top" title="Danos nas Lagoas"></i>
+							</a>
 						</th>
 						<th class="text-center">
-							<i class="fa fa-warning" data-toggle="tooltip" data-placement="top" title="Problemas Diversos"></i>
+							<a class="btn btn-xs btn-default" href="?flg_filtro=dsc_problemas_diversos<% If Request.QueryString("dsc_situacao_operacao") <> "" Then Response.Write "&dsc_situacao_operacao=" & Request.QueryString("dsc_situacao_operacao") End If %>">
+								<i class="fa fa-warning" data-toggle="tooltip" data-placement="top" title="Problemas Diversos"></i>
+							</a>
 						</th>
 						<th class="text-center">
-							<i class="fa fa-download" data-toggle="tooltip" data-placement="top" title="Danos nos Emissários"></i>
+							<a class="btn btn-xs btn-default" href="?flg_filtro=dsc_danos_emissarios<% If Request.QueryString("dsc_situacao_operacao") <> "" Then Response.Write "&dsc_situacao_operacao=" & Request.QueryString("dsc_situacao_operacao") End If %>">
+								<i class="fa fa-download" data-toggle="tooltip" data-placement="top" title="Danos nos Emissários"></i>
+							</a>
 						</th>
 						<th class="text-center">
-							<i class="fa fa-cube" data-toggle="tooltip" data-placement="top" title="Danos nas Caixas de Passagem/Interligações"></i>
+							<a class="btn btn-xs btn-default" href="?flg_filtro=dsc_danos_caixa_passagem_interligacoes<% If Request.QueryString("dsc_situacao_operacao") <> "" Then Response.Write "&dsc_situacao_operacao=" & Request.QueryString("dsc_situacao_operacao") End If %>">
+								<i class="fa fa-cube" data-toggle="tooltip" data-placement="top" title="Danos nas Caixas de Passagem/Interligações"></i>
+							</a>
 						</th>
 						<th class="text-center">
-							<i class="fa fa-code-fork" data-toggle="tooltip" data-placement="top" title="Danos de Drenagem"></i>
+							<a class="btn btn-xs btn-default" href="?flg_filtro=dsc_danos_drenagem<% If Request.QueryString("dsc_situacao_operacao") <> "" Then Response.Write "&dsc_situacao_operacao=" & Request.QueryString("dsc_situacao_operacao") End If %>">
+								<i class="fa fa-code-fork" data-toggle="tooltip" data-placement="top" title="Danos de Drenagem"></i>
+							</a>
 						</th>
 						<th class="text-center">
-							<i class="fa fa-clipboard" data-toggle="tooltip" data-placement="top" title="Partes Inoperantes"></i>
+							<a class="btn btn-xs btn-default" href="?flg_filtro=dsc_partes_inoperantes<% If Request.QueryString("dsc_situacao_operacao") <> "" Then Response.Write "&dsc_situacao_operacao=" & Request.QueryString("dsc_situacao_operacao") End If %>">
+								<i class="fa fa-clipboard" data-toggle="tooltip" data-placement="top" title="Partes Inoperantes"></i>
+							</a>
 						</th>
 					</thead>
 					<tbody>
@@ -470,10 +508,10 @@
 											labelColor = "info"
 										Case "Operando Parcialmente"
 											labelColor = "yellow"
-										Case "Estado de Abandono"
-											labelColor = "danger"
+										Case "Operando Precariamente"
+												labelColor = "warning"
 										Case "Inoperante"
-											labelColor = "warning"
+											labelColor = "danger"
 									End Select
 								%>
 

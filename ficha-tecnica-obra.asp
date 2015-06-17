@@ -715,8 +715,8 @@
 											<input type="text" class="form-control" readonly="readonly" value="<%=(rs_dados_obra.Fields.Item("nme_bacia_hidrografica").Value)%>">
 										</div>
 
-										<label class="col-xs-3 col-sm-3 col-md-3 col-lg-3 control-label">Manancial de Lançamento:</label>
-										<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+										<label class="col-xs-2 col-sm-2 col-md-2 col-lg-2 control-label">Manancial de Lançam.:</label>
+										<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
 											<input type="text" class="form-control" readonly="readonly" value="<%=(rs_dados_obra.Fields.Item("nme_manancial").Value)%>">
 										</div>
 									</div>

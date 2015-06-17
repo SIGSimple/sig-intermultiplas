@@ -1062,25 +1062,25 @@ rs_situacao_numRows = 0
 
       <tr valign="baseline">
         <td align="right" nowrap bgcolor="#CCCCCC" class="style9">
-          <span class="style22">Estudo Elaborado pelo DAEE?:</span>
+          <span class="style22">Estudo contratado pelo DAEE ou PM?:</span>
         </td>
         <td bgcolor="#CCCCCC">
           <select name="flg_estudo_elaborado_daee">
             <option value=""></option>
-            <option value="Sim"
+            <option value="DAEE"
               <%
-                If Lcase("Sim") = Lcase(rs_pi.Fields.Item("flg_estudo_elaborado_daee").Value) then
+                If Lcase("DAEE") = Lcase(rs_pi.Fields.Item("flg_estudo_elaborado_daee").Value) then
                   Response.Write "selected"
                 End If
               %>
-            >Sim</option>
-            <option value="Não"
+            >DAEE</option>
+            <option value="PM"
               <%
-                If Lcase("Não") = Lcase(rs_pi.Fields.Item("flg_estudo_elaborado_daee").Value) then
+                If Lcase("PM") = Lcase(rs_pi.Fields.Item("flg_estudo_elaborado_daee").Value) then
                   Response.Write "selected"
                 End If
               %>
-            >Não</option>
+            >PM</option>
           </select>
         </td>
       </tr>
