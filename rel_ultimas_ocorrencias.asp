@@ -20,9 +20,13 @@
 	  dta_fim 		= Split(dta_filtro_fim,"/")
 
 	  sql = sql & "WHERE [Data do Registro] BETWEEN #" & dta_inicio(1) & "/" & dta_inicio(0) & "/" & dta_inicio(2) & "# AND #" & dta_fim(1) & "/" & dta_fim(0) & "/" & dta_fim(2) & "#"
+
+	  If(Request.QueryString("cod_tipo_registro") <> "" And Len(Request.QueryString("cod_tipo_registro") <> "") > 0) Then
+	  	sql = sql & " AND cod_tipo_registro = " & Request.QueryString("cod_tipo_registro")
+	  End If
 	End If
 
-	sql = sql & "ORDER BY municipio ASC, nome_empreendimento ASC, [Data do Registro] ASC"
+	sql = sql & " ORDER BY municipio ASC, nome_empreendimento ASC, [Data do Registro] ASC"
 
 	Dim rs_lista
 

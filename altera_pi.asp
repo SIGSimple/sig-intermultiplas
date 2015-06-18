@@ -113,6 +113,7 @@ If (CStr(Request("MM_update")) <> "" And CStr(Request("MM_recordId")) <> "") The
   Dim frmField_id_predio
   Dim frmField_municipio
   Dim frmField_nome_empreendimento
+  Dim frmField_descricao_empreendimento
   Dim frmField_cod_tipo_empreendimento
   Dim frmField_cod_programa
   Dim frmField_dsc_situacao_anterior
@@ -164,6 +165,7 @@ If (CStr(Request("MM_update")) <> "" And CStr(Request("MM_recordId")) <> "") The
     End If
   End Function
 
+  frmField_descricao_empreendimento                = IIf(Request.Form("descricao_empreendimento") = "", "", Request.Form("descricao_empreendimento"))
   frmField_cod_tipo_empreendimento                 = IIf(Request.Form("cod_tipo_empreendimento") = "", "NULL", Request.Form("cod_tipo_empreendimento"))
   frmField_cod_programa                            = IIf(Request.Form("cod_programa") = "", "NULL", Request.Form("cod_programa"))
   'frmField_dsc_situacao_anterior                  = IIf(Request.Form("dsc_situacao_anterior") = "", "", Request.Form("dsc_situacao_anterior"))
@@ -208,7 +210,8 @@ If (CStr(Request("MM_update")) <> "" And CStr(Request("MM_recordId")) <> "") The
   frmField_dsc_observacoes_gestor                  = IIF(Request.Form("dsc_observacoes_gestor") = "", "", Request.Form("dsc_observacoes_gestor"))
 
   MM_editQuery = "UPDATE " & MM_editTable & " SET "
-  MM_editQuery = MM_editQuery & "cod_tipo_empreendimento="& frmField_cod_tipo_empreendimento &",cod_programa="& frmField_cod_programa
+  MM_editQuery = MM_editQuery & "[Descrição da Intervenção FDE]='"& frmField_descricao_empreendimento &"'"
+  MM_editQuery = MM_editQuery & ",cod_tipo_empreendimento="& frmField_cod_tipo_empreendimento &",cod_programa="& frmField_cod_programa
   'MM_editQuery = MM_editQuery & "dsc_situacao_anterior='"& frmField_dsc_situacao_anterior &"',dsc_situacao_atual='"& frmField_dsc_situacao_atual & "'"
   MM_editQuery = MM_editQuery & ",dsc_resultado_obtido='"& frmField_dsc_resultado_obtido & "',endereco='"& frmField_endereco &"',cep='"& frmField_cep & "'"
   MM_editQuery = MM_editQuery & ",latitude_longitude='"& frmField_latitude_longitude &"'"

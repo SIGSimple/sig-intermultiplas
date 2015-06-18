@@ -168,6 +168,15 @@
 						report_page += "data_inicio=" + selectedDateBegin + "&data_fim=" + selectedDateEnd;
 					}
 
+					if(optionData.exibeTipoOcorrencia  && selectedDate) {
+						if(report_page.indexOf("?") != -1)
+							report_page += "&";
+						else
+							report_page += "?";
+						
+						report_page += "cod_tipo_registro=" + $("#cod_tipo_registro").val();
+					}
+
 					if(report_page.indexOf("?") != -1)
 						report_page += "&";
 					else
@@ -263,6 +272,13 @@
 				}
 				else if(!$("#data").closest("div.row").hasClass("hide"))
 					$("#data").closest("div.row").addClass("hide");
+
+				if(optionData.exibeTipoOcorrencia) {
+					$("div.row.ocurr-type").removeClass("hide");
+						getAvailabeDates();
+				}
+				else if(!$("div.row.ocurr-type").hasClass("hide"))
+					$("div.row.ocurr-type").addClass("hide");
 
 				if(optionData.exibePeriodo) {
 					$("div.row.period").removeClass("hide");
@@ -379,7 +395,7 @@
 								</option>
 								<option 
 									<% If Request("cod_modelo_relatorio") <> "" Then If Request("cod_modelo_relatorio") = "rel_ultimas_ocorrencias.asp" Then Response.Write "selected='selected'" End If End If %>
-									data-habilita-botoes="true" data-exibe-municipio="false" data-exibe-localidade="false" data-exibe-data="false" data-exibe-periodo="true" value="rel_ultimas_ocorrencias.asp">
+									data-habilita-botoes="true" data-exibe-municipio="false" data-exibe-localidade="false" data-exibe-data="false" data-exibe-periodo="true" data-exibe-tipo-ocorrencia="true" value="rel_ultimas_ocorrencias.asp">
 									Relatório de Últimas Ocorrências
 								</option>
 								<option 
@@ -484,7 +500,36 @@
 					</div>
 				</div>
 
-				<div class="row <% If Request("cod_mun") = "" Then Response.Write "hide" End If %> period">
+				<div class="row hide ocurr-type">
+					<div class="col-xs-12">
+						<div class="form-group">
+							<label class="control-label">Tipo de Ocorrência:</label>
+							<select id="cod_tipo_registro" class="form-control">
+								<option value=""></option>
+								<%
+									strQ = "SELECT * FROM tb_tipo_registro"
+
+									Set rs_combo = Server.CreateObject("ADODB.Recordset")
+										rs_combo.CursorLocation = 3
+										rs_combo.CursorType = 3
+										rs_combo.LockType = 1
+										rs_combo.Open strQ, objCon, , , &H0001
+
+									While(Not rs_combo.EOF)
+								%>
+								<option value="<%=(rs_combo.Fields.Item("id").Value)%>">
+									<%=(rs_combo.Fields.Item("dsc_tipo_registro").Value)%>
+								</option>
+								<%
+										rs_combo.MoveNext()
+									Wend
+								%>
+							</select>
+						</div>
+					</div>
+				</div>
+
+				<div class="row hide period">
 					<div class="col-xs-4">
 						<div class="form-group">
 							<label class="control-label">De:</label>

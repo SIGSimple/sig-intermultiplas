@@ -31,7 +31,7 @@
 	sql = sql & 	"tb_info_emp_concluidos.dsc_danos_caixa_passagem_interligacoes,"
 	sql = sql & 	"tb_info_emp_concluidos.dsc_danos_drenagem,"
 	sql = sql & 	"tb_info_emp_concluidos.dsc_partes_inoperantes,"
-	sql = sql & 	"tb_info_emp_concluidos.dsc_situacao_operacao,"
+	sql = sql & 	"tb_situacao_operacao.dsc_situacao_operacao,"
 
 	sql = sql & 	"IIf(IsNull([tb_info_emp_concluidos.dsc_necessita_reparos]),0,1) 					AS flg_necessita_reparos,"
 	sql = sql & 	"IIf(IsNull([tb_info_emp_concluidos.dsc_problemas_bombas]),0,1) 					AS flg_problemas_bombas,"
@@ -48,6 +48,7 @@
 	sql = sql & 	"IIf(IsNull([tb_info_emp_concluidos.dsc_danos_drenagem]),0,1) 						AS flg_danos_drenagem,"
 	sql = sql & 	"IIf(IsNull([tb_info_emp_concluidos.dsc_partes_inoperantes]),0,1) 					AS flg_partes_inoperantes "
 	sql = sql & "FROM tb_info_emp_concluidos "
+	sql = sql & "INNER JOIN tb_situacao_operacao ON tb_situacao_operacao.id = tb_info_emp_concluidos.cod_situacao_operacao"
 
 	If Request.QueryString("dsc_situacao_operacao") <> "" Then
 		sql = sql & "WHERE dsc_situacao_operacao = '"& Request.QueryString("dsc_situacao_operacao") &"'"
@@ -199,7 +200,27 @@
 			$('[data-toggle="tooltip"]').tooltip();
 			$('[data-toggle="popover"]').popover();
 
-			var colors = ["#E74C3C", "#18BC9C", "#3498DB", "#F9FF00", "#F39C12"];
+			var colors = [
+				<%
+					sql = "SELECT Count(tb_info_emp_concluidos.id) AS qtd_obras, tb_situacao_operacao.hex_cor_exibicao FROM tb_info_emp_concluidos INNER JOIN tb_situacao_operacao ON tb_info_emp_concluidos.cod_situacao_operacao = tb_situacao_operacao.id GROUP BY tb_situacao_operacao.hex_cor_exibicao, tb_situacao_operacao.cod_ordenacao ORDER BY tb_situacao_operacao.cod_ordenacao;"
+
+					Set rs = Server.CreateObject("ADODB.Recordset")
+						rs.CursorLocation = 3
+						rs.CursorType = 3
+						rs.LockType = 1
+						rs.PageSize = 10
+						rs.Open sql, objCon, , , &H0001
+
+					While (Not rs.EOF)
+						qtd_obras 				= rs.Fields.Item("qtd_obras").Value
+						hex_cor_exibicao 	= rs.Fields.Item("hex_cor_exibicao").Value
+				%>
+				"<%=(hex_cor_exibicao)%>",
+				<%
+						rs.MoveNext()
+					Wend
+				%>
+			];
 
 			$('#chart-situacao-operacao').highcharts({
 				colors: colors,
@@ -237,7 +258,7 @@
 					name: 'Qtd. Obras',
 					data: [
 						<%
-							sql = "SELECT Count(id) AS qtd_obras, dsc_situacao_operacao FROM tb_info_emp_concluidos GROUP BY dsc_situacao_operacao;"
+							sql = "SELECT Count(tb_info_emp_concluidos.id) AS qtd_obras, tb_situacao_operacao.dsc_situacao_operacao FROM tb_info_emp_concluidos INNER JOIN tb_situacao_operacao ON tb_info_emp_concluidos.cod_situacao_operacao = tb_situacao_operacao.id GROUP BY tb_situacao_operacao.dsc_situacao_operacao, tb_situacao_operacao.cod_ordenacao ORDER BY tb_situacao_operacao.cod_ordenacao;"
 
 							Set rs = Server.CreateObject("ADODB.Recordset")
 								rs.CursorLocation = 3
@@ -336,7 +357,7 @@
 							</thead>
 							<tbody>
 								<%
-									sql = "SELECT Count(id) AS qtd_obras, dsc_situacao_operacao FROM tb_info_emp_concluidos GROUP BY dsc_situacao_operacao;"
+									sql = "SELECT Count(tb_info_emp_concluidos.id) AS qtd_obras, tb_situacao_operacao.dsc_situacao_operacao FROM tb_info_emp_concluidos INNER JOIN tb_situacao_operacao ON tb_info_emp_concluidos.cod_situacao_operacao = tb_situacao_operacao.id GROUP BY tb_situacao_operacao.dsc_situacao_operacao, tb_situacao_operacao.cod_ordenacao ORDER BY tb_situacao_operacao.cod_ordenacao;"
 
 									Set rs = Server.CreateObject("ADODB.Recordset")
 										rs.CursorLocation = 3
